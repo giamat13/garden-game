@@ -767,6 +767,8 @@ body {
     <span>יום</span>
     <span class="day-num" id="day-num">1</span>
   </div>
+  <button onclick="saveGame(); log('נשמר! 💾')" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:12px;color:white;padding:4px 10px;cursor:pointer;font-family:inherit;font-size:12px;">💾 שמור</button>
+  <button onclick="if(confirm('למחוק את כל ההתקדמות?')){clearSave();location.reload();}" style="background:rgba(255,80,80,0.2);border:1px solid rgba(255,100,100,0.4);border-radius:12px;color:#ffaaaa;padding:4px 10px;cursor:pointer;font-family:inherit;font-size:12px;">🗑️</button>
 </div>
 
 <!-- TOOLS PANEL -->
@@ -952,21 +954,107 @@ let state = {
   selectedPlot: -1,
 };
 
+
+// ========== SAVE / LOAD ==========
+const SAVE_KEY = 'garden_of_wonders_save';
+
+function saveGame() {
+  const toSave = {
+    coins:      state.coins,
+    water:      state.water,
+    fertilizer: state.fertilizer,
+    seeds:      state.seeds,
+    plots:      state.plots,
+    day:        state.day,
+    hour:       state.hour,
+    weather:    state.weather,
+    tick:       state.tick,
+    gameTime:   state.gameTime,
+    savedAt:    Date.now(),
+  };
+  const json = JSON.stringify(toSave);
+  // localStorage
+  try { localStorage.setItem(SAVE_KEY, json); } catch(e) { console.warn('[SAVE] localStorage failed:', e); }
+  // cookie (expires in 30 days)
+  try {
+    const exp = new Date(Date.now() + 30*24*60*60*1000).toUTCString();
+    document.cookie = SAVE_KEY + '=' + encodeURIComponent(json) + '; expires=' + exp + '; path=/; SameSite=Lax';
+  } catch(e) { console.warn('[SAVE] cookie failed:', e); }
+  console.log('[SAVE] saved at h=' + state.hour.toFixed(2) + ' day=' + state.day + ' coins=' + state.coins);
+}
+
+function loadGame() {
+  let json = null;
+  // Try localStorage first
+  try { json = localStorage.getItem(SAVE_KEY); } catch(e) {}
+  // Fallback to cookie
+  if (!json) {
+    try {
+      const match = document.cookie.split('; ').find(r => r.startsWith(SAVE_KEY + '='));
+      if (match) json = decodeURIComponent(match.split('=').slice(1).join('='));
+    } catch(e) {}
+  }
+  if (!json) { console.log('[LOAD] no save found, starting fresh'); return false; }
+  try {
+    const data = JSON.parse(json);
+    state.coins      = data.coins      ?? state.coins;
+    state.water      = data.water      ?? state.water;
+    state.fertilizer = data.fertilizer ?? state.fertilizer;
+    state.seeds      = data.seeds      ?? state.seeds;
+    state.plots      = data.plots      ?? state.plots;
+    state.day        = data.day        ?? state.day;
+    state.hour       = data.hour       ?? state.hour;
+    state.weather    = data.weather    ?? state.weather;
+    state.tick       = data.tick       ?? state.tick;
+    state.gameTime   = data.gameTime   ?? state.gameTime;
+    const ago = data.savedAt ? Math.round((Date.now() - data.savedAt) / 1000) : 0;
+    console.log('[LOAD] loaded save from ' + ago + 's ago. h=' + state.hour.toFixed(2) + ' day=' + state.day + ' coins=' + state.coins);
+    return true;
+  } catch(e) {
+    console.warn('[LOAD] failed to parse save:', e);
+    return false;
+  }
+}
+
+function clearSave() {
+  try { localStorage.removeItem(SAVE_KEY); } catch(e) {}
+  try {
+    document.cookie = SAVE_KEY + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  } catch(e) {}
+  console.log('[SAVE] cleared');
+  log('שמירה נמחקה 🗑️');
+}
+
+// Auto-save every 15 seconds
+setInterval(saveGame, 15000);
+
 // ========== INIT ==========
 function init() {
+  const hasSave = loadGame(); // load before building UI
   buildGarden();
   buildSeedShop();
   buildFence();
   buildGrass();
   generateStars();
+  updateAllPlots();
   updateHUD();
+  updateSeedCounts();
+  // Restore weather badge
+  const w = WEATHERS[state.weather];
+  document.getElementById('weather-icon').textContent = w.icon;
+  document.getElementById('weather-name').textContent = w.name;
+  document.getElementById('day-num').textContent = state.day;
   gameLoop();
   updateSkyColors();
   setInterval(gameTick, 4000);
   setInterval(spawnVisitor, 12000);
   setInterval(changeWeather, 60000);
   document.addEventListener('click', closePopup);
-  log('ברוכים הבאים לגינת הפלאים! 🌿');
+  if (hasSave) {
+    log('ברוכים חזרה! גינתך נטענה 🌿 (יום ' + state.day + ')');
+  } else {
+    log('ברוכים הבאים לגינת הפלאים! 🌱');
+  }
 }
 
 function buildGarden() {
