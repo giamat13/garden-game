@@ -39,7 +39,6 @@ body {
   user-select: none;
 }
 
-/* SKY & WORLD */
 #world {
   position: relative;
   width: 100%;
@@ -53,9 +52,7 @@ body {
   height: 55%;
   background: linear-gradient(180deg, #1e70c8 0%, #4aaae0 55%, #90d0f4 100%);
 }
-/* Sky uses JS-driven gradient on a fast interval — no CSS transition needed */
 
-/* Sun / Moon */
 #celestial {
   position: absolute;
   border-radius: 50%;
@@ -75,7 +72,6 @@ body {
   box-shadow: 0 0 28px 10px rgba(180,210,240,0.45), 0 0 60px 24px rgba(140,170,210,0.2);
 }
 
-/* Stars */
 #stars {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -83,7 +79,6 @@ body {
   transition: opacity 3s ease;
   pointer-events: none;
 }
-
 
 .star {
   position: absolute;
@@ -97,7 +92,6 @@ body {
   50% { opacity: 0.3; transform: scale(0.5); }
 }
 
-/* Clouds */
 .cloud {
   position: absolute;
   background: white;
@@ -119,7 +113,6 @@ body {
   to { transform: translateX(110vw); }
 }
 
-/* GROUND */
 #ground {
   position: absolute;
   bottom: 0; left: 0; right: 0;
@@ -135,7 +128,6 @@ body {
   overflow: hidden;
 }
 
-/* Grass blades */
 .grass-blade {
   position: absolute;
   bottom: 0;
@@ -157,7 +149,6 @@ body {
   background: linear-gradient(180deg, #7a4e32 0%, #5c3d2e 30%, #3d2b1f 100%);
 }
 
-/* GARDEN FENCE */
 #fence {
   position: absolute;
   top: -5px; left: 0; right: 0;
@@ -182,7 +173,6 @@ body {
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-/* GARDEN GRID */
 #garden-area {
   position: absolute;
   top: 38px; left: 50%;
@@ -241,7 +231,6 @@ body {
   pointer-events: none;
 }
 
-/* Plant display inside plot */
 .plant-emoji {
   position: absolute;
   bottom: 4px;
@@ -266,7 +255,6 @@ body {
   opacity: 0.7;
 }
 
-/* Health bar */
 .health-bar {
   position: absolute;
   bottom: -8px;
@@ -289,7 +277,6 @@ body {
 .health-bar-fill.low { background: linear-gradient(90deg, #f44336, #ff7043); }
 .health-bar-fill.mid { background: linear-gradient(90deg, #ff9800, #ffc107); }
 
-/* Water indicator drops */
 .water-dots {
   position: absolute;
   top: 4px;
@@ -309,7 +296,6 @@ body {
 .water-dot.full { background: var(--water-blue); }
 .water-dot.empty { background: rgba(255,255,255,0.2); }
 
-/* Ready to harvest glow */
 .plot.harvestable {
   animation: harvestPulse 1.5s ease-in-out infinite;
 }
@@ -319,7 +305,6 @@ body {
   50% { box-shadow: 0 0 0 6px rgba(255,209,102,0.7), 0 8px 16px rgba(0,0,0,0.5); }
 }
 
-/* Empty plot hint */
 .plot-hint {
   position: absolute;
   inset: 0;
@@ -389,7 +374,6 @@ body {
   color: var(--sun-color);
 }
 
-/* Weather badge */
 #weather-badge {
   display: flex;
   align-items: center;
@@ -534,7 +518,6 @@ body {
   to { opacity: 0; transform: translateY(-10px); }
 }
 
-/* VISITORS - butterflies & bees */
 .visitor {
   position: fixed;
   font-size: 22px;
@@ -601,7 +584,6 @@ body {
 .popup-btn.remove { background: #fce4ec; color: #c62828; }
 .popup-btn.remove:hover { background: #f8bbd0; }
 
-/* Coin pop animation */
 .coin-pop {
   position: fixed;
   pointer-events: none;
@@ -616,7 +598,6 @@ body {
   100% { opacity: 0; transform: translate(0, -70px) scale(0.8); }
 }
 
-/* Particle effects */
 .particle {
   position: fixed;
   pointer-events: none;
@@ -630,7 +611,6 @@ body {
   100% { opacity: 0; transform: translate(var(--px), var(--py)) scale(0); }
 }
 
-/* Progress bar for resources */
 .resource-bar-wrap {
   margin-top: 6px;
   margin-bottom: 10px;
@@ -659,8 +639,8 @@ body {
 
 .resource-bar-fill.water { background: linear-gradient(90deg, #4fc3f7, #0288d1); }
 .resource-bar-fill.fert { background: linear-gradient(90deg, #a5d6a7, #388e3c); }
+.resource-bar-fill.spray { background: linear-gradient(90deg, #ff9800, #f44336); }
 
-/* Rain animation */
 .rain-drop {
   position: fixed;
   width: 2px;
@@ -677,7 +657,6 @@ body {
   to { transform: translateY(100vh); opacity: 0; }
 }
 
-/* Tooltip */
 .tooltip {
   position: absolute;
   bottom: calc(100% + 8px);
@@ -697,36 +676,11 @@ body {
 
 .plot:hover .tooltip { opacity: 1; }
 
-/* Sunlight boost indicator */
-.sun-boost {
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  font-size: 12px;
-  opacity: 0.8;
-  animation: sunPulse 2s ease-in-out infinite;
-}
-
-@keyframes sunPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.3); }
-}
-
-/* Scrollable seed shop */
 .seed-shop-inner {
   max-height: calc(100vh - 160px);
   overflow-y: auto;
   scrollbar-width: thin;
 }
-
-/* Decorative elements */
-.deco-mushroom, .deco-rock, .deco-flower {
-  position: absolute;
-  font-size: 18px;
-  pointer-events: none;
-  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
-}
-
 
 /* ====== ITEM SHOP MODAL ====== */
 #shop-overlay {
@@ -746,7 +700,7 @@ body {
   border: 3px solid #c9a96e;
   border-radius: 22px;
   padding: 24px;
-  width: min(680px, 94vw);
+  width: min(720px, 94vw);
   max-height: 86vh;
   overflow-y: auto;
   box-shadow: 0 24px 64px rgba(0,0,0,0.5);
@@ -834,6 +788,16 @@ body {
   align-items: center;
   gap: 3px;
 }
+.shop-item-maintenance {
+  font-size: 10px;
+  color: #e53935;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(229,57,53,0.08);
+  border-radius: 6px;
+  padding: 2px 6px;
+}
 .shop-buy-btn {
   width: 100%;
   padding: 7px;
@@ -851,7 +815,44 @@ body {
 .shop-buy-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
 .shop-buy-btn.maxed-btn { background: linear-gradient(135deg, #ffc107, #ff8f00); }
 
-/* Active item badges on HUD */
+/* Consumables grid in shop */
+.consumables-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.consumable-item {
+  background: white;
+  border: 2px solid #e8d5b0;
+  border-radius: 12px;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+}
+.consumable-item:hover { border-color: #c9a96e; transform: translateY(-1px); }
+.consumable-icon { font-size: 28px; }
+.consumable-name { font-size: 11px; font-weight: bold; color: #3d2b1f; text-align: center; }
+.consumable-price { font-size: 12px; font-weight: bold; color: #b8860b; }
+.consumable-btn {
+  width: 100%;
+  padding: 5px;
+  border: none;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #6aab78, #4a7c59);
+  color: white;
+  font-family: 'Secular One', sans-serif;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 2px;
+}
+.consumable-btn:hover { background: linear-gradient(135deg, #52b788, #3d6b49); }
+.consumable-btn:disabled { background: #ccc; cursor: not-allowed; }
+
 .item-badge {
   font-size: 14px;
   opacity: 0.85;
@@ -860,7 +861,6 @@ body {
 }
 .item-badge:hover { opacity: 1; }
 
-/* Shop open button in HUD */
 #shop-hud-btn {
   background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.08));
   border: 1px solid rgba(255,255,255,0.3);
@@ -932,23 +932,12 @@ body {
 @keyframes birdFly {
   0%   { opacity: 0; transform: scaleX(1); }
   5%   { opacity: 1; }
-  48%  { transform: scaleX(1); }
-  50%  { transform: scaleX(-1); }
   95%  { opacity: 1; }
-  100% { opacity: 0; transform: scaleX(-1); }
+  100% { opacity: 0; }
 }
 
-/* Spray bar */
-#spray-bar-wrap {
-  margin-top: 6px;
-  margin-bottom: 2px;
-}
-.resource-bar-fill.spray { background: linear-gradient(90deg, #ff9800, #f44336); }
-
-/* Spray tool button danger state */
 .tool-btn.spray-empty { opacity: 0.5; }
 
-/* Pest alert badge */
 .pest-alert {
   position: absolute;
   top: -6px; right: -6px;
@@ -967,7 +956,6 @@ body {
   50% { transform: scale(1.3); }
 }
 
-/* Spray cloud animation */
 .spray-cloud {
   position: fixed;
   pointer-events: none;
@@ -980,6 +968,599 @@ body {
   20%  { opacity: 0.9; transform: scale(1.2); }
   100% { opacity: 0; transform: scale(1.8) translateY(-20px); }
 }
+
+/* ====== PHYSICAL GARDEN ITEMS ====== */
+#items-world {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 30;
+}
+
+.world-item {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: all;
+  cursor: help;
+  transition: filter 0.25s;
+}
+
+.world-item:not(.wi-greenhouse):not(.wi-ledLamp):not(.wi-autoWater):hover {
+  filter: brightness(1.15) drop-shadow(0 0 8px rgba(255,220,100,0.5));
+}
+
+.world-item-label {
+  font-size: 9px;
+  font-family: 'Secular One', sans-serif;
+  background: rgba(61,43,31,0.85);
+  color: #ffd166;
+  border-radius: 8px;
+  padding: 2px 6px;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+/* Rich hover tooltip for world items */
+.world-item .wi-tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(160deg, #2c1a0e, #3d2b1f);
+  border: 1.5px solid #c9a96e;
+  border-radius: 12px;
+  padding: 10px 13px;
+  min-width: 160px;
+  max-width: 210px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  transform: translateX(-50%) translateY(4px);
+  z-index: 9999;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  white-space: normal;
+  text-align: center;
+}
+.world-item:hover .wi-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.wi-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #c9a96e;
+}
+.wi-tooltip-icon { font-size: 22px; display: block; margin-bottom: 4px; }
+.wi-tooltip-name {
+  font-family: 'Noto Serif Hebrew', serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffd166;
+  display: block;
+  margin-bottom: 2px;
+}
+.wi-tooltip-level {
+  font-size: 11px;
+  color: #a8d8a8;
+  display: block;
+  margin-bottom: 5px;
+}
+.wi-tooltip-desc {
+  font-size: 10px;
+  color: #d4b896;
+  line-height: 1.5;
+  display: block;
+  margin-bottom: 4px;
+}
+.wi-tooltip-maint {
+  font-size: 10px;
+  color: #ff8a80;
+  display: block;
+  margin-top: 4px;
+  border-top: 1px solid rgba(201,169,110,0.3);
+  padding-top: 4px;
+}
+
+/* Water tank */
+.wi-waterTank {
+  bottom: 8px;
+  left: 2%;
+}
+.wi-waterTank .tank-body {
+  width: 38px;
+  height: 54px;
+  background: linear-gradient(180deg, #29b6f6, #0277bd);
+  border-radius: 4px 4px 6px 6px;
+  border: 2px solid #01579b;
+  position: relative;
+  box-shadow: inset -4px 0 8px rgba(0,0,0,0.2), 0 4px 8px rgba(0,0,0,0.4);
+}
+.wi-waterTank .tank-body::after {
+  content: '';
+  position: absolute;
+  top: 4px; left: 4px;
+  width: 8px;
+  height: 40px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
+}
+.wi-waterTank .tank-cap {
+  width: 28px;
+  height: 8px;
+  background: #01579b;
+  border-radius: 3px;
+  margin-bottom: -1px;
+}
+.wi-waterTank .tank-level {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(255,255,255,0.3);
+  border-radius: 0 0 4px 4px;
+  transition: height 0.5s;
+}
+.wi-waterTank .tank-pipe {
+  width: 6px;
+  height: 12px;
+  background: #01579b;
+  margin-top: -1px;
+}
+
+/* Rain collector */
+.wi-rainCollector {
+  bottom: 8px;
+  left: 8%;
+}
+.wi-rainCollector .barrel {
+  width: 34px;
+  height: 42px;
+  background: linear-gradient(180deg, #8d6e63, #5d4037);
+  border-radius: 4px 4px 8px 8px;
+  border: 2px solid #4e342e;
+  position: relative;
+  box-shadow: inset -3px 0 6px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.4);
+}
+.wi-rainCollector .barrel-ring {
+  position: absolute;
+  left: -2px; right: -2px;
+  height: 4px;
+  background: #4e342e;
+  border-radius: 2px;
+}
+.wi-rainCollector .funnel {
+  width: 44px;
+  height: 12px;
+  background: linear-gradient(180deg, #78909c, #546e7a);
+  clip-path: polygon(0 0, 100% 0, 78% 100%, 22% 100%);
+  border-radius: 2px;
+}
+
+/* Compost bin */
+.wi-compostBin {
+  bottom: 8px;
+  right: 7%;
+}
+.wi-compostBin .bin {
+  width: 36px;
+  height: 44px;
+  background: linear-gradient(180deg, #558b2f, #33691e);
+  border-radius: 3px 3px 8px 8px;
+  border: 2px solid #1b5e20;
+  position: relative;
+  box-shadow: inset -3px 0 6px rgba(0,0,0,0.2), 0 4px 8px rgba(0,0,0,0.4);
+}
+.wi-compostBin .bin-lid {
+  width: 40px;
+  height: 10px;
+  background: linear-gradient(180deg, #689f38, #33691e);
+  border-radius: 4px 4px 0 0;
+  border: 2px solid #1b5e20;
+  margin-bottom: -1px;
+}
+.wi-compostBin .bin::after {
+  content: '♻️';
+  position: absolute;
+  font-size: 14px;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Beehive */
+.wi-beeHive {
+  bottom: 14px;
+  right: 2%;
+}
+.wi-beeHive .hive-post {
+  width: 6px;
+  height: 28px;
+  background: linear-gradient(180deg, #a0522d, #6b3a2a);
+  margin: 0 auto;
+}
+.wi-beeHive .hive-body {
+  width: 42px;
+  height: 38px;
+  background: linear-gradient(180deg, #ffd54f, #ff8f00);
+  border-radius: 50% 50% 30% 30%;
+  border: 2px solid #e65100;
+  position: relative;
+  box-shadow: inset -4px 0 8px rgba(0,0,0,0.15), 0 4px 8px rgba(0,0,0,0.3);
+}
+.wi-beeHive .hive-body::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  background: repeating-linear-gradient(0deg, transparent, transparent 5px, rgba(0,0,0,0.1) 5px, rgba(0,0,0,0.1) 6px);
+  border-radius: inherit;
+}
+.wi-beeHive .hive-hole {
+  position: absolute;
+  bottom: 8px; left: 50%;
+  transform: translateX(-50%);
+  width: 10px; height: 6px;
+  background: #5d4037;
+  border-radius: 50% 50% 30% 30%;
+}
+.wi-beeHive .bee-float {
+  position: absolute;
+  font-size: 12px;
+  animation: beeFloat 2s ease-in-out infinite;
+}
+@keyframes beeFloat {
+  0%,100% { transform: translate(-14px,-8px) rotate(-10deg); }
+  50% { transform: translate(-8px,-14px) rotate(10deg); }
+}
+
+/* Scarecrow */
+.wi-scarecrow {
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-80px);
+  z-index: 35;
+}
+.wi-scarecrow .sc-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.wi-scarecrow .sc-post {
+  width: 6px;
+  height: 50px;
+  background: linear-gradient(180deg, #a0522d, #6b3a2a);
+}
+.wi-scarecrow .sc-arms {
+  position: absolute;
+  top: 10px;
+  width: 60px;
+  height: 6px;
+  background: linear-gradient(90deg, #a0522d, #6b3a2a);
+  border-radius: 3px;
+}
+.wi-scarecrow .sc-shirt {
+  position: absolute;
+  top: 12px;
+  width: 28px;
+  height: 26px;
+  background: linear-gradient(180deg, #e53935, #b71c1c);
+  border-radius: 4px;
+  border: 1px solid #7f0000;
+}
+.wi-scarecrow .sc-head {
+  width: 28px;
+  height: 28px;
+  background: #ffd54f;
+  border-radius: 4px;
+  border: 2px solid #e65100;
+  position: relative;
+  margin-bottom: -2px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+.wi-scarecrow .sc-head::before { content: '😱'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.wi-scarecrow .sc-hat {
+  width: 36px;
+  height: 12px;
+  background: linear-gradient(180deg, #4e342e, #3e2723);
+  border-radius: 3px;
+  border: 1px solid #1a0000;
+  position: relative;
+}
+.wi-scarecrow .sc-hat::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 18px;
+  background: linear-gradient(180deg, #4e342e, #3e2723);
+  border-radius: 3px 3px 0 0;
+}
+
+/* Greenhouse overlay */
+.wi-greenhouse {
+  position: absolute;
+  top: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.greenhouse-glass {
+  border: 3px solid rgba(100,200,180,0.6);
+  border-radius: 12px;
+  background: rgba(144,238,220,0.06);
+  box-shadow: inset 0 0 30px rgba(100,220,200,0.08), 0 0 20px rgba(100,220,200,0.15);
+  position: relative;
+}
+.greenhouse-glass::before {
+  content: '🏠';
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 18px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+}
+.greenhouse-glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 95px,
+    rgba(100,200,180,0.15) 95px,
+    rgba(100,200,180,0.15) 98px
+  );
+  border-radius: 9px;
+  pointer-events: none;
+}
+
+/* LED Lamp */
+.wi-ledLamp {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 640px;
+  height: 16px;
+  pointer-events: none;
+}
+.led-bar {
+  width: 100%;
+  height: 8px;
+  background: linear-gradient(90deg, #7b1fa2, #9c27b0, #e91e63, #9c27b0, #7b1fa2);
+  border-radius: 4px;
+  box-shadow: 0 0 12px 4px rgba(186,104,200,0.5);
+}
+.led-glow {
+  width: 100%;
+  height: 40px;
+  background: linear-gradient(180deg, rgba(186,104,200,0.15), transparent);
+  border-radius: 0 0 20px 20px;
+}
+
+/* Auto watering */
+.wi-autoWater {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 640px;
+  pointer-events: none;
+}
+.water-pipe {
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(180deg, #78909c, #546e7a);
+  border-radius: 3px;
+  position: relative;
+}
+.sprinkler-head {
+  position: absolute;
+  top: -6px;
+  width: 10px;
+  height: 10px;
+  background: #37474f;
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(79,195,247,0.5);
+}
+.sprinkler-head.active::after {
+  content: '💧';
+  position: absolute;
+  font-size: 10px;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: sprinklerDrip 1.5s ease infinite;
+}
+@keyframes sprinklerDrip {
+  0%,100% { opacity: 0; transform: translateX(-50%) translateY(0); }
+  50% { opacity: 1; transform: translateX(-50%) translateY(5px); }
+}
+
+/* Auto fertilizer */
+.wi-autoFert {
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(40px);
+}
+.fert-machine {
+  width: 36px;
+  height: 42px;
+  background: linear-gradient(180deg, #66bb6a, #388e3c);
+  border-radius: 6px;
+  border: 2px solid #1b5e20;
+  position: relative;
+  box-shadow: inset -3px 0 6px rgba(0,0,0,0.2), 0 4px 8px rgba(0,0,0,0.4);
+}
+.fert-machine::before {
+  content: '🌿';
+  position: absolute;
+  top: 4px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 16px;
+}
+.fert-nozzle {
+  width: 8px;
+  height: 12px;
+  background: #1b5e20;
+  border-radius: 0 0 4px 4px;
+  margin: -1px auto 0;
+}
+
+/* Auto harvest robot */
+.wi-autoHarvest {
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-120px);
+}
+.robot-body {
+  width: 34px;
+  height: 40px;
+  background: linear-gradient(180deg, #78909c, #455a64);
+  border-radius: 6px;
+  border: 2px solid #263238;
+  position: relative;
+  box-shadow: inset -3px 0 6px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.4);
+}
+.robot-head {
+  width: 28px;
+  height: 22px;
+  background: linear-gradient(180deg, #90a4ae, #607d8b);
+  border-radius: 5px;
+  border: 2px solid #263238;
+  position: relative;
+  margin: 0 auto;
+  margin-bottom: -1px;
+}
+.robot-head::before {
+  content: '🤖';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+.robot-arm {
+  position: absolute;
+  top: 8px;
+  width: 12px;
+  height: 6px;
+  background: #455a64;
+  border-radius: 3px;
+  animation: robotArm 2s ease-in-out infinite;
+}
+.robot-arm.left { left: -10px; }
+.robot-arm.right { right: -10px; }
+@keyframes robotArm {
+  0%,100% { transform: rotate(0deg); }
+  50% { transform: rotate(30deg); }
+}
+
+/* Grow boost */
+.wi-growBoost {
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(90px);
+  display: flex;
+  gap: 4px;
+  align-items: flex-end;
+}
+.boost-vial {
+  width: 12px;
+  border-radius: 3px 3px 5px 5px;
+  border: 1px solid rgba(0,0,0,0.3);
+  position: relative;
+  animation: vialGlow 2s ease-in-out infinite;
+}
+@keyframes vialGlow {
+  0%,100% { box-shadow: 0 0 6px 2px currentColor; }
+  50% { box-shadow: 0 0 12px 4px currentColor; }
+}
+
+/* Sun mirror */
+.wi-sunMirror {
+  bottom: 20px;
+  right: 13%;
+}
+.mirror-frame {
+  width: 28px;
+  height: 44px;
+  background: linear-gradient(135deg, #e0e0e0, #9e9e9e);
+  border: 2px solid #757575;
+  border-radius: 4px;
+  position: relative;
+  box-shadow: 0 0 12px rgba(255,220,80,0.4), 0 4px 8px rgba(0,0,0,0.4);
+  overflow: hidden;
+}
+.mirror-reflection {
+  position: absolute;
+  inset: 3px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,220,80,0.4));
+  border-radius: 2px;
+  animation: mirrorShine 3s ease-in-out infinite;
+}
+@keyframes mirrorShine {
+  0%,100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+.mirror-post {
+  width: 5px;
+  height: 20px;
+  background: #757575;
+  margin: 0 auto;
+}
+
+/* Harvest bonus (market stall) */
+.wi-harvestBonus {
+  bottom: 8px;
+  right: 15%;
+}
+.stall-sign {
+  background: linear-gradient(135deg, #ffd54f, #ff8f00);
+  border: 2px solid #e65100;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-family: 'Secular One', sans-serif;
+  color: #3e2723;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+  white-space: nowrap;
+}
+.stall-pole {
+  width: 4px;
+  height: 18px;
+  background: #a0522d;
+  margin: 0 auto;
+}
+
+/* Bob animation for all world items */
+@keyframes itemBob {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.world-item-bob {
+  animation: itemBob 3s ease-in-out infinite;
+}
+
+/* Maintenance warning flash */
+.maintenance-warning {
+  animation: maintWarn 0.5s ease-in-out 3;
+}
+@keyframes maintWarn {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.3; filter: hue-rotate(180deg); }
+}
 </style>
 </head>
 <body>
@@ -990,9 +1571,10 @@ body {
     <div id="celestial" class="sun"></div>
   </div>
   <div id="ground">
-    <div id="grass-strip" id="grass"></div>
+    <div id="grass-strip"></div>
     <div id="dirt"></div>
     <div id="fence"></div>
+    <div id="items-world"></div>
     <div id="garden-area"></div>
   </div>
 </div>
@@ -1011,6 +1593,10 @@ body {
   <div class="hud-resource">
     <span class="icon">🌿</span>
     <span class="val" id="hud-fert">10</span>
+  </div>
+  <div class="hud-resource">
+    <span class="icon">🧴</span>
+    <span class="val" id="hud-spray">0</span>
   </div>
   <div id="weather-badge">
     <span id="weather-icon">☀️</span>
@@ -1037,6 +1623,11 @@ body {
     <span class="tool-label">דשן</span>
     <span class="tool-cost">-1🌿</span>
   </button>
+  <button class="tool-btn" data-tool="spray" onclick="selectTool('spray')" id="spray-tool-btn" title="תרסיס - מגרש מזיקים">
+    <span class="tool-icon">🧴</span>
+    <span class="tool-label">תרסיס</span>
+    <span class="tool-cost">-1🧴</span>
+  </button>
   <button class="tool-btn" data-tool="harvest" onclick="selectTool('harvest')">
     <span class="tool-icon">🧺</span>
     <span class="tool-label">קציר</span>
@@ -1044,16 +1635,6 @@ body {
   <button class="tool-btn" data-tool="remove" onclick="selectTool('remove')">
     <span class="tool-icon">🗑️</span>
     <span class="tool-label">הסרה</span>
-  </button>
-  <button class="tool-btn" data-tool="spray" onclick="selectTool('spray')" id="spray-tool-btn" title="תרסיס - מגרש מזיקים אבל פוגע בפירות אכילים">
-    <span class="tool-icon">🧴</span>
-    <span class="tool-label">תרסיס</span>
-    <span class="tool-cost" id="spray-cost-label">10</span>
-  </button>
-  <button class="tool-btn" onclick="buySpray()" style="font-size:11px;margin-top:2px" id="buy-spray-btn">
-    <span class="tool-icon">🛒</span>
-    <span class="tool-label">תרסיס x10</span>
-    <span class="tool-cost">12🪙</span>
   </button>
 
   <div class="panel-section-title" style="margin-top:10px">📊 משאבים</div>
@@ -1065,22 +1646,10 @@ body {
     <div class="resource-bar-label"><span>דשן</span><span id="fert-val">10</span></div>
     <div class="resource-bar-track"><div class="resource-bar-fill fert" id="fert-bar" style="width:20%"></div></div>
   </div>
-  <div class="resource-bar-wrap" id="spray-bar-wrap">
+  <div class="resource-bar-wrap">
     <div class="resource-bar-label"><span>🧴 תרסיס</span><span id="spray-val">0</span></div>
     <div class="resource-bar-track"><div class="resource-bar-fill spray" id="spray-bar" style="width:0%"></div></div>
   </div>
-
-  <div class="panel-section-title" style="margin-top:6px">🛒 חנות</div>
-  <button class="tool-btn" onclick="buyResource('water')" style="font-size:12px">
-    <span class="tool-icon">💧</span>
-    <span class="tool-label">מים x10</span>
-    <span class="tool-cost">5🪙</span>
-  </button>
-  <button class="tool-btn" onclick="buyResource('fert')" style="font-size:12px">
-    <span class="tool-icon">🌿</span>
-    <span class="tool-label">דשן x5</span>
-    <span class="tool-cost">8🪙</span>
-  </button>
 </div>
 
 <!-- SEED SHOP -->
@@ -1104,7 +1673,7 @@ body {
   <div id="shop-modal">
     <button class="shop-close" onclick="closeShop()">✕</button>
     <h2>🏪 חנות הגינה</h2>
-    <div class="shop-subtitle">שדרג את הגינה שלך עם כלים וציוד מתקדם</div>
+    <div class="shop-subtitle">שדרג את הגינה שלך — פריטים מופיעים פיזית בגינה!</div>
     <div id="shop-content"></div>
   </div>
 </div>
@@ -1194,29 +1763,26 @@ const WEATHERS = [
   { name: 'שלג קל',     icon: '🌨️', waterMult: 0.1, growMult: 0.4,  cloudOpacity: 0.9,  cloudCount: 5,  skyTop:'#c0ccd8', skyMid:'#d8e0e8', skyBot:'#eaf0f4', fogColor: 'rgba(220,235,245,0.3)' },
 ];
 
-// Sky palette keyframes: [hour] -> {top, mid, bot} colors
-// These are the "clear sky" base colors; weather tints them
 const SKY_PALETTE = [
-  // h   top (zenith)   mid             bot (horizon)
-  { h:  0, top:'#020510', mid:'#06101e', bot:'#0e1a2a' }, // deep night
-  { h:  4, top:'#050a1a', mid:'#0a1428', bot:'#151e38' }, // pre-dawn dark
-  { h:  5, top:'#1a0e38', mid:'#4a1e6a', bot:'#c84820' }, // twilight purple-orange
-  { h:  6, top:'#d44010', mid:'#ee7030', bot:'#ffc040' }, // sunrise orange
-  { h:  7, top:'#3a88d0', mid:'#60b0e8', bot:'#b8def5' }, // early morning blue
-  { h:  9, top:'#1e70c8', mid:'#4aaae0', bot:'#90d0f4' }, // morning
-  { h: 12, top:'#0e58be', mid:'#2e90e0', bot:'#70c8f8' }, // noon deep blue
-  { h: 15, top:'#1e70c8', mid:'#4aaae0', bot:'#90d0f4' }, // afternoon
-  { h: 17, top:'#4888c0', mid:'#80b0d8', bot:'#c8dff0' }, // late afternoon
-  { h: 18, top:'#c83010', mid:'#e86020', bot:'#faa030' }, // sunset red-orange
-  { h: 19, top:'#701020', mid:'#b02820', bot:'#d86030' }, // dusk deep red
-  { h: 20, top:'#1a0830', mid:'#240a3c', bot:'#301444' }, // twilight to night
-  { h: 21, top:'#060412', mid:'#0a0818', bot:'#0e0e20' }, // full night
-  { h: 24, top:'#020510', mid:'#06101e', bot:'#0e1a2a' }, // deep night again
+  { h:  0, top:'#020510', mid:'#06101e', bot:'#0e1a2a' },
+  { h:  4, top:'#050a1a', mid:'#0a1428', bot:'#151e38' },
+  { h:  5, top:'#1a0e38', mid:'#4a1e6a', bot:'#c84820' },
+  { h:  6, top:'#d44010', mid:'#ee7030', bot:'#ffc040' },
+  { h:  7, top:'#3a88d0', mid:'#60b0e8', bot:'#b8def5' },
+  { h:  9, top:'#1e70c8', mid:'#4aaae0', bot:'#90d0f4' },
+  { h: 12, top:'#0e58be', mid:'#2e90e0', bot:'#70c8f8' },
+  { h: 15, top:'#1e70c8', mid:'#4aaae0', bot:'#90d0f4' },
+  { h: 17, top:'#4888c0', mid:'#80b0d8', bot:'#c8dff0' },
+  { h: 18, top:'#c83010', mid:'#e86020', bot:'#faa030' },
+  { h: 19, top:'#701020', mid:'#b02820', bot:'#d86030' },
+  { h: 20, top:'#1a0830', mid:'#240a3c', bot:'#301444' },
+  { h: 21, top:'#060412', mid:'#0a0818', bot:'#0e0e20' },
+  { h: 24, top:'#020510', mid:'#06101e', bot:'#0e1a2a' },
 ];
 
 // ========== ITEMS / UPGRADES ==========
+// maintenance: coins per day
 const ITEMS = {
-  // ── אוטומציה ──
   autoWater: {
     name: 'השקייה אוטומטית',
     icon: '🚿',
@@ -1225,7 +1791,7 @@ const ITEMS = {
     maxLevel: 3,
     prices: [40, 80, 140],
     labels: ['בסיסי','מתקדם','מאסטר'],
-    // effect applied in gameTick
+    maintenance: [1, 2, 3],  // coins/day per level
   },
   autoFert: {
     name: 'מרסס דשן',
@@ -1235,6 +1801,7 @@ const ITEMS = {
     maxLevel: 2,
     prices: [55, 110],
     labels: ['בסיסי','מתקדם'],
+    maintenance: [1, 2],
   },
   autoHarvest: {
     name: 'רובוט קציר',
@@ -1244,8 +1811,8 @@ const ITEMS = {
     maxLevel: 1,
     prices: [120],
     labels: ['פעיל'],
+    maintenance: [3],
   },
-  // ── צמיחה ──
   greenhouse: {
     name: 'חממה',
     icon: '🏠',
@@ -1254,6 +1821,7 @@ const ITEMS = {
     maxLevel: 3,
     prices: [50, 100, 180],
     labels: ['קלה','בינונית','מלאה'],
+    maintenance: [2, 3, 5],
   },
   ledLamp: {
     name: 'תאורת LED',
@@ -1263,6 +1831,7 @@ const ITEMS = {
     maxLevel: 2,
     prices: [45, 90],
     labels: ['חלקי','מלא'],
+    maintenance: [2, 4],
   },
   growBoost: {
     name: 'תוסף גדילה',
@@ -1272,8 +1841,8 @@ const ITEMS = {
     maxLevel: 4,
     prices: [30, 60, 100, 160],
     labels: ['+20%','+40%','+60%','+80%'],
+    maintenance: null,
   },
-  // ── משאבים ──
   waterTank: {
     name: 'מיכל מים',
     icon: '🪣',
@@ -1282,6 +1851,7 @@ const ITEMS = {
     maxLevel: 3,
     prices: [25, 55, 100],
     labels: ['x1.5','x2','x3'],
+    maintenance: null,
   },
   rainCollector: {
     name: 'אוסף גשם',
@@ -1291,6 +1861,7 @@ const ITEMS = {
     maxLevel: 3,
     prices: [20, 45, 80],
     labels: ['x2','x3','x4'],
+    maintenance: null,
   },
   compostBin: {
     name: 'מיכל קומפוסט',
@@ -1300,8 +1871,8 @@ const ITEMS = {
     maxLevel: 3,
     prices: [35, 70, 120],
     labels: ['איטי','בינוני','מהיר'],
+    maintenance: null,
   },
-  // ── מיוחד ──
   beeHive: {
     name: 'כוורת',
     icon: '🍯',
@@ -1310,15 +1881,17 @@ const ITEMS = {
     maxLevel: 2,
     prices: [60, 120],
     labels: ['קטנה','גדולה'],
+    maintenance: [1, 1],
   },
   scarecrow: {
     name: 'דחליל',
     icon: '🎃',
-    desc: 'מגן על הצמחים, מוסיף +10% בריאות',
+    desc: 'מגן על הצמחים מציפורים וכנימות',
     category: 'מיוחד',
     maxLevel: 1,
     prices: [40],
     labels: ['פעיל'],
+    maintenance: null,
   },
   sunMirror: {
     name: 'מראת שמש',
@@ -1328,6 +1901,7 @@ const ITEMS = {
     maxLevel: 2,
     prices: [50, 100],
     labels: ['x1.3','x1.6'],
+    maintenance: null,
   },
   harvestBonus: {
     name: 'שוק פרמיום',
@@ -1337,6 +1911,7 @@ const ITEMS = {
     maxLevel: 3,
     prices: [35, 70, 130],
     labels: ['+20%','+40%','+60%'],
+    maintenance: null,
   },
 };
 
@@ -1348,21 +1923,53 @@ let state = {
   seeds: { tomato: 2, sunflower: 2, rose: 1, carrot: 2, mushroom: 1, herbs: 2 },
   plots: Array(18).fill(null),
   day: 1,
-  hour: 6, // 0-24
+  hour: 6,
   weather: 0,
   selectedTool: 'water',
   selectedSeed: null,
   tick: 0,
   gameTime: 0,
   selectedPlot: -1,
-  items: {},  // key -> level (1-based)
+  items: {},
   autoFertCounter: 0,
   compostCounter: 0,
-  spray: 0,          // spray charges remaining
-  pests: [],         // active pests: {plotIdx, type, damage, el}
-  birds: [],         // active birds (can eat pests)
+  spray: 0,
+  pests: [],
+  birds: [],
+  lastDay: 1,
 };
 
+// ========== MAINTENANCE ==========
+function getDailyMaintenance() {
+  let total = 0;
+  for (const [key, lvl] of Object.entries(state.items)) {
+    if (lvl > 0 && ITEMS[key] && ITEMS[key].maintenance) {
+      total += ITEMS[key].maintenance[lvl - 1];
+    }
+  }
+  return total;
+}
+
+function payMaintenance() {
+  const cost = getDailyMaintenance();
+  if (cost === 0) return;
+  if (state.coins >= cost) {
+    state.coins -= cost;
+    log(`🔧 תחזוקה יומית: -${cost}🪙`);
+  } else {
+    const paid = state.coins;
+    state.coins = 0;
+    log(`⚠️ לא הצלחת לשלם תחזוקה! (-${cost}🪙) חלק מהציוד עלול להפסיק לעבוד!`);
+    // Disable automation items temporarily if can't pay
+    if (state.coins < cost) {
+      // flash active items
+      document.getElementById('active-items-row')?.classList.add('maintenance-warning');
+      setTimeout(() => document.getElementById('active-items-row')?.classList.remove('maintenance-warning'), 2000);
+    }
+  }
+  updateHUD();
+  saveGame();
+}
 
 // ========== ITEM SHOP ==========
 function itemLevel(key) { return state.items[key] || 0; }
@@ -1387,13 +1994,34 @@ function buyItem(key) {
   updateHUD();
   renderShop();
   updateActiveItemsRow();
+  renderGardenItems();
   saveGame();
 
-  // Special on-buy effects
   if (key === 'waterTank') state.water = Math.min(getMaxWater(), state.water + 10);
 
-  log(item.icon + ' ' + item.name + ' שודרג לרמה ' + state.items[key] + '!');
+  const maint = item.maintenance ? item.maintenance[state.items[key]-1] : 0;
+  const maintStr = maint > 0 ? ` (תחזוקה: ${maint}🪙/יום)` : '';
+  log(item.icon + ' ' + item.name + ' שודרג לרמה ' + state.items[key] + '!' + maintStr);
   emitParticles({ x: window.innerWidth/2, y: window.innerHeight/2 }, '#ffd166', 14);
+}
+
+function buyConsumable(type) {
+  if (type === 'water') {
+    if (state.coins < 5) { log('אין מספיק מטבעות! 🪙'); return; }
+    state.coins -= 5; state.water = Math.min(getMaxWater(), state.water + 10);
+    log('קנית 10 מים 💧');
+  } else if (type === 'fert') {
+    if (state.coins < 8) { log('אין מספיק מטבעות! 🪙'); return; }
+    state.coins -= 8; state.fertilizer = Math.min(30, state.fertilizer + 5);
+    log('קנית 5 דשן 🌿');
+  } else if (type === 'spray') {
+    if (state.coins < 12) { log('אין מספיק מטבעות! 🪙'); return; }
+    state.coins -= 12; state.spray = Math.min(state.spray + 10, 30);
+    log('קנית תרסיס x10 🧴');
+  }
+  updateHUD();
+  renderShop();
+  saveGame();
 }
 
 function getMaxWater() {
@@ -1404,13 +2032,45 @@ function getMaxFert() { return 30; }
 
 function renderShop() {
   const el = document.getElementById('shop-content');
-  // Group by category
+  const dailyMaint = getDailyMaintenance();
+
+  let html = '';
+
+  // Consumables section first
+  html += '<div class="shop-category">🛒 ציוד מתכלה</div>';
+  html += '<div class="consumables-grid">';
+  const consumables = [
+    { type: 'water', icon: '💧', name: 'מים x10', price: 5, current: state.water, max: getMaxWater() },
+    { type: 'fert', icon: '🌿', name: 'דשן x5', price: 8, current: state.fertilizer, max: 30 },
+    { type: 'spray', icon: '🧴', name: 'תרסיס x10', price: 12, current: state.spray, max: 30 },
+  ];
+  for (const c of consumables) {
+    const cantAfford = state.coins < c.price;
+    html += `<div class="consumable-item">
+      <div class="consumable-icon">${c.icon}</div>
+      <div class="consumable-name">${c.name}</div>
+      <div style="font-size:10px;color:#888">${c.current}/${c.max}</div>
+      <div class="consumable-price">🪙 ${c.price}</div>
+      <button class="consumable-btn" onclick="buyConsumable('${c.type}')" ${cantAfford ? 'disabled' : ''}>
+        🛒 קנה
+      </button>
+    </div>`;
+  }
+  html += '</div>';
+
+  // Daily maintenance summary
+  if (dailyMaint > 0) {
+    html += `<div style="background:rgba(229,57,53,0.08);border:1px solid rgba(229,57,53,0.2);border-radius:10px;padding:8px 12px;margin-bottom:12px;font-size:11px;color:#c62828;display:flex;align-items:center;gap:6px;">
+      🔧 <strong>תחזוקה יומית: ${dailyMaint}🪙/יום</strong> — מנוכה אוטומטית בכל יום
+    </div>`;
+  }
+
+  // Upgrades grouped by category
   const cats = {};
   for (const [key, item] of Object.entries(ITEMS)) {
     if (!cats[item.category]) cats[item.category] = [];
     cats[item.category].push({ key, ...item });
   }
-  let html = '';
   for (const [cat, items] of Object.entries(cats)) {
     html += '<div class="shop-category">' + cat + '</div><div class="shop-grid">';
     for (const item of items) {
@@ -1420,12 +2080,15 @@ function renderShop() {
       const canAfford = price !== null && state.coins >= price;
       const ownedClass = lvl > 0 ? (isMax ? 'maxed' : 'owned') : '';
       const cantClass = !isMax && !canAfford ? 'cant-afford' : '';
+      const nextMaint = (!isMax && item.maintenance) ? item.maintenance[lvl] || item.maintenance[item.maintenance.length-1] : 0;
+      const currMaint = (lvl > 0 && item.maintenance) ? item.maintenance[lvl-1] : 0;
       html += `<div class="shop-item ${ownedClass} ${cantClass}">
         <div class="shop-item-icon">${item.icon}</div>
         <div class="shop-item-name">${item.name}</div>
         <div class="shop-item-desc">${item.desc}</div>
         <div class="shop-item-level">${lvl > 0 ? 'רמה ' + lvl + ' — ' + item.labels[lvl-1] : 'לא נרכש'}</div>
-        ${!isMax ? '<div class="shop-item-price">🪙 ' + price + '</div>' : ''}
+        ${currMaint > 0 ? '<div class="shop-item-maintenance">🔧 ' + currMaint + '🪙/יום</div>' : ''}
+        ${!isMax ? '<div class="shop-item-price">🪙 ' + price + (nextMaint > 0 ? ' + ' + nextMaint + '🪙/יום' : '') + '</div>' : ''}
         <button class="shop-buy-btn ${isMax ? 'maxed-btn' : ''}"
           onclick="buyItem('${item.key}')"
           ${isMax ? '' : (!canAfford ? 'disabled' : '')}>
@@ -1450,75 +2113,319 @@ function updateActiveItemsRow() {
   row.innerHTML = html;
 }
 
+// ========== PHYSICAL GARDEN ITEMS ==========
+
+// Build a rich HTML tooltip for a world item
+function makeTooltip(key, extraLines = []) {
+  const item = ITEMS[key];
+  if (!item) return '';
+  const lvl = itemLevel(key);
+  const lvlLabel = lvl > 0 ? item.labels[lvl - 1] : '';
+  const maint = (item.maintenance && lvl > 0) ? item.maintenance[lvl - 1] : 0;
+  return `<div class="wi-tooltip">
+    <span class="wi-tooltip-icon">${item.icon}</span>
+    <span class="wi-tooltip-name">${item.name}</span>
+    <span class="wi-tooltip-level">רמה ${lvl} — ${lvlLabel}</span>
+    <span class="wi-tooltip-desc">${item.desc}</span>
+    ${extraLines.map(l => `<span class="wi-tooltip-desc" style="color:#87ceeb">${l}</span>`).join('')}
+    ${maint > 0 ? `<span class="wi-tooltip-maint">🔧 תחזוקה: ${maint}🪙 ליום</span>` : ''}
+  </div>`;
+}
+
+function renderGardenItems() {
+  const layer = document.getElementById('items-world');
+  if (!layer) return;
+  layer.innerHTML = '';
+
+  const gardenEl = document.getElementById('garden-area');
+  if (!gardenEl) return;
+  const gr = gardenEl.getBoundingClientRect();
+  const groundEl = document.getElementById('ground');
+  const groundTop = groundEl.getBoundingClientRect().top;
+  const gardenLeft = gr.left;
+  const gardenTop = gr.top - groundTop;
+  const gardenW = gr.width;
+  const gardenH = gr.height;
+
+  // Helper — positions are {left OR right (%), bottom (px), zIndex?}
+  // bobDelay staggers the floating animation so items don't all move in sync
+  let bobCounter = 0;
+  const addItem = (key, innerHtml, pos, extraTooltipLines = []) => {
+    const div = document.createElement('div');
+    div.className = 'world-item world-item-bob wi-' + key;
+    div.style.animationDelay = (bobCounter++ * 0.4) + 's';
+    div.style.position = 'absolute';
+    if (pos.left  !== undefined) div.style.left   = typeof pos.left   === 'number' ? pos.left   + 'px' : pos.left;
+    if (pos.right !== undefined) div.style.right  = typeof pos.right  === 'number' ? pos.right  + 'px' : pos.right;
+    if (pos.bottom !== undefined) div.style.bottom = pos.bottom + 'px';
+    if (pos.top    !== undefined) div.style.top    = pos.top    + 'px';
+    if (pos.zIndex) div.style.zIndex = pos.zIndex;
+    div.innerHTML = innerHtml + makeTooltip(key, extraTooltipLines);
+    layer.appendChild(div);
+    return div;
+  };
+
+  // ── LEFT EDGE: Water Tank ──────────────────────── ~3%
+  const lvlWaterTank = itemLevel('waterTank');
+  if (lvlWaterTank > 0) {
+    const fillPct = Math.round(state.water / getMaxWater() * 100);
+    const tankH = 36 + lvlWaterTank * 12;
+    addItem('waterTank', `
+      <div class="tank-cap"></div>
+      <div class="tank-body" style="height:${tankH}px">
+        <div class="tank-level" style="height:${fillPct}%"></div>
+      </div>
+      <div class="tank-pipe"></div>
+      <div class="world-item-label">💧 ${state.water}/${getMaxWater()}</div>
+    `, { left: '3%', bottom: 8 },
+    [`מכיל: ${state.water}/${getMaxWater()} יחידות מים`]);
+  }
+
+  // ── LEFT-NEAR: Rain Collector ─────────────────── ~11%
+  const lvlRainCollector = itemLevel('rainCollector');
+  if (lvlRainCollector > 0) {
+    addItem('rainCollector', `
+      <div class="funnel" style="width:${40+lvlRainCollector*4}px"></div>
+      <div class="barrel" style="height:${30+lvlRainCollector*9}px;width:${30+lvlRainCollector*4}px">
+        <div class="barrel-ring" style="top:8px"></div>
+        <div class="barrel-ring" style="top:22px"></div>
+      </div>
+      <div class="world-item-label">☔ x${lvlRainCollector+1}</div>
+    `, { left: '11%', bottom: 8 },
+    [`אוסף מים פסיבי בשיעור x${lvlRainCollector+1}`]);
+  }
+
+  // ── LEFT-CENTER: Auto Fertilizer ─────────────── ~21%
+  const lvlAutoFert = itemLevel('autoFert');
+  if (lvlAutoFert > 0) {
+    addItem('autoFert', `
+      <div class="fert-machine" style="width:${28+lvlAutoFert*7}px;height:${36+lvlAutoFert*7}px"></div>
+      <div class="fert-nozzle"></div>
+      <div class="world-item-label">🌿 דשן אוטו׳</div>
+    `, { left: '21%', bottom: 10 },
+    [`מדשן אוטומטית כל ${lvlAutoFert === 1 ? '8' : '4'} מחזורים`]);
+  }
+
+  // ── CENTER-LEFT: Auto Harvest Robot ──────────── ~31%
+  const lvlAutoHarvest = itemLevel('autoHarvest');
+  if (lvlAutoHarvest > 0) {
+    addItem('autoHarvest', `
+      <div class="robot-head"></div>
+      <div class="robot-body">
+        <div class="robot-arm left"></div>
+        <div class="robot-arm right"></div>
+      </div>
+      <div class="world-item-label">🤖 קוצר</div>
+    `, { left: '31%', bottom: 10, zIndex: 35 },
+    ['קוצר אוטומטית צמחים בשלים']);
+  }
+
+  // ── CENTER: Scarecrow ─────────────────────────── ~50% (between garden cols)
+  const lvlScarecrow = itemLevel('scarecrow');
+  if (lvlScarecrow > 0) {
+    addItem('scarecrow', `
+      <div class="sc-body">
+        <div class="sc-hat"></div>
+        <div class="sc-head"></div>
+        <div class="sc-arms"></div>
+        <div class="sc-shirt"></div>
+        <div class="sc-post"></div>
+      </div>
+      <div class="world-item-label">🎃 דחליל</div>
+    `, { left: '50%', bottom: 10, zIndex: 36 },
+    ['מגן מציפורים שפוגעות בצמחים']);
+  }
+
+  // ── CENTER-RIGHT: Grow Boost vials ───────────── ~61%
+  const lvlGrowBoost = itemLevel('growBoost');
+  if (lvlGrowBoost > 0) {
+    const vialColors = ['#e91e63','#9c27b0','#2196f3','#4caf50'].slice(0, lvlGrowBoost);
+    const vials = vialColors.map((c, i) => {
+      const h = 22 + i * 5;
+      return `<div class="boost-vial" style="height:${h}px;background:${c};color:${c}"></div>`;
+    }).join('');
+    addItem('growBoost', `
+      <div style="display:flex;gap:3px;align-items:flex-end">${vials}</div>
+      <div class="world-item-label">⚗️ +${lvlGrowBoost*20}%</div>
+    `, { left: '61%', bottom: 12 },
+    [`מאיץ גדילה ב-${lvlGrowBoost*20}% לכל הצמחים`]);
+  }
+
+  // ── RIGHT-CENTER: Harvest Bonus stall ────────── ~72%
+  const lvlHarvestBonus = itemLevel('harvestBonus');
+  if (lvlHarvestBonus > 0) {
+    addItem('harvestBonus', `
+      <div class="stall-sign">💰 +${lvlHarvestBonus*20}%<br>שוק פרמיום</div>
+      <div class="stall-pole"></div>
+    `, { left: '72%', bottom: 8 },
+    [`מגדיל רווח מקציר ב-${lvlHarvestBonus*20}%`]);
+  }
+
+  // ── RIGHT: Sun Mirror ────────────────────────── ~80%
+  const lvlSunMirror = itemLevel('sunMirror');
+  if (lvlSunMirror > 0) {
+    addItem('sunMirror', `
+      <div class="mirror-frame" style="width:${22+lvlSunMirror*7}px;height:${36+lvlSunMirror*9}px">
+        <div class="mirror-reflection"></div>
+      </div>
+      <div class="mirror-post" style="height:${16+lvlSunMirror*4}px"></div>
+      <div class="world-item-label">🔆 מראה</div>
+    `, { left: '80%', bottom: 18 },
+    [`מגביר אור לצמחים אוהבי-שמש x${lvlSunMirror === 1 ? '1.3' : '1.6'}`]);
+  }
+
+  // ── FAR RIGHT: Compost Bin ────────────────────── ~88%
+  const lvlCompost = itemLevel('compostBin');
+  if (lvlCompost > 0) {
+    addItem('compostBin', `
+      <div class="bin-lid"></div>
+      <div class="bin" style="height:${34+lvlCompost*7}px"></div>
+      <div class="world-item-label">♻️ קומפוסט</div>
+    `, { left: '88%', bottom: 8 },
+    [`מייצר דשן ${['לאט','בינוני','מהיר'][lvlCompost-1]} אוטומטית`]);
+  }
+
+  // ── RIGHT EDGE: Beehive ───────────────────────── ~95%
+  const lvlBeeHive = itemLevel('beeHive');
+  if (lvlBeeHive > 0) {
+    addItem('beeHive', `
+      <div class="hive-body" style="width:${36+lvlBeeHive*7}px;height:${32+lvlBeeHive*7}px">
+        <div class="hive-hole"></div>
+        <div class="bee-float" style="font-size:${10+lvlBeeHive*3}px">🐝</div>
+      </div>
+      <div class="hive-post"></div>
+      <div class="world-item-label">🍯 כוורת</div>
+    `, { left: '94%', bottom: 12 },
+    [`שולח ${lvlBeeHive === 1 ? 'דבורה אחת' : 'שתי דבורות'} נוספות לסייע לצמחים`]);
+  }
+
+  // ── SPANNING: Greenhouse overlay ─────────────────
+  const lvlGreenhouse = itemLevel('greenhouse');
+  if (lvlGreenhouse > 0) {
+    const opacity = [0.35, 0.55, 0.75][lvlGreenhouse - 1];
+    const borderW = [2, 3, 4][lvlGreenhouse - 1];
+    const pad = 14;
+    const maint = ITEMS.greenhouse.maintenance[lvlGreenhouse - 1];
+    const div = document.createElement('div');
+    div.className = 'wi-greenhouse world-item';
+    div.style.cssText = `position:absolute;top:${gardenTop-pad}px;left:${gardenLeft-pad}px;z-index:18;cursor:help;`;
+    div.innerHTML = `
+      <div class="greenhouse-glass" style="width:${gardenW+pad*2}px;height:${gardenH+pad*2}px;border-width:${borderW}px;border-color:rgba(100,220,180,${opacity});background:rgba(144,238,220,${opacity*0.08});">
+        <div class="world-item-label" style="position:absolute;top:-20px;left:50%;transform:translateX(-50%)">🏠 חממה רמה ${lvlGreenhouse} — ${ITEMS.greenhouse.labels[lvlGreenhouse-1]}</div>
+      </div>
+      <div class="wi-tooltip" style="bottom:auto;top:calc(100% + 10px);transform:translateX(-50%);">
+        <span class="wi-tooltip-icon">🏠</span>
+        <span class="wi-tooltip-name">חממה</span>
+        <span class="wi-tooltip-level">רמה ${lvlGreenhouse} — ${ITEMS.greenhouse.labels[lvlGreenhouse-1]}</span>
+        <span class="wi-tooltip-desc">${ITEMS.greenhouse.desc}</span>
+        <span class="wi-tooltip-maint">🔧 תחזוקה: ${maint}🪙 ליום</span>
+      </div>`;
+    // Fix tooltip arrow for bottom-positioned tooltip
+    layer.appendChild(div);
+  }
+
+  // ── SPANNING: LED lamp bar ────────────────────────
+  const lvlLed = itemLevel('ledLamp');
+  if (lvlLed > 0) {
+    const maint = ITEMS.ledLamp.maintenance[lvlLed - 1];
+    const div = document.createElement('div');
+    div.className = 'wi-ledLamp world-item';
+    div.style.cssText = `position:absolute;top:${gardenTop+2}px;left:${gardenLeft}px;width:${gardenW}px;z-index:22;cursor:help;`;
+    div.innerHTML = `
+      <div class="led-bar" style="box-shadow:0 0 ${lvlLed===1?'8px 3px':'16px 6px'} rgba(186,104,200,${0.45+lvlLed*0.2})"></div>
+      <div class="led-glow" style="height:${22+lvlLed*16}px;background:linear-gradient(180deg,rgba(186,104,200,${0.12+lvlLed*0.06}),transparent)"></div>
+      <div class="world-item-label" style="margin:3px auto 0;display:block;text-align:center">💡 LED רמה ${lvlLed}</div>
+      <div class="wi-tooltip">
+        <span class="wi-tooltip-icon">💡</span>
+        <span class="wi-tooltip-name">תאורת LED</span>
+        <span class="wi-tooltip-level">רמה ${lvlLed} — ${ITEMS.ledLamp.labels[lvlLed-1]}</span>
+        <span class="wi-tooltip-desc">${ITEMS.ledLamp.desc}</span>
+        <span class="wi-tooltip-desc" style="color:#87ceeb">גדילת לילה: ${lvlLed===1?'60%':'100%'} מהרגיל</span>
+        <span class="wi-tooltip-maint">🔧 תחזוקה: ${maint}🪙 ליום</span>
+      </div>`;
+    layer.appendChild(div);
+  }
+
+  // ── SPANNING: Auto Watering pipe ─────────────────
+  const lvlAutoWater = itemLevel('autoWater');
+  if (lvlAutoWater > 0) {
+    const maint = ITEMS.autoWater.maintenance[lvlAutoWater - 1];
+    const numSprinklers = [3, 5, 8][lvlAutoWater - 1];
+    let sprHtml = '';
+    for (let i = 0; i < numSprinklers; i++) {
+      const pos = Math.round((i + 0.5) / numSprinklers * 100);
+      sprHtml += `<div class="sprinkler-head active" style="left:${pos}%;transform:translateX(-50%)"></div>`;
+    }
+    const div = document.createElement('div');
+    div.className = 'wi-autoWater world-item';
+    div.style.cssText = `position:absolute;top:${gardenTop+22}px;left:${gardenLeft}px;width:${gardenW}px;z-index:21;cursor:help;`;
+    div.innerHTML = `
+      <div class="water-pipe">${sprHtml}</div>
+      <div class="world-item-label" style="margin:4px auto 0;display:block;text-align:center">🚿 השקייה אוטו׳ רמה ${lvlAutoWater}</div>
+      <div class="wi-tooltip">
+        <span class="wi-tooltip-icon">🚿</span>
+        <span class="wi-tooltip-name">השקייה אוטומטית</span>
+        <span class="wi-tooltip-level">רמה ${lvlAutoWater} — ${ITEMS.autoWater.labels[lvlAutoWater-1]}</span>
+        <span class="wi-tooltip-desc">${ITEMS.autoWater.desc}</span>
+        <span class="wi-tooltip-desc" style="color:#87ceeb">${numSprinklers} ראשי ממטרה פעילים</span>
+        <span class="wi-tooltip-maint">🔧 תחזוקה: ${maint}🪙 ליום</span>
+      </div>`;
+    layer.appendChild(div);
+  }
+}
+
 // ========== SAVE / LOAD ==========
 const SAVE_KEY = 'garden_of_wonders_save';
 
 function saveGame() {
   const toSave = {
-    coins:      state.coins,
-    water:      state.water,
-    fertilizer: state.fertilizer,
-    seeds:      state.seeds,
-    plots:      state.plots,
-    day:        state.day,
-    hour:       state.hour,
-    weather:    state.weather,
-    tick:       state.tick,
-    gameTime:   state.gameTime,
-    items:      state.items,
-    spray:      state.spray,
-    savedAt:    Date.now(),
+    coins: state.coins, water: state.water, fertilizer: state.fertilizer,
+    seeds: state.seeds, plots: state.plots, day: state.day, hour: state.hour,
+    weather: state.weather, tick: state.tick, gameTime: state.gameTime,
+    items: state.items, spray: state.spray, lastDay: state.lastDay, savedAt: Date.now(),
   };
   const json = JSON.stringify(toSave);
-  try { localStorage.setItem(SAVE_KEY, json); } catch(e) { console.warn('[SAVE] localStorage failed:', e); }
+  try { localStorage.setItem(SAVE_KEY, json); } catch(e) {}
   try {
     const exp = new Date(Date.now() + 30*24*60*60*1000).toUTCString();
     document.cookie = SAVE_KEY + '=' + encodeURIComponent(json) + '; expires=' + exp + '; path=/; SameSite=Lax';
-  } catch(e) { console.warn('[SAVE] cookie failed:', e); }
-  console.log('[SAVE] h=' + state.hour.toFixed(2) + ' day=' + state.day + ' coins=' + state.coins);
+  } catch(e) {}
 }
 
 function loadGame() {
   let json = null;
-  // Try localStorage first
   try { json = localStorage.getItem(SAVE_KEY); } catch(e) {}
-  // Fallback to cookie
   if (!json) {
     try {
       const match = document.cookie.split('; ').find(r => r.startsWith(SAVE_KEY + '='));
       if (match) json = decodeURIComponent(match.split('=').slice(1).join('='));
     } catch(e) {}
   }
-  if (!json) { console.log('[LOAD] no save found, starting fresh'); return false; }
+  if (!json) return false;
   try {
     const data = JSON.parse(json);
-    state.coins      = data.coins      ?? state.coins;
-    state.water      = data.water      ?? state.water;
+    state.coins = data.coins ?? state.coins;
+    state.water = data.water ?? state.water;
     state.fertilizer = data.fertilizer ?? state.fertilizer;
-    state.seeds      = data.seeds      ?? state.seeds;
-    state.plots      = data.plots      ?? state.plots;
-    state.day        = data.day        ?? state.day;
-    state.hour       = data.hour       ?? state.hour;
-    state.weather    = data.weather    ?? state.weather;
-    state.tick       = data.tick       ?? state.tick;
-    state.gameTime   = data.gameTime   ?? state.gameTime;
-    state.items      = data.items      ?? state.items;
-    state.spray      = data.spray      ?? state.spray;
-    const ago = data.savedAt ? Math.round((Date.now() - data.savedAt) / 1000) : 0;
-    console.log('[LOAD] loaded save from ' + ago + 's ago. h=' + state.hour.toFixed(2) + ' day=' + state.day + ' coins=' + state.coins);
+    state.seeds = data.seeds ?? state.seeds;
+    state.plots = data.plots ?? state.plots;
+    state.day = data.day ?? state.day;
+    state.hour = data.hour ?? state.hour;
+    state.weather = data.weather ?? state.weather;
+    state.tick = data.tick ?? state.tick;
+    state.gameTime = data.gameTime ?? state.gameTime;
+    state.items = data.items ?? state.items;
+    state.spray = data.spray ?? state.spray;
+    state.lastDay = data.lastDay ?? state.day;
     return true;
-  } catch(e) {
-    console.warn('[LOAD] failed to parse save:', e);
-    return false;
-  }
+  } catch(e) { return false; }
 }
 
-// Auto-save every 10 seconds
 setInterval(saveGame, 10000);
 
 // ========== INIT ==========
 function init() {
-  const hasSave = loadGame(); // load before building UI
+  const hasSave = loadGame();
   buildGarden();
   buildSeedShop();
   buildFence();
@@ -1527,23 +2434,22 @@ function init() {
   updateAllPlots();
   updateHUD();
   updateSeedCounts();
-  // Restore weather badge
   const w = WEATHERS[state.weather];
   document.getElementById('weather-icon').textContent = w.icon;
   document.getElementById('weather-name').textContent = w.name;
   document.getElementById('day-num').textContent = state.day;
+  renderGardenItems();
   gameLoop();
   updateSkyColors();
   setInterval(gameTick, 4000);
   setInterval(() => {
-    // beeHive doubles bee frequency
     spawnVisitor();
     if (itemLevel('beeHive') >= 1) spawnVisitor();
     if (itemLevel('beeHive') >= 2) spawnVisitor();
   }, 12000);
   setInterval(changeWeather, 60000);
-  setInterval(spawnPest, 25000);   // pest every 25s
-  setInterval(spawnBird, 18000);   // bird every 18s
+  setInterval(spawnPest, 25000);
+  setInterval(spawnBird, 18000);
   document.addEventListener('click', closePopup);
   updateActiveItemsRow();
   if (hasSave) {
@@ -1598,14 +2504,12 @@ function buildFence() {
   const fence = document.getElementById('fence');
   fence.innerHTML = '';
   const w = window.innerWidth;
-  // posts
   for (let x = 20; x < w; x += 40) {
     const post = document.createElement('div');
     post.className = 'fence-post';
     post.style.cssText = `left:${x}px; top:0; height:45px;`;
     fence.appendChild(post);
   }
-  // top rail
   const rail1 = document.createElement('div');
   rail1.className = 'fence-rail';
   rail1.style.cssText = `left:0; right:0; top:8px;`;
@@ -1642,7 +2546,6 @@ function generateStars() {
     `;
     stars.appendChild(s);
   }
-  // Init clouds based on starting weather
   const initClouds = WEATHERS[state.weather].cloudCount;
   for (let i = 0; i < initClouds; i++) {
     spawnCloud(Math.random() * 90);
@@ -1708,35 +2611,37 @@ function gameLoop(ts = 0) {
   const dt = (ts - lastTime) / 1000;
   lastTime = ts;
   state.gameTime += dt;
-  
-  // Update day cycle (1 real minute = 1 game day)
   state.hour = (state.hour + dt * 0.4) % 24;
-  if (state.hour >= 24) { state.hour = 0; state.day++; document.getElementById('day-num').textContent = state.day; }
   
-  updateCelestial(); // only position — runs every frame
+  // Day change detection
+  const newDay = Math.floor(state.gameTime / (60 / 0.4)) + 1;
+  if (state.day !== state.lastDay) {
+    onNewDay();
+  }
+  
+  updateCelestial();
   requestAnimationFrame(gameLoop);
 }
 
-// Sky colors update every 2s so CSS transition has time to interpolate
+function onNewDay() {
+  state.lastDay = state.day;
+  payMaintenance();
+  document.getElementById('day-num').textContent = state.day;
+  renderGardenItems(); // refresh water tank level display
+}
+
 setInterval(updateSkyColors, 500);
 
-// ---- Color utilities: always work in [r,g,b] arrays ----
 function hexToArr(hex) {
   return [parseInt(hex.slice(1,3),16), parseInt(hex.slice(3,5),16), parseInt(hex.slice(5,7),16)];
 }
 function lerpArr(a, b, t) {
-  return [
-    Math.round(a[0] + (b[0]-a[0])*t),
-    Math.round(a[1] + (b[1]-a[1])*t),
-    Math.round(a[2] + (b[2]-a[2])*t)
-  ];
+  return [Math.round(a[0]+(b[0]-a[0])*t), Math.round(a[1]+(b[1]-a[1])*t), Math.round(a[2]+(b[2]-a[2])*t)];
 }
 function arrToCss(c) { return `rgb(${c[0]},${c[1]},${c[2]})`; }
-// lerpColor: both inputs must be '#rrggbb' hex strings
 function lerpColor(a, b, t) { return arrToCss(lerpArr(hexToArr(a), hexToArr(b), t)); }
 
 function getSkyPalette(hour) {
-  // Returns raw [r,g,b] arrays (not css strings) so we can lerp further
   let lo = SKY_PALETTE[0], hi = SKY_PALETTE[SKY_PALETTE.length-1];
   for (let i = 0; i < SKY_PALETTE.length-1; i++) {
     if (hour >= SKY_PALETTE[i].h && hour < SKY_PALETTE[i+1].h) {
@@ -1761,8 +2666,6 @@ function updateSkyColors() {
   const sky = document.getElementById('sky');
   const stars = document.getElementById('stars');
   const w = WEATHERS[state.weather];
-
-  // Base palette (arrays), then blend 25% toward weather hex
   const base = getSkyPalette(h);
   const topC = arrToCss(lerpArr(base.top, hexToArr(w.skyTop), 0.25));
   const midC = arrToCss(lerpArr(base.mid, hexToArr(w.skyMid), 0.25));
@@ -1771,30 +2674,15 @@ function updateSkyColors() {
   if (grad !== _lastSkyGrad) {
     sky.style.background = grad;
     _lastSkyGrad = grad;
-    console.log(`[SKY] h=${h.toFixed(2)} top=${topC} mid=${midC} bot=${botC}`);
   }
-
-  // Stars: 0 during day (h 7..18), 1 at night, fade at dawn/dusk
   let starOpacity;
-  if (h >= 7 && h < 18)      starOpacity = 0;
-  else if (h >= 18 && h < 19) starOpacity = (h - 18);       // dusk: fade in over 1hr
-  else if (h >= 19)            starOpacity = 1;              // night
-  else if (h >= 6 && h < 7)   starOpacity = 1 - (h - 6);   // dawn: fade out over 1hr
-  else                         starOpacity = 1;              // before 6am = night
+  if (h >= 7 && h < 18) starOpacity = 0;
+  else if (h >= 18 && h < 19) starOpacity = (h - 18);
+  else if (h >= 19) starOpacity = 1;
+  else if (h >= 6 && h < 7) starOpacity = 1 - (h - 6);
+  else starOpacity = 1;
   const starOp = parseFloat(starOpacity.toFixed(2));
-  if (starOp !== _lastStarOp) {
-    stars.style.opacity = starOp;
-    _lastStarOp = starOp;
-  }
-
-  // Log day/night transitions
-  const isDay = (h >= 6 && h < 20);
-  if (_lastDayState !== null && isDay !== _lastDayState) {
-    console.log(`[DAY/NIGHT] h=${h.toFixed(2)} → ${isDay ? '🌅 יום' : '🌙 לילה'}`);
-  }
-  _lastDayState = isDay;
-
-  // Fog overlay
+  if (starOp !== _lastStarOp) { stars.style.opacity = starOp; _lastStarOp = starOp; }
   if (!fogEl) {
     fogEl = document.createElement('div');
     fogEl.id = 'fog-overlay';
@@ -1802,8 +2690,6 @@ function updateSkyColors() {
     sky.appendChild(fogEl);
   }
   fogEl.style.background = w.fogColor || 'transparent';
-
-  // Cloud color
   const darkness = w.cloudOpacity > 0.9 ? '75,82,90' : w.cloudOpacity > 0.6 ? '185,192,200' : '255,255,255';
   document.querySelectorAll('.cloud').forEach(c => {
     c.style.background = `rgb(${darkness})`;
@@ -1815,40 +2701,24 @@ function updateCelestial() {
   const h = state.hour;
   const cel = document.getElementById('celestial');
   const W = window.innerWidth;
-
-  // Day: 6:00 -> 20:00  |  Night: 20:00 -> 6:00 (next day, 10 hours)
   const isDay = (h >= 6 && h < 20);
-  if (cel.className !== (isDay ? 'sun' : 'moon')) {
-    console.log(`[CELESTIAL] h=${h.toFixed(2)} → switching to ${isDay ? '☀️ שמש' : '🌙 ירח'}`);
-  }
   cel.className = isDay ? 'sun' : 'moon';
-
-  // arcT: 0 = just risen (left/east), 1 = just set (right/west)
   let arcT;
-  if (isDay) {
-    arcT = (h - 6) / 14;        // 0 at 6am, 1 at 8pm
-  } else {
-    // night spans 20->24->0->6, total 10 hours
+  if (isDay) { arcT = (h - 6) / 14; }
+  else {
     const nh = h >= 20 ? (h - 20) : (h + 4);
-    arcT = nh / 10;              // 0 at 8pm, 1 at 6am
+    arcT = nh / 10;
   }
-
   const celSize = isDay ? 58 : 44;
-  // X: left (east) at arcT=0, right (west) at arcT=1
   const celX = arcT * (W - celSize - 60) + 30;
-  // Y: high arc — sin peaks at arcT=0.5 (noon / midnight)
   const peak = Math.sin(Math.PI * arcT);
   const skyH = window.innerHeight * 0.55;
-  // At horizon (arcT=0 or 1): near bottom of sky. At peak: near top.
   const topPx = skyH * 0.88 - peak * skyH * 0.78;
-
   cel.style.left = celX + 'px';
   cel.style.top = Math.max(6, topPx) + 'px';
   cel.style.width = cel.style.height = celSize + 'px';
-
   if (isDay) {
-    // Color: orange at horizon, white-yellow at noon
-    const noon = Math.sin(Math.PI * arcT); // 0 at edges, 1 at noon
+    const noon = Math.sin(Math.PI * arcT);
     const g = Math.round(150 + noon * 95);
     const b = Math.round(noon * 50);
     cel.style.background = `radial-gradient(circle at 38% 36%, #fffde0, rgb(255,${g},${b}) 55%, rgb(230,${Math.round(g*0.72)},0))`;
@@ -1868,7 +2738,14 @@ function gameTick() {
   
   const weather = WEATHERS[state.weather];
   
-  // Rain/storm: waterMult===0 means precipitation
+  // Day tracking via tick
+  if (state.tick % 15 === 0) {
+    state.day = Math.floor(state.tick / 15) + 1;
+    if (state.day !== state.lastDay) {
+      onNewDay();
+    }
+  }
+  
   if (weather.waterMult === 0) {
     const rainGain = 2 * (1 + itemLevel('rainCollector'));
     addWater(rainGain);
@@ -1878,8 +2755,8 @@ function gameTick() {
     });
   }
 
-  // Auto-watering item
   const autoWaterLvl = itemLevel('autoWater');
+  const canAffordMaint = state.coins > 0 || getDailyMaintenance() === 0;
   if (autoWaterLvl > 0 && weather.waterMult !== 0) {
     const waterPerPlant = [0.5, 1.0, 1.5][autoWaterLvl - 1];
     let used = 0;
@@ -1893,7 +2770,6 @@ function gameTick() {
     state.water = Math.max(0, state.water - Math.ceil(used));
   }
 
-  // Auto-fertilizer item (every N ticks)
   const autoFertLvl = itemLevel('autoFert');
   if (autoFertLvl > 0) {
     state.autoFertCounter = (state.autoFertCounter || 0) + 1;
@@ -1907,7 +2783,6 @@ function gameTick() {
     }
   }
 
-  // Compost bin — generates fertilizer passively
   const compostLvl = itemLevel('compostBin');
   if (compostLvl > 0) {
     state.compostCounter = (state.compostCounter || 0) + 1;
@@ -1918,43 +2793,36 @@ function gameTick() {
     }
   }
 
-  // Passive water trickle (enhanced by rainCollector)
   if (state.tick % 5 === 0) {
     const passiveGain = 1 + itemLevel('rainCollector');
     state.water = Math.min(getMaxWater(), state.water + passiveGain);
   }
   
-  // Grow all plants
   state.plots.forEach((plant, i) => {
     if (!plant) return;
     if (plant.stage >= 4) return;
     
-    // During rain/storm, plants are infinitely watered — no wilting possible
     const isRaining = (weather.waterMult === 0);
     if (isRaining) {
-      plant.health = Math.min(100, plant.health + 8); // rain heals wilted plants too
+      plant.health = Math.min(100, plant.health + 8);
     } else if (plant.watered <= 0) {
       plant.health = Math.max(0, plant.health - 12);
     } else {
       plant.health = Math.min(100, plant.health + 5);
     }
     
-    // Time-of-day factor
     const h = state.hour;
     let timeMult = 1.0;
-    if (h >= 10 && h <= 16) timeMult = 1.3;      // peak sun hours best for growth
-    else if (h >= 7 && h < 10) timeMult = 0.9;   // morning
-    else if (h >= 16 && h < 19) timeMult = 0.8;  // late afternoon
-    else if (h >= 19 || h < 6) timeMult = 0.2;   // night - almost no growth
-    else timeMult = 0.5;                           // dawn/dusk
+    if (h >= 10 && h <= 16) timeMult = 1.3;
+    else if (h >= 7 && h < 10) timeMult = 0.9;
+    else if (h >= 16 && h < 19) timeMult = 0.8;
+    else if (h >= 19 || h < 6) timeMult = 0.2;
+    else timeMult = 0.5;
     
     const pDef = PLANTS[plant.type];
-    // Sun-loving plants suffer at night even more
     if (pDef.sunNeed && (h < 7 || h >= 19)) timeMult *= 0.3;
-    // Hot dry weather hurts if not watered
     if (weather.name === 'חם ויבש' && plant.watered <= 0) plant.health = Math.max(0, plant.health - 8);
     
-    // Greenhouse: reduces weather penalty, buffers bad conditions
     const ghLvl = itemLevel('greenhouse');
     let effectiveGrowMult = weather.growMult;
     if (ghLvl > 0) {
@@ -1962,21 +2830,18 @@ function gameTick() {
       effectiveGrowMult = Math.min(1.3, effectiveGrowMult + ghBonus);
     }
 
-    // LED lamp: night penalty reduced
     const ledLvl = itemLevel('ledLamp');
     let effectiveTimeMult = timeMult;
     if (ledLvl > 0 && (h < 7 || h >= 19)) {
       effectiveTimeMult = ledLvl === 1 ? Math.max(timeMult, 0.6) : Math.max(timeMult, 1.0);
     }
 
-    // Sun mirror: boosts sun-loving plants during day
     const mirrorLvl = itemLevel('sunMirror');
     let sunBonus = 1.0;
     if (mirrorLvl > 0 && pDef.sunNeed && h >= 7 && h < 19) {
       sunBonus = mirrorLvl === 1 ? 1.3 : 1.6;
     }
 
-    // growBoost item: global multiplier
     const growBoostLvl = itemLevel('growBoost');
     const growBoostMult = 1 + (growBoostLvl * 0.2);
 
@@ -1984,7 +2849,6 @@ function gameTick() {
     if (plant.fertilized) { growRate *= 1.6; plant.fertilized = false; }
     if (plant.beeBoost) { growRate *= 1.4; plant.beeBoost = false; }
 
-    // Scarecrow: passive health bonus
     if (hasItem('scarecrow') && plant.health < 100) {
       plant.health = Math.min(100, plant.health + 2);
     }
@@ -2004,10 +2868,7 @@ function gameTick() {
       saveGame();
     }
   });
-  
 
-  
-  // Auto-harvest robot
   if (hasItem('autoHarvest')) {
     state.plots.forEach((plant, i) => {
       if (plant && plant.stage >= 4) {
@@ -2020,12 +2881,17 @@ function gameTick() {
     });
   }
 
-  // harvestBonus only affects manual harvest too (applied in harvestPlant)
-  // Tick pest damage every gameTick
   tickPests();
-
   updateAllPlots();
   updateHUD();
+  
+  // Update water tank display every few ticks
+  if (state.tick % 3 === 0) {
+    const tankLabel = document.querySelector('.wi-waterTank .world-item-label');
+    if (tankLabel) tankLabel.textContent = `💧 ${state.water}/${getMaxWater()}`;
+    const tankLevel = document.querySelector('.wi-waterTank .tank-level');
+    if (tankLevel) tankLevel.style.height = Math.round(state.water / getMaxWater() * 100) + '%';
+  }
 }
 
 function spawnRain() {
@@ -2069,24 +2935,19 @@ function handlePlotClick(idx, e) {
   const plot = state.plots[idx];
   
   if (!plot && state.selectedSeed) {
-    // Plant seed
     plantSeed(idx, state.selectedSeed);
     return;
   }
   
   if (plot) {
-    // Stage 4 = ready to harvest — always harvest on click regardless of tool
-    if (plot.stage >= 4) {
-      harvestPlant(idx);
-      return;
-    }
+    if (plot.stage >= 4) { harvestPlant(idx); return; }
     const tool = state.selectedTool;
-    if (tool === 'water') { waterPlant(idx); }
-    else if (tool === 'fertilize') { fertilizePlant(idx); }
-    else if (tool === 'harvest') { harvestPlant(idx); }
-    else if (tool === 'remove') { removePlant(idx); }
-    else if (tool === 'spray') { sprayPlot(idx); }
-    else { showPopup(idx, e); }
+    if (tool === 'water') waterPlant(idx);
+    else if (tool === 'fertilize') fertilizePlant(idx);
+    else if (tool === 'harvest') harvestPlant(idx);
+    else if (tool === 'remove') removePlant(idx);
+    else if (tool === 'spray') sprayPlot(idx);
+    else showPopup(idx, e);
   }
   
   state.selectedPlot = idx;
@@ -2096,29 +2957,18 @@ function handlePlotClick(idx, e) {
 function plantSeed(idx, type) {
   if (state.seeds[type] <= 0) { log('אין לך זרעים מסוג זה! 🌱'); return; }
   state.seeds[type]--;
-  state.plots[idx] = {
-    type,
-    stage: 0,
-    progress: 0,
-    health: 100,
-    watered: 2,
-    fertilized: false,
-  };
+  state.plots[idx] = { type, stage: 0, progress: 0, health: 100, watered: 2, fertilized: false };
   emitParticles(plotCenter(idx), '#52b788', 8);
   log(`שתלת ${PLANTS[type].name}! 🌱`);
   updatePlot(idx);
   updateHUD();
   updateSeedCounts();
   saveGame();
-  // Reset to water tool after planting
-  if (state.seeds[type] <= 0) {
-    state.selectedSeed = null;
-    selectTool('water');
-  }
+  if (state.seeds[type] <= 0) { state.selectedSeed = null; selectTool('water'); }
 }
 
 function waterPlant(idx) {
-  if (state.water <= 0) { log('אין מים! קנה עוד מהחנות 💧'); return; }
+  if (state.water <= 0) { log('אין מים! פתח את החנות לרכישה 💧'); return; }
   const plot = state.plots[idx];
   if (!plot) return;
   state.water--;
@@ -2131,7 +2981,7 @@ function waterPlant(idx) {
 }
 
 function fertilizePlant(idx) {
-  if (state.fertilizer <= 0) { log('אין דשן! קנה עוד 🌿'); return; }
+  if (state.fertilizer <= 0) { log('אין דשן! פתח את החנות לרכישה 🌿'); return; }
   const plot = state.plots[idx];
   if (!plot) return;
   state.fertilizer--;
@@ -2159,26 +3009,22 @@ function harvestPlant(idx) {
   saveGame();
 }
 
-
 function sprayPlot(idx) {
-  if (state.spray <= 0) { log('אין תרסיס! 🧴'); return; }
+  if (state.spray <= 0) { log('אין תרסיס! פתח את החנות 🧴'); return; }
   const pest = state.pests.find(p => p.plotIdx === idx);
   state.spray--;
   updateHUD();
-  // Spray cloud visual
   const pos = plotCenter(idx);
   const cloud = document.createElement('div');
   cloud.className = 'spray-cloud';
   cloud.textContent = '💨';
   cloud.style.left = pos.x + 'px';
-  cloud.style.top  = pos.y + 'px';
+  cloud.style.top = pos.y + 'px';
   document.body.appendChild(cloud);
   setTimeout(() => cloud.remove(), 1300);
-
   if (pest) {
     setTimeout(() => removePest(pest, true), 400);
   } else {
-    // No pest — spray still affects edible plants
     const plant = state.plots[idx];
     if (plant && ['tomato','carrot','herbs'].includes(plant.type)) {
       plant.health = Math.max(10, plant.health - 15);
@@ -2191,6 +3037,7 @@ function sprayPlot(idx) {
   }
   saveGame();
 }
+
 function removePlant(idx) {
   state.plots[idx] = null;
   updatePlot(idx);
@@ -2198,25 +3045,13 @@ function removePlant(idx) {
 }
 
 function addWater(amt) {
-  state.water = Math.min(50, state.water + amt);
+  state.water = Math.min(getMaxWater(), state.water + amt);
   updateHUD();
-}
-
-function buyResource(type) {
-  if (type === 'water') {
-    if (state.coins < 5) { log('אין מספיק מטבעות! 🪙'); return; }
-    state.coins -= 5; state.water = Math.min(50, state.water + 10);
-  } else if (type === 'fert') {
-    if (state.coins < 8) { log('אין מספיק מטבעות! 🪙'); return; }
-    state.coins -= 8; state.fertilizer = Math.min(30, state.fertilizer + 5);
-  }
-  updateHUD();
-  saveGame();
 }
 
 function selectTool(tool) {
   if (tool === 'spray' && state.spray <= 0) {
-    log('אין תרסיס! קנה עוד 🧴');
+    log('אין תרסיס! פתח את החנות לרכישה 🧴');
     return;
   }
   state.selectedTool = tool;
@@ -2229,7 +3064,6 @@ function selectTool(tool) {
 
 function selectSeed(type) {
   if (state.seeds[type] <= 0) {
-    // Buy seed
     const price = PLANTS[type].price;
     if (state.coins < price) { log('אין מספיק מטבעות! 🪙'); return; }
     state.coins -= price;
@@ -2251,18 +3085,17 @@ function updateHUD() {
   document.getElementById('hud-coins').textContent = state.coins;
   document.getElementById('hud-water').textContent = state.water;
   document.getElementById('hud-fert').textContent = state.fertilizer;
+  const hudSpray = document.getElementById('hud-spray');
+  if (hudSpray) hudSpray.textContent = state.spray;
   document.getElementById('water-val').textContent = state.water;
   document.getElementById('fert-val').textContent = state.fertilizer;
   const maxW = getMaxWater();
   document.getElementById('water-bar').style.width = (state.water / maxW * 100) + '%';
   document.getElementById('fert-bar').style.width = (state.fertilizer / 30 * 100) + '%';
-  // Spray
   const sprayEl = document.getElementById('spray-val');
   const sprayBar = document.getElementById('spray-bar');
-  const sprayLabel = document.getElementById('spray-cost-label');
   if (sprayEl) sprayEl.textContent = state.spray;
   if (sprayBar) sprayBar.style.width = (state.spray / 30 * 100) + '%';
-  if (sprayLabel) sprayLabel.textContent = state.spray + '🧴';
   const sprayBtn = document.querySelector('[data-tool="spray"]');
   if (sprayBtn) sprayBtn.classList.toggle('spray-empty', state.spray <= 0);
 }
@@ -2299,21 +3132,12 @@ function updatePlot(idx) {
   }
   
   const pDef = PLANTS[plot.type];
-  
-  // Emoji & stage class
   emoji.textContent = pDef.emoji[plot.stage];
   el.classList.add(`plant-stage-${plot.stage}`);
-  
-  // Wilting
   if (plot.health < 30) el.classList.add('plant-wilting');
-  
-  // Harvestable
   if (plot.stage >= 4) el.classList.add('harvestable');
-  
-  // Watered indicator
   if (plot.watered > 0) el.classList.add('watered');
   
-  // Health bar
   if (hbar) {
     hbar.style.display = 'block';
     hfill.style.width = plot.health + '%';
@@ -2322,7 +3146,6 @@ function updatePlot(idx) {
     else if (plot.health < 60) hfill.classList.add('mid');
   }
   
-  // Water dots
   wdots.innerHTML = '';
   for (let d = 0; d < 3; d++) {
     const dot = document.createElement('div');
@@ -2330,7 +3153,6 @@ function updatePlot(idx) {
     wdots.appendChild(dot);
   }
   
-  // Tooltip
   if (tip) {
     tip.textContent = `${pDef.name} • ${pDef.stages[plot.stage]} • ❤️${Math.round(plot.health)}%`;
     if (plot.stage >= 4) tip.textContent += ' • מוכן לקציר!';
@@ -2343,41 +3165,33 @@ function highlightPlot(idx) {
   if (el) el.classList.add('selected');
 }
 
-
 // ========== PESTS & BIRDS ==========
 const PEST_TYPES = {
-  aphid:      { icon: '🐛', name: 'כנימות',    dmg: 6,  speed: 'slow',   edible: false },
-  caterpillar:{ icon: '🐜', name: 'זחלים',     dmg: 9,  speed: 'slow',   edible: false },
-  snail:      { icon: '🐌', name: 'חילזון',    dmg: 7,  speed: 'slow',   edible: false },
-  locust:     { icon: '🦗', name: 'ארבה',      dmg: 14, speed: 'fast',   edible: false },
-  mite:       { icon: '🕷️', name: 'קרדית',    dmg: 10, speed: 'medium', edible: false },
+  aphid:       { icon: '🐛', name: 'כנימות',   dmg: 6,  speed: 'slow' },
+  caterpillar: { icon: '🐜', name: 'זחלים',    dmg: 9,  speed: 'slow' },
+  snail:       { icon: '🐌', name: 'חילזון',   dmg: 7,  speed: 'slow' },
+  locust:      { icon: '🦗', name: 'ארבה',     dmg: 14, speed: 'fast' },
+  mite:        { icon: '🕷️', name: 'קרדית',   dmg: 10, speed: 'medium' },
 };
 
 const BIRD_TYPES = [
-  { icon: '🐦', name: 'ציפור', eatsPlants: true,  eatsPests: false },
-  { icon: '🦜', name: 'תוכי',  eatsPlants: true,  eatsPests: false },
-  { icon: '🐓', name: 'תרנגול',eatsPlants: false, eatsPests: true  },
-  { icon: '🦅', name: 'נץ',    eatsPlants: false, eatsPests: true  },
+  { icon: '🐦', name: 'ציפור',   eatsPlants: true,  eatsPests: false },
+  { icon: '🦜', name: 'תוכי',    eatsPlants: true,  eatsPests: false },
+  { icon: '🐓', name: 'תרנגול', eatsPlants: false, eatsPests: true  },
+  { icon: '🦅', name: 'נץ',      eatsPlants: false, eatsPests: true  },
 ];
 
 function spawnPest() {
-  // Only spawn on plots that have growing plants
   const targets = state.plots.map((p, i) => (p && p.stage > 0 && p.stage < 4) ? i : -1).filter(i => i >= 0);
   if (targets.length === 0) return;
-  // Max 3 active pests
   if (state.pests.length >= 3) return;
-
   const plotIdx = targets[Math.floor(Math.random() * targets.length)];
-  // Don't stack pests on same plot
   if (state.pests.find(p => p.plotIdx === plotIdx)) return;
-
   const typeKey = Object.keys(PEST_TYPES)[Math.floor(Math.random() * Object.keys(PEST_TYPES).length)];
   const pType = PEST_TYPES[typeKey];
-
   const plotEl = document.querySelectorAll('.plot')[plotIdx];
   if (!plotEl) return;
   const rect = plotEl.getBoundingClientRect();
-
   const el = document.createElement('div');
   el.className = 'pest on-plot';
   el.textContent = pType.icon;
@@ -2385,23 +3199,15 @@ function spawnPest() {
   el.style.top  = (rect.top  + rect.height * 0.3 + Math.random() * rect.height * 0.3) + 'px';
   el.title = pType.name + ' — לחץ לגירוש (עם תרסיס)';
   document.body.appendChild(el);
-
-  // Add alert badge to plot
   const alertBadge = document.createElement('div');
   alertBadge.className = 'pest-alert';
   alertBadge.id = 'pest-alert-' + plotIdx;
   alertBadge.textContent = pType.icon;
   plotEl.style.position = 'relative';
   plotEl.appendChild(alertBadge);
-
   const pestObj = { plotIdx, typeKey, type: pType, el, damage: 0 };
   state.pests.push(pestObj);
-
-  el.addEventListener('click', (e) => {
-    e.stopPropagation();
-    trySprayPest(pestObj);
-  });
-
+  el.addEventListener('click', (e) => { e.stopPropagation(); trySprayPest(pestObj); });
   log('⚠️ ' + pType.name + ' תקפו את הגינה! לחץ על המזיק לגירוש.');
 }
 
@@ -2412,7 +3218,6 @@ function removePest(pestObj, sprayed = false) {
   state.pests = state.pests.filter(p => p !== pestObj);
   if (sprayed) {
     const pDef = PLANTS[state.plots[pestObj.plotIdx]?.type];
-    // Spray hurts edible plants
     if (pDef && ['tomato','carrot','herbs'].includes(state.plots[pestObj.plotIdx]?.type)) {
       if (state.plots[pestObj.plotIdx]) {
         state.plots[pestObj.plotIdx].health = Math.max(10, state.plots[pestObj.plotIdx].health - 25);
@@ -2426,13 +3231,9 @@ function removePest(pestObj, sprayed = false) {
 }
 
 function trySprayPest(pestObj) {
-  if (state.spray <= 0) {
-    log('אין תרסיס! קנה עוד 🧴');
-    return;
-  }
+  if (state.spray <= 0) { log('אין תרסיס! פתח את החנות 🧴'); return; }
   state.spray--;
   updateHUD();
-  // Spray cloud effect
   const pos = { x: parseFloat(pestObj.el.style.left), y: parseFloat(pestObj.el.style.top) };
   const cloud = document.createElement('div');
   cloud.className = 'spray-cloud';
@@ -2452,7 +3253,6 @@ function spawnBird() {
   const endX   = fromLeft ? window.innerWidth + 80 : -80;
   const startY = 80 + Math.random() * (window.innerHeight * 0.35);
   const dur = 8 + Math.random() * 6;
-
   const el = document.createElement('div');
   el.className = 'bird';
   el.textContent = bType.icon;
@@ -2460,26 +3260,19 @@ function spawnBird() {
   el.style.top  = startY + 'px';
   el.style.animationDuration = dur + 's';
   document.body.appendChild(el);
-
-  // Fly across
   const startTime = Date.now();
   const flyInterval = setInterval(() => {
     const elapsed = (Date.now() - startTime) / 1000;
     const t = elapsed / dur;
     if (t >= 1) { clearInterval(flyInterval); el.remove(); return; }
     const x = startX + (endX - startX) * t;
-    // slight sine wave path
     const y = startY + Math.sin(t * Math.PI * 3) * 30;
     el.style.left = x + 'px';
     el.style.top  = y + 'px';
-
-    // At midpoint — do the bird's action
     if (t > 0.45 && t < 0.55 && !el.dataset.acted) {
       el.dataset.acted = '1';
       const hasScarecrow = hasItem('scarecrow');
-
       if (bType.eatsPlants && !hasScarecrow) {
-        // Bird damages a random plant
         const planted = state.plots.map((p, i) => p && p.stage >= 2 ? i : -1).filter(i => i >= 0);
         if (planted.length > 0) {
           const idx = planted[Math.floor(Math.random() * planted.length)];
@@ -2491,9 +3284,7 @@ function spawnBird() {
         }
       } else if (bType.eatsPlants && hasScarecrow) {
         log('🎃 הדחליל הבריח את ה' + bType.name + '!');
-        emitParticles({ x: window.innerWidth * 0.5, y: startY }, '#ffd166', 5);
       } else if (bType.eatsPests && state.pests.length > 0) {
-        // Bird eats a pest!
         const pest = state.pests[Math.floor(Math.random() * state.pests.length)];
         removePest(pest, false);
         log('🦅 ' + bType.name + ' אכלה מזיק! 🐛✨');
@@ -2503,27 +3294,15 @@ function spawnBird() {
       }
     }
   }, 50);
-
   el.addEventListener('animationend', () => { clearInterval(flyInterval); el.remove(); });
 }
 
-function buySpray() {
-  if (state.coins < 12) { log('אין מספיק מטבעות! 🪙'); return; }
-  state.coins -= 12;
-  state.spray = Math.min(state.spray + 10, 30);
-  updateHUD();
-  saveGame();
-  log('קנית תרסיס x10 🧴');
-}
-
-// Pest damage tick — runs in gameTick
 function tickPests() {
   state.pests.forEach(pest => {
     const plant = state.plots[pest.plotIdx];
     if (!plant) { removePest(pest, false); return; }
     plant.health = Math.max(0, plant.health - pest.type.dmg * 0.5);
     pest.damage += pest.type.dmg * 0.5;
-    // Flash the plot
     const plotEl = document.querySelectorAll('.plot')[pest.plotIdx];
     if (plotEl) {
       const flash = document.createElement('div');
@@ -2541,11 +3320,8 @@ function tickPests() {
 // ========== VISITORS ==========
 function spawnVisitor() {
   const isDay = state.hour >= 7 && state.hour < 19;
-  const types = isDay 
-    ? ['🦋','🐝','🦋','🐝','🐞','🐛']
-    : ['🦉','🌙','✨'];
+  const types = isDay ? ['🦋','🐝','🦋','🐝','🐞','🐛'] : ['🦉','🌙','✨'];
   const icon = types[Math.floor(Math.random() * types.length)];
-  
   const v = document.createElement('div');
   v.className = 'visitor';
   v.textContent = icon;
@@ -2563,17 +3339,13 @@ function spawnVisitor() {
   document.body.appendChild(v);
   v.addEventListener('animationend', () => {
     v.remove();
-    // Bonus
     if (icon === '🐝') {
-      // Boost growth on a random planted plot
       const planted = state.plots.map((p, i) => p && p.stage < 4 ? i : -1).filter(i => i >= 0);
       if (planted.length > 0) {
         const idx = planted[Math.floor(Math.random() * planted.length)];
         state.plots[idx].beeBoost = true;
         emitParticles(plotCenter(idx), '#ffd166', 6);
         log(`דבורה האיצה את גדילת ה${PLANTS[state.plots[idx].type].name}! 🐝✨`);
-      } else {
-        log('דבורה ביקרה בגינה! 🐝');
       }
     } else if (icon === '🦋') { log('פרפר יפה עף בגינה! ✨'); }
   });
@@ -2629,7 +3401,6 @@ function log(msg) {
   div.textContent = msg;
   logEl.appendChild(div);
   setTimeout(() => div.remove(), 3000);
-  // Keep max 3 messages
   while (logEl.children.length > 3) logEl.removeChild(logEl.firstChild);
 }
 
