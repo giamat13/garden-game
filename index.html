@@ -727,6 +727,161 @@ body {
   filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
 }
 
+
+/* ====== ITEM SHOP MODAL ====== */
+#shop-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20,12,6,0.75);
+  backdrop-filter: blur(6px);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+#shop-overlay.open { display: flex; }
+
+#shop-modal {
+  background: linear-gradient(160deg, #fdf6ec, #f5e8d0);
+  border: 3px solid #c9a96e;
+  border-radius: 22px;
+  padding: 24px;
+  width: min(680px, 94vw);
+  max-height: 86vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+  position: relative;
+}
+
+#shop-modal h2 {
+  font-family: 'Noto Serif Hebrew', serif;
+  font-size: 22px;
+  color: #3d2b1f;
+  margin-bottom: 4px;
+  text-align: center;
+}
+.shop-subtitle {
+  text-align: center;
+  font-size: 12px;
+  color: #a07040;
+  margin-bottom: 18px;
+}
+
+.shop-close {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #a07040;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+.shop-close:hover { background: rgba(160,82,45,0.12); }
+
+.shop-category {
+  font-size: 11px;
+  font-weight: bold;
+  color: #a07040;
+  letter-spacing: 0.08em;
+  margin: 14px 0 8px;
+  border-bottom: 1px solid rgba(160,112,64,0.25);
+  padding-bottom: 4px;
+}
+
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.shop-item {
+  background: white;
+  border: 2px solid #e8d5b0;
+  border-radius: 14px;
+  padding: 14px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s;
+  position: relative;
+}
+.shop-item:hover { border-color: #c9a96e; box-shadow: 0 4px 14px rgba(160,112,64,0.2); transform: translateY(-2px); }
+.shop-item.owned { background: linear-gradient(135deg, #f0faf0, #e8f5e9); border-color: #81c784; }
+.shop-item.maxed { background: linear-gradient(135deg, #fff8e1, #fff3cd); border-color: #ffc107; }
+.shop-item.cant-afford { opacity: 0.55; }
+
+.shop-item-icon { font-size: 32px; line-height: 1; }
+.shop-item-name { font-size: 13px; font-weight: bold; color: #3d2b1f; text-align: center; }
+.shop-item-desc { font-size: 10px; color: #888; text-align: center; line-height: 1.4; }
+.shop-item-level {
+  font-size: 10px;
+  color: #5c3d2e;
+  background: rgba(160,82,45,0.1);
+  border-radius: 8px;
+  padding: 2px 8px;
+}
+.shop-item-price {
+  font-size: 13px;
+  font-weight: bold;
+  color: #b8860b;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.shop-buy-btn {
+  width: 100%;
+  padding: 7px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #6aab78, #4a7c59);
+  color: white;
+  font-family: 'Secular One', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 4px;
+}
+.shop-buy-btn:hover { background: linear-gradient(135deg, #52b788, #3d6b49); transform: scale(1.03); }
+.shop-buy-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+.shop-buy-btn.maxed-btn { background: linear-gradient(135deg, #ffc107, #ff8f00); }
+
+/* Active item badges on HUD */
+.item-badge {
+  font-size: 14px;
+  opacity: 0.85;
+  cursor: help;
+  transition: opacity 0.2s;
+}
+.item-badge:hover { opacity: 1; }
+
+/* Shop open button in HUD */
+#shop-hud-btn {
+  background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.08));
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 14px;
+  color: white;
+  padding: 5px 12px;
+  cursor: pointer;
+  font-family: 'Secular One', sans-serif;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s;
+}
+#shop-hud-btn:hover { background: rgba(255,255,255,0.25); }
+
+#active-items-row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
 </style>
 </head>
 <body>
@@ -763,12 +918,12 @@ body {
     <span id="weather-icon">☀️</span>
     <span id="weather-name">שמשי</span>
   </div>
+  <div id="active-items-row" title="פריטים פעילים"></div>
+  <button id="shop-hud-btn" onclick="openShop()">🏪 חנות</button>
   <div class="day-info">
     <span>יום</span>
     <span class="day-num" id="day-num">1</span>
   </div>
-  <button onclick="saveGame(); log('נשמר! 💾')" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:12px;color:white;padding:4px 10px;cursor:pointer;font-family:inherit;font-size:12px;">💾 שמור</button>
-  <button onclick="if(confirm('למחוק את כל ההתקדמות?')){clearSave();location.reload();}" style="background:rgba(255,80,80,0.2);border:1px solid rgba(255,100,100,0.4);border-radius:12px;color:#ffaaaa;padding:4px 10px;cursor:pointer;font-family:inherit;font-size:12px;">🗑️</button>
 </div>
 
 <!-- TOOLS PANEL -->
@@ -830,6 +985,16 @@ body {
   <button class="popup-btn fertilize" onclick="popupAction('fertilize')">🌿 דישון</button>
   <button class="popup-btn harvest" id="popup-harvest-btn" onclick="popupAction('harvest')">🧺 קציר</button>
   <button class="popup-btn remove" onclick="popupAction('remove')">🗑️ הסרה</button>
+</div>
+
+<!-- ITEM SHOP MODAL -->
+<div id="shop-overlay" onclick="if(event.target===this)closeShop()">
+  <div id="shop-modal">
+    <button class="shop-close" onclick="closeShop()">✕</button>
+    <h2>🏪 חנות הגינה</h2>
+    <div class="shop-subtitle">שדרג את הגינה שלך עם כלים וציוד מתקדם</div>
+    <div id="shop-content"></div>
+  </div>
 </div>
 
 <!-- LOG -->
@@ -937,6 +1102,132 @@ const SKY_PALETTE = [
   { h: 24, top:'#020510', mid:'#06101e', bot:'#0e1a2a' }, // deep night again
 ];
 
+// ========== ITEMS / UPGRADES ==========
+const ITEMS = {
+  // ── אוטומציה ──
+  autoWater: {
+    name: 'השקייה אוטומטית',
+    icon: '🚿',
+    desc: 'משקה את כל הצמחים אוטומטית',
+    category: 'אוטומציה',
+    maxLevel: 3,
+    prices: [40, 80, 140],
+    labels: ['בסיסי','מתקדם','מאסטר'],
+    // effect applied in gameTick
+  },
+  autoFert: {
+    name: 'מרסס דשן',
+    icon: '🌿',
+    desc: 'מדשן צמחים אוטומטית מדי פעם',
+    category: 'אוטומציה',
+    maxLevel: 2,
+    prices: [55, 110],
+    labels: ['בסיסי','מתקדם'],
+  },
+  autoHarvest: {
+    name: 'רובוט קציר',
+    icon: '🤖',
+    desc: 'קוצר צמחים בשלים אוטומטית',
+    category: 'אוטומציה',
+    maxLevel: 1,
+    prices: [120],
+    labels: ['פעיל'],
+  },
+  // ── צמיחה ──
+  greenhouse: {
+    name: 'חממה',
+    icon: '🏠',
+    desc: 'מגן מפני מזג אוויר רע, מאיץ גדילה',
+    category: 'צמיחה',
+    maxLevel: 3,
+    prices: [50, 100, 180],
+    labels: ['קלה','בינונית','מלאה'],
+  },
+  ledLamp: {
+    name: 'תאורת LED',
+    icon: '💡',
+    desc: 'מאפשר גדילה מלאה בלילה',
+    category: 'צמיחה',
+    maxLevel: 2,
+    prices: [45, 90],
+    labels: ['חלקי','מלא'],
+  },
+  growBoost: {
+    name: 'תוסף גדילה',
+    icon: '⚗️',
+    desc: 'מגביר קצב גדילה כללי',
+    category: 'צמיחה',
+    maxLevel: 4,
+    prices: [30, 60, 100, 160],
+    labels: ['+20%','+40%','+60%','+80%'],
+  },
+  // ── משאבים ──
+  waterTank: {
+    name: 'מיכל מים',
+    icon: '🪣',
+    desc: 'מגדיל קיבולת מים מקסימלית',
+    category: 'משאבים',
+    maxLevel: 3,
+    prices: [25, 55, 100],
+    labels: ['x1.5','x2','x3'],
+  },
+  rainCollector: {
+    name: 'אוסף גשם',
+    icon: '☔',
+    desc: 'אוסף מים פסיבי גדול יותר',
+    category: 'משאבים',
+    maxLevel: 3,
+    prices: [20, 45, 80],
+    labels: ['x2','x3','x4'],
+  },
+  compostBin: {
+    name: 'מיכל קומפוסט',
+    icon: '♻️',
+    desc: 'מייצר דשן אוטומטי לאורך זמן',
+    category: 'משאבים',
+    maxLevel: 3,
+    prices: [35, 70, 120],
+    labels: ['איטי','בינוני','מהיר'],
+  },
+  // ── מיוחד ──
+  beeHive: {
+    name: 'כוורת',
+    icon: '🍯',
+    desc: 'מושך יותר דבורים שמאיצות גדילה',
+    category: 'מיוחד',
+    maxLevel: 2,
+    prices: [60, 120],
+    labels: ['קטנה','גדולה'],
+  },
+  scarecrow: {
+    name: 'דחליל',
+    icon: '🎃',
+    desc: 'מגן על הצמחים, מוסיף +10% בריאות',
+    category: 'מיוחד',
+    maxLevel: 1,
+    prices: [40],
+    labels: ['פעיל'],
+  },
+  sunMirror: {
+    name: 'מראת שמש',
+    icon: '🔆',
+    desc: 'מגביר אור שמש לצמחים שאוהבים שמש',
+    category: 'מיוחד',
+    maxLevel: 2,
+    prices: [50, 100],
+    labels: ['x1.3','x1.6'],
+  },
+  harvestBonus: {
+    name: 'שוק פרמיום',
+    icon: '💰',
+    desc: 'מגדיל רווח מקציר',
+    category: 'מיוחד',
+    maxLevel: 3,
+    prices: [35, 70, 130],
+    labels: ['+20%','+40%','+60%'],
+  },
+};
+
 // ========== STATE ==========
 let state = {
   coins: 50,
@@ -952,8 +1243,97 @@ let state = {
   tick: 0,
   gameTime: 0,
   selectedPlot: -1,
+  items: {},  // key -> level (1-based)
+  autoFertCounter: 0,
+  compostCounter: 0,
 };
 
+
+// ========== ITEM SHOP ==========
+function itemLevel(key) { return state.items[key] || 0; }
+function hasItem(key) { return itemLevel(key) > 0; }
+
+function openShop() {
+  renderShop();
+  document.getElementById('shop-overlay').classList.add('open');
+}
+function closeShop() {
+  document.getElementById('shop-overlay').classList.remove('open');
+}
+
+function buyItem(key) {
+  const item = ITEMS[key];
+  const lvl = itemLevel(key);
+  if (lvl >= item.maxLevel) { log('הפריט כבר במקסימום! ⭐'); return; }
+  const price = item.prices[lvl];
+  if (state.coins < price) { log('אין מספיק מטבעות! 🪙'); return; }
+  state.coins -= price;
+  state.items[key] = lvl + 1;
+  updateHUD();
+  renderShop();
+  updateActiveItemsRow();
+  saveGame();
+
+  // Special on-buy effects
+  if (key === 'waterTank') state.water = Math.min(getMaxWater(), state.water + 10);
+
+  log(item.icon + ' ' + item.name + ' שודרג לרמה ' + state.items[key] + '!');
+  emitParticles({ x: window.innerWidth/2, y: window.innerHeight/2 }, '#ffd166', 14);
+}
+
+function getMaxWater() {
+  const lvl = itemLevel('waterTank');
+  return lvl === 0 ? 50 : lvl === 1 ? 75 : lvl === 2 ? 100 : 150;
+}
+function getMaxFert() { return 30; }
+
+function renderShop() {
+  const el = document.getElementById('shop-content');
+  // Group by category
+  const cats = {};
+  for (const [key, item] of Object.entries(ITEMS)) {
+    if (!cats[item.category]) cats[item.category] = [];
+    cats[item.category].push({ key, ...item });
+  }
+  let html = '';
+  for (const [cat, items] of Object.entries(cats)) {
+    html += '<div class="shop-category">' + cat + '</div><div class="shop-grid">';
+    for (const item of items) {
+      const lvl = itemLevel(item.key);
+      const isMax = lvl >= item.maxLevel;
+      const price = isMax ? null : item.prices[lvl];
+      const canAfford = price !== null && state.coins >= price;
+      const ownedClass = lvl > 0 ? (isMax ? 'maxed' : 'owned') : '';
+      const cantClass = !isMax && !canAfford ? 'cant-afford' : '';
+      html += `<div class="shop-item ${ownedClass} ${cantClass}">
+        <div class="shop-item-icon">${item.icon}</div>
+        <div class="shop-item-name">${item.name}</div>
+        <div class="shop-item-desc">${item.desc}</div>
+        <div class="shop-item-level">${lvl > 0 ? 'רמה ' + lvl + ' — ' + item.labels[lvl-1] : 'לא נרכש'}</div>
+        ${!isMax ? '<div class="shop-item-price">🪙 ' + price + '</div>' : ''}
+        <button class="shop-buy-btn ${isMax ? 'maxed-btn' : ''}"
+          onclick="buyItem('${item.key}')"
+          ${isMax ? '' : (!canAfford ? 'disabled' : '')}>
+          ${isMax ? '⭐ מקסימום' : (lvl > 0 ? '⬆️ שדרג' : '🛒 קנה')}
+        </button>
+      </div>`;
+    }
+    html += '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function updateActiveItemsRow() {
+  const row = document.getElementById('active-items-row');
+  if (!row) return;
+  let html = '';
+  for (const [key, lvl] of Object.entries(state.items)) {
+    if (lvl > 0 && ITEMS[key]) {
+      html += '<span class="item-badge" title="' + ITEMS[key].name + ' רמה ' + lvl + '">' + ITEMS[key].icon + '</span>';
+    }
+  }
+  row.innerHTML = html;
+}
 
 // ========== SAVE / LOAD ==========
 const SAVE_KEY = 'garden_of_wonders_save';
@@ -970,17 +1350,16 @@ function saveGame() {
     weather:    state.weather,
     tick:       state.tick,
     gameTime:   state.gameTime,
+    items:      state.items,
     savedAt:    Date.now(),
   };
   const json = JSON.stringify(toSave);
-  // localStorage
   try { localStorage.setItem(SAVE_KEY, json); } catch(e) { console.warn('[SAVE] localStorage failed:', e); }
-  // cookie (expires in 30 days)
   try {
     const exp = new Date(Date.now() + 30*24*60*60*1000).toUTCString();
     document.cookie = SAVE_KEY + '=' + encodeURIComponent(json) + '; expires=' + exp + '; path=/; SameSite=Lax';
   } catch(e) { console.warn('[SAVE] cookie failed:', e); }
-  console.log('[SAVE] saved at h=' + state.hour.toFixed(2) + ' day=' + state.day + ' coins=' + state.coins);
+  console.log('[SAVE] h=' + state.hour.toFixed(2) + ' day=' + state.day + ' coins=' + state.coins);
 }
 
 function loadGame() {
@@ -1007,6 +1386,7 @@ function loadGame() {
     state.weather    = data.weather    ?? state.weather;
     state.tick       = data.tick       ?? state.tick;
     state.gameTime   = data.gameTime   ?? state.gameTime;
+    state.items      = data.items      ?? state.items;
     const ago = data.savedAt ? Math.round((Date.now() - data.savedAt) / 1000) : 0;
     console.log('[LOAD] loaded save from ' + ago + 's ago. h=' + state.hour.toFixed(2) + ' day=' + state.day + ' coins=' + state.coins);
     return true;
@@ -1016,17 +1396,8 @@ function loadGame() {
   }
 }
 
-function clearSave() {
-  try { localStorage.removeItem(SAVE_KEY); } catch(e) {}
-  try {
-    document.cookie = SAVE_KEY + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-  } catch(e) {}
-  console.log('[SAVE] cleared');
-  log('שמירה נמחקה 🗑️');
-}
-
-// Auto-save every 15 seconds
-setInterval(saveGame, 15000);
+// Auto-save every 10 seconds
+setInterval(saveGame, 10000);
 
 // ========== INIT ==========
 function init() {
@@ -1047,9 +1418,15 @@ function init() {
   gameLoop();
   updateSkyColors();
   setInterval(gameTick, 4000);
-  setInterval(spawnVisitor, 12000);
+  setInterval(() => {
+    // beeHive doubles bee frequency
+    spawnVisitor();
+    if (itemLevel('beeHive') >= 1) spawnVisitor();
+    if (itemLevel('beeHive') >= 2) spawnVisitor();
+  }, 12000);
   setInterval(changeWeather, 60000);
   document.addEventListener('click', closePopup);
+  updateActiveItemsRow();
   if (hasSave) {
     log('ברוכים חזרה! גינתך נטענה 🌿 (יום ' + state.day + ')');
   } else {
@@ -1372,13 +1749,60 @@ function gameTick() {
   
   const weather = WEATHERS[state.weather];
   
-  // Rain/snow: waterMult === 0 means precipitation
+  // Rain/storm: waterMult===0 means precipitation
   if (weather.waterMult === 0) {
-    addWater(2);
+    const rainGain = 2 * (1 + itemLevel('rainCollector'));
+    addWater(rainGain);
     spawnRain();
     state.plots.forEach((plant) => {
       if (plant) plant.watered = Math.min(plant.watered + 1, 3);
     });
+  }
+
+  // Auto-watering item
+  const autoWaterLvl = itemLevel('autoWater');
+  if (autoWaterLvl > 0 && weather.waterMult !== 0) {
+    const waterPerPlant = [0.5, 1.0, 1.5][autoWaterLvl - 1];
+    let used = 0;
+    state.plots.forEach((plant) => {
+      if (plant && plant.stage < 4 && state.water > 0) {
+        plant.watered = Math.min(plant.watered + waterPerPlant, 3);
+        plant.health = Math.min(100, plant.health + 3);
+        used += 0.15;
+      }
+    });
+    state.water = Math.max(0, state.water - Math.ceil(used));
+  }
+
+  // Auto-fertilizer item (every N ticks)
+  const autoFertLvl = itemLevel('autoFert');
+  if (autoFertLvl > 0) {
+    state.autoFertCounter = (state.autoFertCounter || 0) + 1;
+    const interval = autoFertLvl === 1 ? 8 : 4;
+    if (state.autoFertCounter >= interval && state.fertilizer > 0) {
+      state.autoFertCounter = 0;
+      state.plots.forEach((plant) => {
+        if (plant && plant.stage < 4) plant.fertilized = true;
+      });
+      state.fertilizer = Math.max(0, state.fertilizer - 1);
+    }
+  }
+
+  // Compost bin — generates fertilizer passively
+  const compostLvl = itemLevel('compostBin');
+  if (compostLvl > 0) {
+    state.compostCounter = (state.compostCounter || 0) + 1;
+    const compostInterval = [12, 8, 5][compostLvl - 1];
+    if (state.compostCounter >= compostInterval) {
+      state.compostCounter = 0;
+      state.fertilizer = Math.min(getMaxFert(), state.fertilizer + 1);
+    }
+  }
+
+  // Passive water trickle (enhanced by rainCollector)
+  if (state.tick % 5 === 0) {
+    const passiveGain = 1 + itemLevel('rainCollector');
+    state.water = Math.min(getMaxWater(), state.water + passiveGain);
   }
   
   // Grow all plants
@@ -1386,8 +1810,11 @@ function gameTick() {
     if (!plant) return;
     if (plant.stage >= 4) return;
     
-    // Health: decays without water
-    if (plant.watered <= 0) {
+    // During rain/storm, plants are infinitely watered — no wilting possible
+    const isRaining = (weather.waterMult === 0);
+    if (isRaining) {
+      plant.health = Math.min(100, plant.health + 8); // rain heals wilted plants too
+    } else if (plant.watered <= 0) {
       plant.health = Math.max(0, plant.health - 12);
     } else {
       plant.health = Math.min(100, plant.health + 5);
@@ -1408,9 +1835,40 @@ function gameTick() {
     // Hot dry weather hurts if not watered
     if (weather.name === 'חם ויבש' && plant.watered <= 0) plant.health = Math.max(0, plant.health - 8);
     
-    let growRate = 40 * weather.growMult * timeMult;
+    // Greenhouse: reduces weather penalty, buffers bad conditions
+    const ghLvl = itemLevel('greenhouse');
+    let effectiveGrowMult = weather.growMult;
+    if (ghLvl > 0) {
+      const ghBonus = [0.15, 0.3, 0.5][ghLvl - 1];
+      effectiveGrowMult = Math.min(1.3, effectiveGrowMult + ghBonus);
+    }
+
+    // LED lamp: night penalty reduced
+    const ledLvl = itemLevel('ledLamp');
+    let effectiveTimeMult = timeMult;
+    if (ledLvl > 0 && (h < 7 || h >= 19)) {
+      effectiveTimeMult = ledLvl === 1 ? Math.max(timeMult, 0.6) : Math.max(timeMult, 1.0);
+    }
+
+    // Sun mirror: boosts sun-loving plants during day
+    const mirrorLvl = itemLevel('sunMirror');
+    let sunBonus = 1.0;
+    if (mirrorLvl > 0 && pDef.sunNeed && h >= 7 && h < 19) {
+      sunBonus = mirrorLvl === 1 ? 1.3 : 1.6;
+    }
+
+    // growBoost item: global multiplier
+    const growBoostLvl = itemLevel('growBoost');
+    const growBoostMult = 1 + (growBoostLvl * 0.2);
+
+    let growRate = 40 * effectiveGrowMult * effectiveTimeMult * sunBonus * growBoostMult;
     if (plant.fertilized) { growRate *= 1.6; plant.fertilized = false; }
     if (plant.beeBoost) { growRate *= 1.4; plant.beeBoost = false; }
+
+    // Scarecrow: passive health bonus
+    if (hasItem('scarecrow') && plant.health < 100) {
+      plant.health = Math.min(100, plant.health + 2);
+    }
     
     if (plant.watered > 0 || weather.waterMult === 0) {
       plant.progress += growRate;
@@ -1424,14 +1882,26 @@ function gameTick() {
       const pName = pDef.name;
       const stageName = pDef.stages[plant.stage];
       log(`${pName} עברה לשלב: ${stageName} ${pDef.emoji[plant.stage]}`);
+      saveGame();
     }
   });
   
-  // Passive water trickle
-  if (state.tick % 5 === 0) {
-    state.water = Math.min(50, state.water + 1);
-  }
+
   
+  // Auto-harvest robot
+  if (hasItem('autoHarvest')) {
+    state.plots.forEach((plant, i) => {
+      if (plant && plant.stage >= 4) {
+        const pDef = PLANTS[plant.type];
+        const coins = Math.round(pDef.harvestCoins * (1 + itemLevel('harvestBonus') * 0.2));
+        state.coins += coins;
+        showCoinPop(plotCenter(i), '+' + coins + '🪙');
+        state.plots[i] = null;
+      }
+    });
+  }
+
+  // harvestBonus only affects manual harvest too (applied in harvestPlant)
   updateAllPlots();
   updateHUD();
 }
@@ -1516,6 +1986,7 @@ function plantSeed(idx, type) {
   updatePlot(idx);
   updateHUD();
   updateSeedCounts();
+  saveGame();
   // Reset to water tool after planting
   if (state.seeds[type] <= 0) {
     state.selectedSeed = null;
@@ -1533,6 +2004,7 @@ function waterPlant(idx) {
   emitParticles(plotCenter(idx), '#4fc3f7', 6);
   updatePlot(idx);
   updateHUD();
+  saveGame();
 }
 
 function fertilizePlant(idx) {
@@ -1544,13 +2016,15 @@ function fertilizePlant(idx) {
   emitParticles(plotCenter(idx), '#81c784', 6);
   log('דישנת את הצמח! גדילה מואצת 🌿');
   updateHUD();
+  saveGame();
 }
 
 function harvestPlant(idx) {
   const plot = state.plots[idx];
   if (!plot || plot.stage < 4) { log('הצמח עוד לא מוכן לקציר 🌱'); return; }
   const pDef = PLANTS[plot.type];
-  const coins = pDef.harvestCoins + Math.floor(plot.health / 20);
+  const bonusMult = 1 + itemLevel('harvestBonus') * 0.2;
+  const coins = Math.round((pDef.harvestCoins + Math.floor(plot.health / 20)) * bonusMult);
   state.coins += coins;
   state.plots[idx] = null;
   const pos = plotCenter(idx);
@@ -1559,11 +2033,13 @@ function harvestPlant(idx) {
   log(`קצרת ${pDef.name}! +${coins} מטבעות 🪙`);
   updatePlot(idx);
   updateHUD();
+  saveGame();
 }
 
 function removePlant(idx) {
   state.plots[idx] = null;
   updatePlot(idx);
+  saveGame();
 }
 
 function addWater(amt) {
@@ -1580,6 +2056,7 @@ function buyResource(type) {
     state.coins -= 8; state.fertilizer = Math.min(30, state.fertilizer + 5);
   }
   updateHUD();
+  saveGame();
 }
 
 function selectTool(tool) {
