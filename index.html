@@ -1414,55 +1414,7 @@ body {
   margin: -1px auto 0;
 }
 
-/* Auto harvest robot */
-.wi-autoHarvest {
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-120px);
-}
-.robot-body {
-  width: 34px;
-  height: 40px;
-  background: linear-gradient(180deg, #78909c, #455a64);
-  border-radius: 6px;
-  border: 2px solid #263238;
-  position: relative;
-  box-shadow: inset -3px 0 6px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.4);
-}
-.robot-head {
-  width: 28px;
-  height: 22px;
-  background: linear-gradient(180deg, #90a4ae, #607d8b);
-  border-radius: 5px;
-  border: 2px solid #263238;
-  position: relative;
-  margin: 0 auto;
-  margin-bottom: -1px;
-}
-.robot-head::before {
-  content: '🤖';
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-}
-.robot-arm {
-  position: absolute;
-  top: 8px;
-  width: 12px;
-  height: 6px;
-  background: #455a64;
-  border-radius: 3px;
-  animation: robotArm 2s ease-in-out infinite;
-}
-.robot-arm.left { left: -10px; }
-.robot-arm.right { right: -10px; }
-@keyframes robotArm {
-  0%,100% { transform: rotate(0deg); }
-  50% { transform: rotate(30deg); }
-}
+/* Old static robot CSS removed — robots are now robot-agent elements that move */
 
 /* Grow boost */
 .wi-growBoost {
@@ -1562,6 +1514,190 @@ body {
   50% { opacity: 0.3; filter: hue-rotate(180deg); }
 }
 
+
+/* ====== ROBOT AGENTS (moving workers) ====== */
+.robot-agent {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  pointer-events: none;
+  z-index: 50;
+  transition: left 0.7s cubic-bezier(0.4,0,0.6,1), bottom 0.7s cubic-bezier(0.4,0,0.6,1);
+  filter: drop-shadow(0 3px 5px rgba(0,0,0,0.5));
+}
+/* Robot head */
+.robot-agent .ra-head {
+  width: 26px;
+  height: 22px;
+  border-radius: 5px 5px 2px 2px;
+  border: 2px solid rgba(0,0,0,0.35);
+  position: relative;
+  margin: 0 auto;
+  margin-bottom: -1px;
+  box-shadow: inset -2px 0 4px rgba(0,0,0,0.25);
+}
+.robot-agent .ra-head::before {
+  content: attr(data-icon);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+/* Robot eye lights */
+.robot-agent .ra-eyes {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 5px;
+}
+.robot-agent .ra-eye {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #00e5ff;
+  box-shadow: 0 0 4px #00e5ff;
+  animation: eyeBlink 3s ease-in-out infinite;
+}
+.robot-agent .ra-eye.right { animation-delay: 0.2s; }
+@keyframes eyeBlink {
+  0%,90%,100% { opacity: 1; transform: scale(1); }
+  95% { opacity: 0.1; transform: scale(0.4); }
+}
+/* Robot body */
+.robot-agent .ra-body {
+  width: 30px;
+  height: 34px;
+  border-radius: 3px 3px 6px 6px;
+  border: 2px solid rgba(0,0,0,0.3);
+  position: relative;
+  box-shadow: inset -3px 0 5px rgba(0,0,0,0.25), 0 3px 6px rgba(0,0,0,0.4);
+}
+/* Chest indicator light */
+.robot-agent .ra-chest {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: chestPulse 1.5s ease-in-out infinite;
+}
+@keyframes chestPulse {
+  0%,100% { opacity: 1; transform: translateX(-50%) scale(1); }
+  50% { opacity: 0.5; transform: translateX(-50%) scale(0.7); }
+}
+/* Robot arms */
+.robot-agent .ra-arm {
+  position: absolute;
+  top: 6px;
+  width: 10px;
+  height: 5px;
+  border-radius: 3px;
+  border: 1px solid rgba(0,0,0,0.3);
+}
+.robot-agent .ra-arm.left  { left: -9px;  transform-origin: right center; }
+.robot-agent .ra-arm.right { right: -9px; transform-origin: left center; }
+/* Tool attachment on arm */
+.robot-agent .ra-tool {
+  position: absolute;
+  font-size: 9px;
+  top: -3px;
+}
+.robot-agent .ra-arm.left  .ra-tool { left: -2px; }
+.robot-agent .ra-arm.right .ra-tool { right: -2px; }
+/* Legs */
+.robot-agent .ra-legs {
+  display: flex;
+  gap: 4px;
+  margin-top: -1px;
+}
+.robot-agent .ra-leg {
+  width: 9px;
+  height: 10px;
+  border-radius: 0 0 3px 3px;
+  border: 2px solid rgba(0,0,0,0.3);
+  border-top: none;
+}
+/* Label underneath */
+.robot-agent .ra-label {
+  font-size: 8px;
+  color: white;
+  font-family: 'Secular One', sans-serif;
+  white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+  margin-top: 2px;
+  background: rgba(0,0,0,0.4);
+  border-radius: 4px;
+  padding: 1px 4px;
+}
+
+/* Idle: gentle bob */
+.robot-agent:not(.robot-moving):not(.robot-working) .ra-body {
+  animation: robotIdleBob 2.5s ease-in-out infinite;
+}
+@keyframes robotIdleBob {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+/* Arm swing while moving */
+.robot-agent.robot-moving .ra-arm.left  { animation: armSwingL 0.5s ease-in-out infinite; }
+.robot-agent.robot-moving .ra-arm.right { animation: armSwingR 0.5s ease-in-out infinite; }
+@keyframes armSwingL {
+  0%,100% { transform: rotate(-20deg); }
+  50% { transform: rotate(20deg); }
+}
+@keyframes armSwingR {
+  0%,100% { transform: rotate(20deg); }
+  50% { transform: rotate(-20deg); }
+}
+/* Moving glow */
+.robot-agent.robot-moving {
+  filter: drop-shadow(0 0 8px rgba(255,220,80,0.8)) drop-shadow(0 3px 5px rgba(0,0,0,0.5));
+}
+/* Working: shake */
+.robot-agent.robot-working {
+  animation: robotWorkShake 0.15s ease-in-out infinite;
+}
+@keyframes robotWorkShake {
+  0%,100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(-2px) rotate(-4deg); }
+  75% { transform: translateX(2px) rotate(4deg); }
+}
+
+/* ====== SPRAY SHIELD BADGE ====== */
+.shield-badge {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  font-size: 13px;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+  animation: shieldPulse 2s ease-in-out infinite;
+  z-index: 12;
+  pointer-events: none;
+}
+@keyframes shieldPulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.85); }
+}
+
+/* ====== PERENNIAL BADGE ====== */
+.perennial-badge {
+  position: absolute;
+  bottom: -6px;
+  right: -6px;
+  font-size: 11px;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+  z-index: 12;
+  pointer-events: none;
+}
+
 /* ====== WEEDS ====== */
 .weed {
   position: absolute;
@@ -1593,51 +1729,7 @@ body {
 }
 
 /* ====== WEED ROBOT ====== */
-.wi-weedRobot {
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(160px);
-}
-.weed-robot-body {
-  width: 32px;
-  height: 36px;
-  background: linear-gradient(180deg, #43a047, #2e7d32);
-  border-radius: 6px;
-  border: 2px solid #1b5e20;
-  position: relative;
-  box-shadow: inset -3px 0 6px rgba(0,0,0,0.25), 0 4px 8px rgba(0,0,0,0.4);
-}
-.weed-robot-head {
-  width: 26px;
-  height: 20px;
-  background: linear-gradient(180deg, #66bb6a, #43a047);
-  border-radius: 5px;
-  border: 2px solid #1b5e20;
-  position: relative;
-  margin: 0 auto;
-  margin-bottom: -1px;
-}
-.weed-robot-head::before {
-  content: '🌿';
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-}
-.weed-robot-claw {
-  position: absolute;
-  bottom: -8px;
-  font-size: 14px;
-  animation: clawGrab 2s ease-in-out infinite;
-}
-.weed-robot-claw.left { left: -2px; }
-.weed-robot-claw.right { right: -2px; animation-delay: 0.5s; }
-@keyframes clawGrab {
-  0%,100% { transform: rotate(0deg); }
-  50% { transform: rotate(-30deg) scale(1.2); }
-}
+/* Old weed-robot static CSS removed — now part of robot-agent */
 
 /* ====== LOAN MODAL ====== */
 #loan-overlay {
@@ -1847,13 +1939,24 @@ body {
     <span id="weather-icon">☀️</span>
     <span id="weather-name">שמשי</span>
   </div>
+  <div id="season-badge" style="display:flex;align-items:center;gap:5px;background:rgba(255,255,255,0.12);border-radius:16px;padding:4px 10px;color:white;font-size:13px;">
+    <span id="season-icon">🌸</span>
+    <span id="season-name">אביב</span>
+  </div>
   <div id="active-items-row" title="פריטים פעילים"></div>
   <button id="loan-hud-btn" onclick="openLoan()" title="הלוואות">🏦 הלוואה</button>
+  <button id="investor-hud-btn" onclick="openInvestor()" title="מימון מניות" style="display:flex;align-items:center;gap:5px;background:rgba(156,39,176,0.25);border:1px solid rgba(156,39,176,0.5);border-radius:16px;color:#ce93d8;padding:4px 12px;font-family:'Secular One',sans-serif;font-size:12px;cursor:pointer;transition:all 0.2s">💎 מניות</button>
   <button id="shop-hud-btn" onclick="openShop()">🏪 חנות</button>
   <div class="day-info">
     <span>יום</span>
     <span class="day-num" id="day-num">1</span>
   </div>
+</div>
+
+<!-- BEE GAME LINK BAR -->
+<div id="bee-game-bar" style="position:fixed;top:58px;left:0;right:0;z-index:90;background:rgba(15,10,30,0.82);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,209,102,0.2);padding:3px 16px;display:flex;align-items:center;gap:8px;cursor:pointer;" onclick="window.open('https://giamat13.github.io/Bee-nest-game/','_blank')" title="לחץ לפתיחת משחק הכוורת">
+  <div id="bee-game-hud" style="flex:1;display:flex;align-items:center;gap:10px;flex-wrap:wrap;"></div>
+  <span style="font-size:10px;color:rgba(255,255,255,0.35);white-space:nowrap">לחץ לפתיחה ↗</span>
 </div>
 
 <!-- TOOLS PANEL -->
@@ -1938,89 +2041,120 @@ body {
   </div>
 </div>
 
+<!-- INVESTOR MODAL -->
+<div id="investor-overlay" onclick="if(event.target===this)closeInvestor()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;">
+  <div id="investor-modal" style="background:linear-gradient(135deg,#1a1035 0%,#2d1b5e 100%);border:2px solid #7b1fa2;border-radius:20px;padding:28px;max-width:480px;width:92%;position:relative;box-shadow:0 0 40px rgba(156,39,176,0.5),0 20px 60px rgba(0,0,0,0.6);color:white;font-family:'Secular One',sans-serif;">
+    <button onclick="closeInvestor()" style="position:absolute;top:12px;left:14px;background:none;border:none;color:rgba(255,255,255,0.6);font-size:20px;cursor:pointer;line-height:1">✕</button>
+    <div style="text-align:center;margin-bottom:6px;font-size:28px">💎</div>
+    <h2 style="text-align:center;font-size:20px;margin-bottom:4px;color:#e1bee7">מימון מניות</h2>
+    <p style="text-align:center;font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:18px">מכור אחוזים מהגינה תמורת הון מיידי. האחוז נלקח לתמיד מכל קציר.</p>
+    <div id="investor-current" style="margin-bottom:16px"></div>
+    <div id="investor-options"></div>
+  </div>
+</div>
+
 <!-- LOG -->
 <div id="log"></div>
 
 <script>
 // ========== DATA ==========
+// seasonMult: { 0:spring, 1:summer, 2:fall, 3:winter }
 const PLANTS = {
   tomato: {
     name: 'עגבנייה',
     emoji: ['🌱','🌿','🍃','🍅','🍅'],
     stages: ['זרע','נבט','שיח','פריחה','בשלה ✂️'],
-    growTime: [8,10,12,8],
+    growTime: [9,12,14,10],
     waterNeed: 3,
     sunNeed: true,
-    harvestCoins: 18,
+    harvestCoins: 35,
     price: 8,
-    color: '#e53935'
+    color: '#e53935',
+    perennial: true, regrowStage: 2,
+    seasonMult: { 0: 1.3, 1: 1.5, 2: 0.8, 3: 0.15 },
   },
   sunflower: {
     name: 'חמניות',
     emoji: ['🌱','🌱','🌻','🌻','🌻'],
     stages: ['זרע','נבט','גבעול','פרח','בשל ✂️'],
-    growTime: [6,8,10,7],
+    growTime: [5,7,9,6],
     waterNeed: 2,
     sunNeed: true,
     harvestCoins: 15,
     price: 7,
-    color: '#fdd835'
+    color: '#fdd835',
+    seasonMult: { 0: 1.2, 1: 1.8, 2: 0.6, 3: 0.1 },
   },
   rose: {
     name: 'ורד',
     emoji: ['🌱','🌿','🌸','🌹','🌹'],
     stages: ['זרע','נבט','ניצן','פריחה','בשל ✂️'],
-    growTime: [7,10,12,10],
+    growTime: [7,9,11,9],
     waterNeed: 3,
     sunNeed: false,
     harvestCoins: 20,
     price: 10,
-    color: '#e91e63'
+    color: '#e91e63',
+    seasonMult: { 0: 1.5, 1: 0.9, 2: 1.1, 3: 0.2 },
   },
   carrot: {
     name: 'גזר',
     emoji: ['🌱','🌿','🌿','🥕','🥕'],
     stages: ['זרע','נבט','עלים','התפתחות','בשל ✂️'],
-    growTime: [6,8,10,8],
+    growTime: [5,7,9,7],
     waterNeed: 2,
     sunNeed: false,
     harvestCoins: 14,
     price: 6,
-    color: '#ff7043'
+    color: '#ff7043',
+    seasonMult: { 0: 1.4, 1: 0.8, 2: 1.3, 3: 0.3 },
   },
   mushroom: {
     name: 'פטריות',
     emoji: ['🌱','🍄','🍄','🍄','🍄'],
     stages: ['נבגים','נביטה','קטן','גדול','בשל ✂️'],
-    growTime: [5,6,8,6],
+    growTime: [4,5,7,5],
     waterNeed: 4,
     sunNeed: false,
     harvestCoins: 16,
     price: 9,
-    color: '#795548'
+    color: '#795548',
+    seasonMult: { 0: 0.9, 1: 0.5, 2: 1.6, 3: 1.2 },
   },
   herbs: {
     name: 'עשבי תיבול',
     emoji: ['🌱','🌿','🌿','🪴','🪴'],
     stages: ['זרע','נבט','שתיל','צמיחה','בשל ✂️'],
-    growTime: [4,6,8,6],
+    growTime: [3,5,7,5],
     waterNeed: 2,
     sunNeed: false,
-    harvestCoins: 12,
+    harvestCoins: 28,
     price: 5,
-    color: '#388e3c'
+    color: '#388e3c',
+    perennial: true, regrowStage: 2,
+    seasonMult: { 0: 1.2, 1: 1.3, 2: 1.0, 3: 0.4 },
   }
 };
 
 const WEATHERS = [
-  { name: 'שמשי',      icon: '☀️',  waterMult: 1.5, growMult: 1.3,  cloudOpacity: 0.05, cloudCount: 1,  skyTop:'#3a9fe8', skyMid:'#6ec6f5', skyBot:'#b8e8d0', fogColor: null },
-  { name: 'מעונן חלקית',icon: '🌤️', waterMult: 0.9, growMult: 1.0,  cloudOpacity: 0.7,  cloudCount: 3,  skyTop:'#5aaee0', skyMid:'#8ecce8', skyBot:'#c4dff0', fogColor: null },
-  { name: 'מעונן',      icon: '☁️',  waterMult: 0.6, growMult: 0.85, cloudOpacity: 0.95, cloudCount: 6,  skyTop:'#7a9db5', skyMid:'#9db8c8', skyBot:'#c0d0da', fogColor: null },
-  { name: 'גשום',       icon: '🌧️', waterMult: 0.0, growMult: 0.8,  cloudOpacity: 0.98, cloudCount: 7,  skyTop:'#4a5f6e', skyMid:'#637585', skyBot:'#808f96', fogColor: null },
-  { name: 'סוער',       icon: '⛈️', waterMult: 0.0, growMult: 0.55, cloudOpacity: 1.0,  cloudCount: 8,  skyTop:'#2a3540', skyMid:'#3a4a54', skyBot:'#505e66', fogColor: null },
-  { name: 'ערפלי',      icon: '🌫️', waterMult: 0.4, growMult: 0.65, cloudOpacity: 0.0,  cloudCount: 0,  skyTop:'#9baab5', skyMid:'#b8c8d0', skyBot:'#d0dce0', fogColor: 'rgba(200,215,220,0.45)' },
-  { name: 'חם ויבש',    icon: '🌵', waterMult: 2.0, growMult: 0.7,  cloudOpacity: 0.02, cloudCount: 0,  skyTop:'#e8a048', skyMid:'#f0c06a', skyBot:'#f8e098', fogColor: 'rgba(255,200,80,0.12)' },
-  { name: 'שלג קל',     icon: '🌨️', waterMult: 0.1, growMult: 0.4,  cloudOpacity: 0.9,  cloudCount: 5,  skyTop:'#c0ccd8', skyMid:'#d8e0e8', skyBot:'#eaf0f4', fogColor: 'rgba(220,235,245,0.3)' },
+  { name: 'שמשי',      icon: '☀️',  waterMult: 1.5, growMult: 1.3,  cloudOpacity: 0.05, cloudCount: 1,  skyTop:'#3a9fe8', skyMid:'#6ec6f5', skyBot:'#b8e8d0', fogColor: null, setback: 0 },
+  { name: 'מעונן חלקית',icon: '🌤️', waterMult: 0.9, growMult: 1.0,  cloudOpacity: 0.7,  cloudCount: 3,  skyTop:'#5aaee0', skyMid:'#8ecce8', skyBot:'#c4dff0', fogColor: null, setback: 0 },
+  { name: 'מעונן',      icon: '☁️',  waterMult: 0.6, growMult: 0.85, cloudOpacity: 0.95, cloudCount: 6,  skyTop:'#7a9db5', skyMid:'#9db8c8', skyBot:'#c0d0da', fogColor: null, setback: 0 },
+  { name: 'גשום',       icon: '🌧️', waterMult: 0.0, growMult: 0.8,  cloudOpacity: 0.98, cloudCount: 7,  skyTop:'#4a5f6e', skyMid:'#637585', skyBot:'#808f96', fogColor: null, setback: 0 },
+  { name: 'סוער',       icon: '⛈️', waterMult: 0.0, growMult: 0.55, cloudOpacity: 1.0,  cloudCount: 8,  skyTop:'#2a3540', skyMid:'#3a4a54', skyBot:'#505e66', fogColor: null, setback: 0.05 },
+  { name: 'ערפלי',      icon: '🌫️', waterMult: 0.4, growMult: 0.65, cloudOpacity: 0.0,  cloudCount: 0,  skyTop:'#9baab5', skyMid:'#b8c8d0', skyBot:'#d0dce0', fogColor: 'rgba(200,215,220,0.45)', setback: 0 },
+  { name: 'חם ויבש',    icon: '🌵', waterMult: 2.0, growMult: 0.7,  cloudOpacity: 0.02, cloudCount: 0,  skyTop:'#e8a048', skyMid:'#f0c06a', skyBot:'#f8e098', fogColor: 'rgba(255,200,80,0.12)', setback: 0 },
+  { name: 'שלג קל',     icon: '🌨️', waterMult: 0.1, growMult: 0.4,  cloudOpacity: 0.9,  cloudCount: 5,  skyTop:'#c0ccd8', skyMid:'#d8e0e8', skyBot:'#eaf0f4', fogColor: 'rgba(220,235,245,0.3)', setback: 0.08 },
+  { name: 'כפור',       icon: '🧊',  waterMult: 0.05,growMult: 0.2,  cloudOpacity: 0.7,  cloudCount: 4,  skyTop:'#8ab0c8', skyMid:'#b0cce0', skyBot:'#d8ecf4', fogColor: 'rgba(180,220,240,0.5)', setback: 0.2,  frostDmg: 18 },
+  { name: 'גלי חום',    icon: '🔥',  waterMult: 3.0, growMult: 0.5,  cloudOpacity: 0.0,  cloudCount: 0,  skyTop:'#c84000', skyMid:'#e06820', skyBot:'#f0a040', fogColor: 'rgba(255,140,40,0.18)', setback: 0.1 },
+];
+
+// SEASONS: each season has weather probability weights (index = weather index)
+const SEASONS = [
+  { name: 'אביב', icon: '🌸', weights: [3,3,2,3,1,1,1,0,0,0], growBonus: 0.15 },
+  { name: 'קיץ',  icon: '☀️', weights: [5,2,1,0,1,0,4,0,0,3], growBonus: 0.1  },
+  { name: 'סתיו', icon: '🍂', weights: [1,2,3,3,2,2,0,1,0,0], growBonus: 0.0  },
+  { name: 'חורף', icon: '❄️', weights: [0,1,2,2,1,1,0,3,3,0], growBonus: -0.2 },
 ];
 
 const SKY_PALETTE = [
@@ -2175,13 +2309,43 @@ const ITEMS = {
   },
   weedRobot: {
     name: 'רובוט עשבים',
-    icon: '🌿🤖',
+    icon: '✂️',
     desc: 'תולש אוטומטית עשבים שוטים מהגינה',
     category: 'אוטומציה',
     maxLevel: 2,
     prices: [80, 150],
     labels: ['איטי','מהיר'],
     maintenance: [2, 3],
+  },
+  waterRobot: {
+    name: 'רובוט מזלף',
+    icon: '💧',
+    desc: 'מזלף מגיע לצמחים צמאים ומשקה אותם',
+    category: 'אוטומציה',
+    maxLevel: 2,
+    prices: [65, 130],
+    labels: ['בסיסי','מהיר'],
+    maintenance: [2, 3],
+  },
+  fertRobot: {
+    name: 'רובוט מדשן',
+    icon: '💚',
+    desc: 'רובוט מגיע לצמחים ומדשן אותם',
+    category: 'אוטומציה',
+    maxLevel: 2,
+    prices: [70, 140],
+    labels: ['בסיסי','מהיר'],
+    maintenance: [2, 3],
+  },
+  sprayRobot: {
+    name: 'רובוט מתרסס',
+    icon: '🔫',
+    desc: 'רובוט מגיע למזיקים ומרסס אותם',
+    category: 'אוטומציה',
+    maxLevel: 2,
+    prices: [90, 160],
+    labels: ['בסיסי','מהיר'],
+    maintenance: [2, 4],
   },
 };
 
@@ -2210,6 +2374,10 @@ let state = {
   weeds: [],
   loanDebt: 0,
   loanCount: 0,
+  investorCut: 0,       // total % taken by investors (0-75)
+  investors: [],         // [{name, amount, pct, day}]
+  season: 0,
+  seasonTick: 0,
 };
 
 // ========== MAINTENANCE ==========
@@ -2272,6 +2440,9 @@ function buyItem(key) {
   saveGame();
 
   if (key === 'waterTank') state.water = Math.min(getMaxWater(), state.water + 10);
+  // Re-initialize robot agents when new robot is bought
+  const robotItems = ['autoHarvest','weedRobot','waterRobot','fertRobot','sprayRobot'];
+  if (robotItems.includes(key)) setTimeout(initRobotAgents, 300);
 
   const maint = item.maintenance ? item.maintenance[state.items[key]-1] : 0;
   const maintStr = maint > 0 ? ` (תחזוקה: ${maint}🪙/יום)` : '';
@@ -2406,6 +2577,88 @@ function makeTooltip(key, extraLines = []) {
   </div>`;
 }
 
+// ================================================================
+// COLLISION RESOLUTION — move overlapping garden items apart
+// ================================================================
+function resolveItemCollisions(items, groundW) {
+  if (!items || items.length < 2) return;
+  const PADDING = 6; // px gap between items
+  const MAX_PASSES = 12;
+  
+  // Read actual rects after first paint
+  const rects = items.map(item => {
+    const r = item.el.getBoundingClientRect();
+    return { item, left: r.left, right: r.right, width: r.width, center: r.left + r.width / 2 };
+  });
+  
+  // Sort left-to-right
+  rects.sort((a, b) => a.center - b.center);
+  
+  let changed = true;
+  let passes = 0;
+  while (changed && passes < MAX_PASSES) {
+    changed = false;
+    passes++;
+    for (let i = 0; i < rects.length - 1; i++) {
+      const a = rects[i];
+      const b = rects[i + 1];
+      const overlap = a.right + PADDING - b.left;
+      if (overlap > 0) {
+        // Push each away from center by half the overlap
+        const shift = overlap / 2 + 1;
+        a.left -= shift;
+        a.right -= shift;
+        a.center -= shift;
+        b.left += shift;
+        b.right += shift;
+        b.center += shift;
+        changed = true;
+      }
+    }
+    // Clamp to ground bounds
+    const groundRect = document.getElementById('ground')?.getBoundingClientRect();
+    if (groundRect) {
+      for (const r of rects) {
+        if (r.left < groundRect.left + 2) {
+          const d = groundRect.left + 2 - r.left;
+          r.left += d; r.right += d; r.center += d;
+        }
+        if (r.right > groundRect.right - 2) {
+          const d = r.right - groundRect.right + 2;
+          r.left -= d; r.right -= d; r.center -= d;
+        }
+      }
+    }
+  }
+  
+  // Apply resolved positions
+  const groundRect = document.getElementById('ground')?.getBoundingClientRect();
+  if (!groundRect) return;
+  rects.forEach(r => {
+    const newLeftPx = r.center - r.width / 2 - groundRect.left;
+    r.item.el.style.left = newLeftPx + 'px';
+    r.item.el.style.right = '';
+  });
+}
+
+// ================================================================
+// ROBOT HOME SYNC — update robot home positions to match static items
+// ================================================================
+function syncRobotHomesToItems() {
+  // Robot agents ARE the visual items now — they start at home and move on dispatch.
+  // Nothing to sync with static items since those are removed.
+  // Just ensure idle robots stay at their home positions.
+  const ground = document.getElementById('ground');
+  if (!ground) return;
+  for (const [key, ra] of Object.entries(robotAgents)) {
+    if (!ra.busy && ra.el) {
+      ra.el.style.transition = 'none';
+      ra.el.style.left = ra.homeLeftPct + '%';
+      ra.el.style.bottom = ra.homeBottom + 'px';
+    }
+  }
+}
+
 function renderGardenItems() {
   const layer = document.getElementById('items-world');
   if (!layer) return;
@@ -2424,18 +2677,30 @@ function renderGardenItems() {
   // Helper — positions are {left OR right (%), bottom (px), zIndex?}
   // bobDelay staggers the floating animation so items don't all move in sync
   let bobCounter = 0;
+  const _placedItems = []; // track all placed ground items for collision resolution
+  const groundW = groundEl.getBoundingClientRect().width || window.innerWidth;
+  
   const addItem = (key, innerHtml, pos, extraTooltipLines = []) => {
     const div = document.createElement('div');
     div.className = 'world-item world-item-bob wi-' + key;
+    div.dataset.itemKey = key;
     div.style.animationDelay = (bobCounter++ * 0.4) + 's';
     div.style.position = 'absolute';
-    if (pos.left  !== undefined) div.style.left   = typeof pos.left   === 'number' ? pos.left   + 'px' : pos.left;
-    if (pos.right !== undefined) div.style.right  = typeof pos.right  === 'number' ? pos.right  + 'px' : pos.right;
+    // Convert % to a consistent leftPct for collision checking
+    let leftPct = null;
+    if (pos.left !== undefined) {
+      div.style.left = typeof pos.left === 'number' ? pos.left + 'px' : pos.left;
+      leftPct = typeof pos.left === 'number' ? pos.left / groundW * 100 : parseFloat(pos.left);
+    }
+    if (pos.right !== undefined) div.style.right = typeof pos.right === 'number' ? pos.right + 'px' : pos.right;
     if (pos.bottom !== undefined) div.style.bottom = pos.bottom + 'px';
     if (pos.top    !== undefined) div.style.top    = pos.top    + 'px';
     if (pos.zIndex) div.style.zIndex = pos.zIndex;
     div.innerHTML = innerHtml + makeTooltip(key, extraTooltipLines);
     layer.appendChild(div);
+    if (leftPct !== null && pos.bottom !== undefined) {
+      _placedItems.push({ el: div, leftPct, bottom: pos.bottom, key });
+    }
     return div;
   };
 
@@ -2464,6 +2729,7 @@ function renderGardenItems() {
         <div class="barrel-ring" style="top:8px"></div>
         <div class="barrel-ring" style="top:22px"></div>
       </div>
+      <div class="rain-pipe-out" style="width:5px;height:12px;background:#546e7a;margin:0 auto;border-radius:0 0 3px 3px;"></div>
       <div class="world-item-label">☔ x${lvlRainCollector+1}</div>
     `, { left: '11%', bottom: 8 },
     [`אוסף מים פסיבי בשיעור x${lvlRainCollector+1}`]);
@@ -2480,33 +2746,15 @@ function renderGardenItems() {
     [`מדשן אוטומטית כל ${lvlAutoFert === 1 ? '8' : '4'} מחזורים`]);
   }
 
-  // ── CENTER-LEFT: Auto Harvest Robot ──────────── ~31%
-  const lvlAutoHarvest = itemLevel('autoHarvest');
-  if (lvlAutoHarvest > 0) {
-    addItem('autoHarvest', `
-      <div class="robot-head"></div>
-      <div class="robot-body">
-        <div class="robot-arm left"></div>
-        <div class="robot-arm right"></div>
-      </div>
-      <div class="world-item-label">🤖 קוצר</div>
-    `, { left: '31%', bottom: 10, zIndex: 35 },
-    ['קוצר אוטומטית צמחים בשלים']);
-  }
+  // autoHarvest robot: rendered as moving robot-agent (see initRobotAgents)
 
-  // ── ~39%: Weed Robot ──────────────────────────────
-  const lvlWeedRobot = itemLevel('weedRobot');
-  if (lvlWeedRobot > 0) {
-    addItem('weedRobot', `
-      <div class="weed-robot-head"></div>
-      <div class="weed-robot-body">
-        <div class="weed-robot-claw left">✂️</div>
-        <div class="weed-robot-claw right">✂️</div>
-      </div>
-      <div class="world-item-label">✂️ עשבים</div>
-    `, { left: '40%', bottom: 10, zIndex: 34 },
-    [`תולש עשבים שוטים ${lvlWeedRobot === 1 ? 'לאט' : 'מהר'}`]);
-  }
+  // weedRobot: rendered as moving robot-agent
+
+  // waterRobot: rendered as moving robot-agent
+
+  // fertRobot: rendered as moving robot-agent
+
+  // sprayRobot: rendered as moving robot-agent
 
   // ── CENTER: Scarecrow ─────────────────────────── ~50% (between garden cols)
   const lvlScarecrow = itemLevel('scarecrow');
@@ -2568,6 +2816,7 @@ function renderGardenItems() {
     addItem('compostBin', `
       <div class="bin-lid"></div>
       <div class="bin" style="height:${34+lvlCompost*7}px"></div>
+      <div class="compost-pipe-out" style="width:6px;height:14px;background:#1b5e20;margin:0 auto;border-radius:0 0 3px 3px;"></div>
       <div class="world-item-label">♻️ קומפוסט</div>
     `, { left: '88%', bottom: 8 },
     [`מייצר דשן ${['לאט','בינוני','מהיר'][lvlCompost-1]} אוטומטית`]);
@@ -2586,6 +2835,16 @@ function renderGardenItems() {
     `, { left: '94%', bottom: 12 },
     [`שולח ${lvlBeeHive === 1 ? 'דבורה אחת' : 'שתי דבורות'} נוספות לסייע לצמחים`]);
   }
+
+  // ── Resolve collisions between ground items ───────
+  // Must run after all ground items added but before spanning overlays
+  requestAnimationFrame(() => {
+    resolveItemCollisions(_placedItems, groundW);
+    requestAnimationFrame(() => {
+      syncRobotHomesToItems();
+      drawPipes(); // redraw pipes AFTER collision resolution so positions are correct
+    });
+  });
 
   // ── SPANNING: Greenhouse overlay ─────────────────
   const lvlGreenhouse = itemLevel('greenhouse');
@@ -2752,17 +3011,25 @@ function drawPipes() {
     const x1 = rain.x, y1 = rain.bottom - 8;
     const x2 = tank.right - 6, y2 = tank.bottom - 16;
     const ug = groundY + 5;
-    const d = `M ${x1} ${y1} L ${x1} ${ug} L ${x2} ${ug} L ${x2} ${y2}`;
-    const p = namedPath(d, 'pipe-water');
-    // animated drop
-    for (let i = 0; i < 2; i++) {
+    // surface segment: barrel bottom → ground entry
+    const surfD = `M ${x1} ${y1} L ${x1} ${groundY}`;
+    namedPath(surfD, 'pipe-water');
+    // underground segment
+    const ugD = `M ${x1} ${groundY} L ${x1} ${ug} L ${x2} ${ug} L ${x2} ${y2}`;
+    const p = namedPath(ugD, 'pipe-water');
+    // animated drops along full path
+    const fullD = `M ${x1} ${y1} L ${x1} ${ug} L ${x2} ${ug} L ${x2} ${y2}`;
+    const pFull = namedPath(fullD, 'pipe-water');
+    pFull.style.opacity = '0'; // invisible path just for animation
+    for (let i = 0; i < 3; i++) {
       const drop = mk('circle', { r: 3.5, class: 'flow-drop' });
-      const anim = mk('animateMotion', { dur: '3s', repeatCount: 'indefinite', begin: (i * 1.5) + 's' });
-      const mp = mk('mpath', {}); mp.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '#' + p.id);
+      const anim = mk('animateMotion', { dur: '3s', repeatCount: 'indefinite', begin: (i * 1) + 's' });
+      const mp = mk('mpath', {}); mp.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '#' + pFull.id);
       anim.appendChild(mp); drop.appendChild(anim); svg.appendChild(drop);
     }
     joint(x1, y1, 4, 'pipe-joint-water');
     joint(x2, y2, 4, 'pipe-joint-water');
+    joint(x1, groundY, 3.5, 'pipe-joint-water');
     joint(x1, ug, 3.5, 'pipe-joint-water');
     joint(x2, ug, 3.5, 'pipe-joint-water');
   }
@@ -2825,6 +3092,35 @@ function drawPipes() {
     joint(x2, y2, 4, 'pipe-joint-fert');
     joint(x1, ug, 3, 'pipe-joint-fert');
     joint(x2, ug, 3, 'pipe-joint-fert');
+  }
+
+  // ── 4b. Compost Bin → Garden (direct fertilizer supply when no autoFert) ──
+  if (compost && itemLevel('compostBin') > 0) {
+    const gardenEl = document.getElementById('garden-area');
+    if (gardenEl) {
+      const layer = document.getElementById('items-world');
+      const lr = layer.getBoundingClientRect();
+      const gr = gardenEl.getBoundingClientRect();
+      const gx = gr.right - lr.left - 20;
+      const gy = gr.top - lr.top + gr.height * 0.6;
+      const x1 = compost.left + 4, y1 = compost.bottom - 10;
+      const ug = groundY + 18;
+      const d = `M ${x1} ${y1} L ${x1} ${ug} L ${gx} ${ug} L ${gx} ${gy}`;
+      // Only show dashed "potential" line if autoFert not present
+      if (!autoFert || itemLevel('autoFert') === 0) {
+        const p = namedPath(d, 'pipe-fert');
+        for (let i = 0; i < 3; i++) {
+          const drop = mk('circle', { r: 3, style: 'fill:rgba(129,199,132,0.75);', class: 'flow-drop' });
+          const anim = mk('animateMotion', { dur: '4s', repeatCount: 'indefinite', begin: (i * 1.33) + 's' });
+          const mp = mk('mpath', {}); mp.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '#' + p.id);
+          anim.appendChild(mp); drop.appendChild(anim); svg.appendChild(drop);
+        }
+        joint(x1, y1, 4, 'pipe-joint-fert');
+        joint(gx, gy, 4, 'pipe-joint-fert');
+        joint(x1, ug, 3, 'pipe-joint-fert');
+        joint(gx, ug, 3, 'pipe-joint-fert');
+      }
+    }
   }
 
   // ── 5. LED lamp → Greenhouse (electric wire) ─────────────────────────────
@@ -2998,7 +3294,16 @@ function saveGame() {
     weather: state.weather, tick: state.tick, gameTime: state.gameTime,
     items: state.items, spray: state.spray, lastDay: state.lastDay, savedAt: Date.now(),
     loanDebt: state.loanDebt, loanCount: state.loanCount,
-    weeds: state.weeds,
+    investorCut: state.investorCut || 0,
+    investors: state.investors || [],
+    weeds: state.weeds.map(w => ({
+      plotIdx: w.plotIdx,
+      typeIdx: WEED_TYPES.indexOf(w.type),
+      stage: w.stage,
+      progress: w.progress,
+    })),
+    season: state.season, seasonTick: state.seasonTick,
+    plotShields: state.plotShields || {},
   };
   const json = JSON.stringify(toSave);
   try { localStorage.setItem(SAVE_KEY, json); } catch(e) {}
@@ -3020,24 +3325,95 @@ function loadGame() {
   if (!json) return false;
   try {
     const data = JSON.parse(json);
-    state.coins = data.coins ?? state.coins;
-    state.water = data.water ?? state.water;
-    state.fertilizer = data.fertilizer ?? state.fertilizer;
-    state.seeds = data.seeds ?? state.seeds;
-    state.plots = data.plots ?? state.plots;
-    state.day = data.day ?? state.day;
-    state.hour = data.hour ?? state.hour;
-    state.weather = data.weather ?? state.weather;
-    state.tick = data.tick ?? state.tick;
-    state.gameTime = data.gameTime ?? state.gameTime;
-    state.items = data.items ?? state.items;
-    state.spray = data.spray ?? state.spray;
-    state.lastDay = data.lastDay ?? state.day;
-    state.loanDebt = data.loanDebt ?? 0;
-    state.loanCount = data.loanCount ?? 0;
-    state.weeds = data.weeds ?? [];
+    
+    // ── Safe numeric loader ──────────────────────────
+    const safeNum = (v, def, min = -Infinity, max = Infinity) => {
+      const n = Number(v);
+      return (isFinite(n) && n >= min && n <= max) ? n : def;
+    };
+    const safeInt = (v, def, min = 0, max = Infinity) => Math.round(safeNum(v, def, min, max));
+    
+    state.coins     = safeNum(data.coins,      state.coins,      0);
+    state.water     = safeNum(data.water,      state.water,      0, 999);
+    state.fertilizer= safeNum(data.fertilizer, state.fertilizer, 0, 999);
+    state.spray     = safeNum(data.spray,      state.spray,      0, 999);
+    state.day       = safeInt(data.day,        state.day,        1);
+    state.hour      = safeNum(data.hour,       state.hour,       0, 24);
+    state.weather   = safeInt(data.weather,    0,                0, WEATHERS.length - 1);
+    state.tick      = safeInt(data.tick,       state.tick,       0);
+    state.gameTime  = safeNum(data.gameTime,   state.gameTime,   0);
+    state.lastDay   = safeInt(data.lastDay,    state.day,        1);
+    state.loanDebt  = safeNum(data.loanDebt,   0,                0);
+    state.loanCount = safeInt(data.loanCount,  0,                0);
+    state.investorCut = safeNum(data.investorCut, 0, 0, 95);
+    if (Array.isArray(data.investors)) state.investors = data.investors;
+    state.season    = safeInt(data.season,     0,                0, 3);
+    state.seasonTick= safeInt(data.seasonTick, 0,                0);
+    
+    // ── Seeds: only known plant types ───────────────
+    if (data.seeds && typeof data.seeds === 'object') {
+      for (const key of Object.keys(state.seeds)) {
+        if (key in data.seeds) state.seeds[key] = safeInt(data.seeds[key], 0, 0, 999);
+      }
+    }
+    
+    // ── Items: only known item keys, valid levels ────
+    if (data.items && typeof data.items === 'object') {
+      for (const key of Object.keys(ITEMS)) {
+        if (key in data.items) {
+          state.items[key] = safeInt(data.items[key], 0, 0, ITEMS[key].maxLevel);
+        }
+      }
+    }
+    
+    // ── Plots: array of 18, validate each plant ──────
+    if (Array.isArray(data.plots)) {
+      for (let i = 0; i < 18; i++) {
+        const p = data.plots[i];
+        if (!p) { state.plots[i] = null; continue; }
+        if (!PLANTS[p.type]) { state.plots[i] = null; continue; }
+        state.plots[i] = {
+          type:       p.type,
+          stage:      safeInt(p.stage,    0, 0, 4),
+          progress:   safeNum(p.progress, 0, 0),
+          health:     safeNum(p.health,   100, 0, 100),
+          watered:    safeNum(p.watered,  0,   0, 3),
+          fertilized: !!p.fertilized,
+          beeBoost:   !!p.beeBoost,
+          sprayShield:safeInt(p.sprayShield, 0, 0, 200),
+          isPerennial:!!p.isPerennial,
+        };
+      }
+    }
+    
+    // ── Weeds: validate plotIdx and type ─────────────
+    if (Array.isArray(data.weeds)) {
+      state.weeds = data.weeds
+        .filter(w => w && safeInt(w.plotIdx, -1, 0, 17) >= 0 && !state.plots[w.plotIdx])
+        .map(w => ({
+          plotIdx:  safeInt(w.plotIdx, 0, 0, 17),
+          type:     WEED_TYPES[safeInt(w.typeIdx, 0, 0, WEED_TYPES.length - 1)] || WEED_TYPES[0],
+          stage:    safeInt(w.stage,   0, 0, 3),
+          progress: safeNum(w.progress, 0, 0),
+        }));
+    }
+    
+    // ── PlotShields: validate indices ────────────────
+    if (data.plotShields && typeof data.plotShields === 'object') {
+      state.plotShields = {};
+      for (const [k, v] of Object.entries(data.plotShields)) {
+        const idx = parseInt(k);
+        if (idx >= 0 && idx < 18) {
+          state.plotShields[idx] = safeInt(v, 0, 0, 200);
+        }
+      }
+    }
+    
     return true;
-  } catch(e) { return false; }
+  } catch(e) {
+    console.warn('Save load error:', e);
+    return false;
+  }
 }
 
 setInterval(saveGame, 10000);
@@ -3066,6 +3442,9 @@ function init() {
     spawnVisitor();
     if (itemLevel('beeHive') >= 1) spawnVisitor();
     if (itemLevel('beeHive') >= 2) spawnVisitor();
+    // External bee game: spawn extra visitors based on bees count
+    const _extBee = getBeeGameBonuses();
+    for (let _i = 0; _i < _extBee.beeVisitorBonus; _i++) spawnVisitor();
   }, 12000);
   setInterval(changeWeather, 60000);
   setInterval(spawnPest, 25000);
@@ -3073,11 +3452,19 @@ function init() {
   setInterval(spawnWeed, 35000);
   document.addEventListener('click', closePopup);
   updateActiveItemsRow();
-  updateLoanBtn();
+  updateLoanBtn(); updateInvestorBtn();
+  updateBeeGameHUD();
+  setInterval(updateBeeGameHUD, 5000); // refresh bee bonuses every 5 seconds
   // Re-render any saved weeds
   if (state.weeds && state.weeds.length > 0) {
     state.weeds.forEach(w => renderWeedOnPlot(w));
   }
+  // Init season display
+  const s0 = SEASONS[state.season || 0];
+  document.getElementById('season-icon').textContent = s0.icon;
+  document.getElementById('season-name').textContent = s0.name;
+  // Init robot agents after items rendered
+  setTimeout(initRobotAgents, 200);
   if (hasSave) {
     log('ברוכים חזרה! גינתך נטענה 🌿 (יום ' + state.day + ')');
   } else {
@@ -3360,10 +3747,31 @@ function updateCelestial() {
 
 // ========== GAME TICK ==========
 let rainDrops = [];
+
+function getSeasonMult(plantType) {
+  const pDef = PLANTS[plantType];
+  if (!pDef || !pDef.seasonMult) return 1.0;
+  return pDef.seasonMult[state.season] || 1.0;
+}
+
 function gameTick() {
   state.tick++;
   
   const weather = WEATHERS[state.weather];
+  
+  // Season tick (each real second = 4s tick, season changes every ~75 ticks = 5 min)
+  state.seasonTick = (state.seasonTick || 0) + 1;
+  const SEASON_TICKS = 90; // ticks per season
+  if (state.seasonTick >= SEASON_TICKS) {
+    state.seasonTick = 0;
+    state.season = (state.season + 1) % 4;
+    const s = SEASONS[state.season];
+    log('🗓️ עונה חדשה: ' + s.icon + ' ' + s.name);
+    document.getElementById('season-icon').textContent = s.icon;
+    document.getElementById('season-name').textContent = s.name;
+    // Change weather to match season
+    changeWeather();
+  }
   
   // Day tracking via tick
   if (state.tick % 15 === 0) {
@@ -3382,8 +3790,8 @@ function gameTick() {
     });
   }
 
+  // Auto-robots (old pipe-based ones)
   const autoWaterLvl = itemLevel('autoWater');
-  const canAffordMaint = state.coins > 0 || getDailyMaintenance() === 0;
   if (autoWaterLvl > 0 && weather.waterMult !== 0) {
     const waterPerPlant = [0.5, 1.0, 1.5][autoWaterLvl - 1];
     let used = 0;
@@ -3425,8 +3833,34 @@ function gameTick() {
     state.water = Math.min(getMaxWater(), state.water + passiveGain);
   }
   
+  // Robot workers dispatch
+  tickRobotWorkers();
+
+  // Old autoHarvest backup — robot handles it via tickRobotWorkers
+  if (false) {
+    state.plots.forEach((plant, i) => {
+      if (plant && plant.stage >= 4) {
+        const pDef = PLANTS[plant.type];
+        const coins = Math.round(pDef.harvestCoins * (1 + itemLevel('harvestBonus') * 0.2));
+        state.coins += coins;
+        showCoinPop(plotCenter(i), '+' + coins + '🪙');
+        doHarvestPlot(i);
+      }
+    });
+  }
+
+  const seasonData = SEASONS[state.season];
+  
   state.plots.forEach((plant, i) => {
     if (!plant) return;
+    
+    // Decay spray shield
+    if (plant.sprayShield > 0) {
+      plant.sprayShield--;
+      // Visual shield indicator update
+      updateSprayShieldBadge(i, plant.sprayShield);
+    }
+    
     if (plant.stage >= 4) return;
     
     const isRaining = (weather.waterMult === 0);
@@ -3434,6 +3868,11 @@ function gameTick() {
       plant.health = Math.min(100, plant.health + 8);
     } else if (plant.watered <= 0) {
       plant.health = Math.max(0, plant.health - 12);
+      // Perennial plants can die from drought
+      if (plant.health <= 0 && PLANTS[plant.type]?.perennial && plant.isPerennial) {
+        state.plots[i] = null;
+        log('🥀 שיח ' + PLANTS[plant.type].name + ' נבל ומת מצמא!');
+      }
     } else {
       plant.health = Math.min(100, plant.health + 5);
     }
@@ -3448,7 +3887,24 @@ function gameTick() {
     
     const pDef = PLANTS[plant.type];
     if (pDef.sunNeed && (h < 7 || h >= 19)) timeMult *= 0.3;
-    if (weather.name === 'חם ויבש' && plant.watered <= 0) plant.health = Math.max(0, plant.health - 8);
+    if (weather.name === 'חם ויבש' || weather.name === 'גלי חום') {
+      if (plant.watered <= 0) plant.health = Math.max(0, plant.health - (weather.name === 'גלי חום' ? 15 : 8));
+    }
+    
+    // Frost damage and setback
+    if (weather.frostDmg) {
+      const ghLvl2 = itemLevel('greenhouse');
+      if (ghLvl2 === 0) {
+        plant.health = Math.max(0, plant.health - weather.frostDmg * 0.3);
+      }
+    }
+    
+    // Setback (frost/storm reverses growth)
+    if (weather.setback > 0 && state.tick % 3 === 0) {
+      const ghLvl3 = itemLevel('greenhouse');
+      const setbackAmt = weather.setback * (ghLvl3 > 0 ? 0.3 : 1.0);
+      plant.progress = Math.max(0, plant.progress - 40 * setbackAmt);
+    }
     
     const ghLvl = itemLevel('greenhouse');
     let effectiveGrowMult = weather.growMult;
@@ -3471,10 +3927,17 @@ function gameTick() {
 
     const growBoostLvl = itemLevel('growBoost');
     const growBoostMult = 1 + (growBoostLvl * 0.2);
+    
+    // Season multiplier
+    const seasonMult = getSeasonMult(plant.type) * (1 + seasonData.growBonus);
 
-    let growRate = 40 * effectiveGrowMult * effectiveTimeMult * sunBonus * growBoostMult;
+    let growRate = 40 * effectiveGrowMult * effectiveTimeMult * sunBonus * growBoostMult * seasonMult;
     if (plant.fertilized) { growRate *= 1.6; plant.fertilized = false; }
-    if (plant.beeBoost) { growRate *= 1.4; plant.beeBoost = false; }
+    // External bee game: beeBoost uses hiveLevel-scaled multiplier
+    const _beeBonus = getBeeGameBonuses();
+    if (plant.beeBoost) { growRate *= _beeBonus.beeBoostMult; plant.beeBoost = false; }
+    // External bee game: speedLevel gives global grow bonus
+    growRate *= _beeBonus.growSpeedBonus;
 
     if (hasItem('scarecrow') && plant.health < 100) {
       plant.health = Math.min(100, plant.health + 2);
@@ -3491,22 +3954,10 @@ function gameTick() {
       plant.progress = 0;
       const pName = pDef.name;
       const stageName = pDef.stages[plant.stage];
-      log(`${pName} עברה לשלב: ${stageName} ${pDef.emoji[plant.stage]}`);
+      log(pName + ' עברה לשלב: ' + stageName + ' ' + pDef.emoji[plant.stage]);
       saveGame();
     }
   });
-
-  if (hasItem('autoHarvest')) {
-    state.plots.forEach((plant, i) => {
-      if (plant && plant.stage >= 4) {
-        const pDef = PLANTS[plant.type];
-        const coins = Math.round(pDef.harvestCoins * (1 + itemLevel('harvestBonus') * 0.2));
-        state.coins += coins;
-        showCoinPop(plotCenter(i), '+' + coins + '🪙');
-        state.plots[i] = null;
-      }
-    });
-  }
 
   tickPests();
   tickWeeds();
@@ -3516,12 +3967,11 @@ function gameTick() {
   // Update water tank display every few ticks
   if (state.tick % 3 === 0) {
     const tankLabel = document.querySelector('.wi-waterTank .world-item-label');
-    if (tankLabel) tankLabel.textContent = `💧 ${state.water}/${getMaxWater()}`;
+    if (tankLabel) tankLabel.textContent = '💧 ' + state.water + '/' + getMaxWater();
     const tankLevel = document.querySelector('.wi-waterTank .tank-level');
     if (tankLevel) tankLevel.style.height = Math.round(state.water / getMaxWater() * 100) + '%';
   }
 }
-
 function spawnRain() {
   clearRain();
   for (let i = 0; i < 40; i++) {
@@ -3549,7 +3999,19 @@ function clearRain() {
 
 function changeWeather() {
   clearRain();
-  state.weather = Math.floor(Math.random() * WEATHERS.length);
+  // Use season weights for weather selection
+  const seasonData = SEASONS[state.season || 0];
+  const weights = seasonData.weights;
+  const total = weights.reduce((s, w) => s + w, 0);
+  let r = Math.random() * total;
+  let idx = 0;
+  for (let i = 0; i < weights.length; i++) {
+    r -= weights[i];
+    if (r <= 0) { idx = i; break; }
+  }
+  // Don't pick zero-weight weathers
+  if (weights[idx] === 0) idx = weights.findIndex(w => w > 0) || 0;
+  state.weather = idx;
   const w = WEATHERS[state.weather];
   document.getElementById('weather-icon').textContent = w.icon;
   document.getElementById('weather-name').textContent = w.name;
@@ -3627,6 +4089,23 @@ function fertilizePlant(idx) {
   saveGame();
 }
 
+// Internal: do the actual plot removal/regrow after harvest
+function doHarvestPlot(idx) {
+  const plot = state.plots[idx];
+  if (!plot) return;
+  const pDef = PLANTS[plot.type];
+  if (pDef.perennial) {
+    // Perennial: regrow from regrowStage
+    plot.stage = pDef.regrowStage;
+    plot.progress = 0;
+    plot.watered = 1;
+    plot.health = Math.max(40, plot.health - 20);
+    plot.isPerennial = true;
+  } else {
+    state.plots[idx] = null;
+  }
+}
+
 function harvestPlant(idx) {
   const plot = state.plots[idx];
   if (!plot || plot.stage < 4) { log('הצמח עוד לא מוכן לקציר 🌱'); return; }
@@ -3639,28 +4118,31 @@ function harvestPlant(idx) {
     state.loanDebt -= deduction;
     if (state.loanDebt <= 0) { state.loanDebt = 0; state.loanCount = 0; }
   }
-  const coins = rawCoins - deduction;
-  state.coins += coins;
-  state.plots[idx] = null;
-  const pos = plotCenter(idx);
-  showCoinPop(pos, `+${coins}🪙${deduction > 0 ? ' (-'+deduction+'💸)' : ''}`);
-  emitParticles(pos, '#ffd166', 12);
-  if (deduction > 0) {
-    log(`קצרת ${pDef.name}! +${coins}🪙 (${deduction}🪙 לחוב 💸)`);
-  } else {
-    log(`קצרת ${pDef.name}! +${coins} מטבעות 🪙`);
+  // Investor cut (permanent %)
+  let investorDeduction = 0;
+  if (state.investorCut > 0) {
+    investorDeduction = Math.ceil(rawCoins * state.investorCut / 100);
   }
+  const coins = rawCoins - deduction - investorDeduction;
+  state.coins += coins;
+  const pos = plotCenter(idx);
+  showCoinPop(pos, '+' + coins + '🪙' + (deduction > 0 ? ' (-' + deduction + '💸)' : '') + (investorDeduction > 0 ? ' (-' + investorDeduction + '📊)' : ''));
+  emitParticles(pos, '#ffd166', 12);
+  const perennialMsg = pDef.perennial ? ' (שיח ישאר לגדול מחדש 🔄)' : '';
+  let logMsg = 'קצרת ' + pDef.name + '! +' + coins + '🪙';
+  if (deduction > 0) logMsg += ' (-' + deduction + '🪙 לחוב 💸)';
+  if (investorDeduction > 0) logMsg += ' (-' + investorDeduction + '🪙 למשקיעים 📊)';
+  logMsg += perennialMsg;
+  log(logMsg);
+  doHarvestPlot(idx);
   updatePlot(idx);
   updateHUD();
-  updateLoanBtn();
+  updateLoanBtn(); updateInvestorBtn();
   saveGame();
 }
 
-function sprayPlot(idx) {
-  if (state.spray <= 0) { log('אין תרסיס! פתח את החנות 🧴'); return; }
+function doSprayAt(idx, fromRobot = false) {
   const pest = state.pests.find(p => p.plotIdx === idx);
-  state.spray--;
-  updateHUD();
   const pos = plotCenter(idx);
   const cloud = document.createElement('div');
   cloud.className = 'spray-cloud';
@@ -3671,17 +4153,46 @@ function sprayPlot(idx) {
   setTimeout(() => cloud.remove(), 1300);
   if (pest) {
     setTimeout(() => removePest(pest, true), 400);
-  } else {
-    const plant = state.plots[idx];
-    if (plant && ['tomato','carrot','herbs'].includes(plant.type)) {
-      plant.health = Math.max(10, plant.health - 15);
-      const pDef = PLANTS[plant.type];
-      log('🧴 ריססת ללא מזיק — פגעת ב' + pDef.name + '!');
-      updatePlot(idx);
-    } else {
-      log('🧴 ריססת — אין מזיקים כאן.');
-    }
   }
+  // Add persistent spray shield to the plot
+  const plant = state.plots[idx];
+  const SHIELD_DURATION = 20; // ticks
+  if (plant) {
+    plant.sprayShield = (plant.sprayShield || 0) + SHIELD_DURATION;
+    updateSprayShieldBadge(idx, plant.sprayShield);
+    if (!pest) log('🧴 ריססת — מגן פעיל ל-' + plant.sprayShield + ' מחזורים!');
+  } else {
+    // empty plot — add shield marker separately
+    state.plotShields = state.plotShields || {};
+    state.plotShields[idx] = (state.plotShields[idx] || 0) + SHIELD_DURATION;
+    updateSprayShieldBadge(idx, state.plotShields[idx]);
+    if (!pest) log('🧴 ריססת ערוגה ריקה — מגן פעיל!');
+  }
+}
+
+function updateSprayShieldBadge(idx, remaining) {
+  const plotEl = document.querySelectorAll('.plot')[idx];
+  if (!plotEl) return;
+  let badge = document.getElementById('shield-badge-' + idx);
+  if (remaining > 0) {
+    if (!badge) {
+      badge = document.createElement('div');
+      badge.id = 'shield-badge-' + idx;
+      badge.className = 'shield-badge';
+      plotEl.appendChild(badge);
+    }
+    badge.textContent = '🛡️';
+    badge.title = 'מגן תרסיס: ' + remaining + ' מחזורים';
+  } else {
+    if (badge) badge.remove();
+  }
+}
+
+function sprayPlot(idx) {
+  if (state.spray <= 0) { log('אין תרסיס! פתח את החנות 🧴'); return; }
+  state.spray--;
+  updateHUD();
+  doSprayAt(idx);
   saveGame();
 }
 
@@ -3834,6 +4345,11 @@ function spawnPest() {
   if (state.pests.length >= 3) return;
   const plotIdx = targets[Math.floor(Math.random() * targets.length)];
   if (state.pests.find(p => p.plotIdx === plotIdx)) return;
+  // Check spray shield
+  const plotPlant = state.plots[plotIdx];
+  if (plotPlant && plotPlant.sprayShield > 0) { return; }
+  const emptyShield = (state.plotShields || {})[plotIdx];
+  if (emptyShield > 0) { return; }
   const typeKey = Object.keys(PEST_TYPES)[Math.floor(Math.random() * Object.keys(PEST_TYPES).length)];
   const pType = PEST_TYPES[typeKey];
   const plotEl = document.querySelectorAll('.plot')[plotIdx];
@@ -3945,6 +4461,15 @@ function spawnBird() {
 }
 
 function tickPests() {
+  // Decay empty plot shields
+  if (state.plotShields) {
+    for (const [idx, shield] of Object.entries(state.plotShields)) {
+      if (shield > 0) {
+        state.plotShields[idx] = shield - 1;
+        updateSprayShieldBadge(parseInt(idx), state.plotShields[idx]);
+      }
+    }
+  }
   state.pests.forEach(pest => {
     const plant = state.plots[pest.plotIdx];
     if (!plant) { removePest(pest, false); return; }
@@ -4084,6 +4609,213 @@ function closePopup(e) {
   popup.style.display = 'none';
 }
 
+
+// ========== ROBOT WORKERS (PHYSICAL MOVEMENT) ==========
+const ROBOT_DEFS = {
+  harvester:  { item: 'autoHarvest', icon: '🤖', label: 'קוצר',   homeLeftPct: 31, homeBottom: 14, color: '#607d8b', speed: 700 },
+  weeder:     { item: 'weedRobot',   icon: '✂️',  label: 'עשבים',  homeLeftPct: 41, homeBottom: 14, color: '#43a047', speed: 750 },
+  waterer:    { item: 'waterRobot',  icon: '💧',  label: 'מזלף',   homeLeftPct: 17, homeBottom: 14, color: '#0288d1', speed: 680 },
+  fertilizer: { item: 'fertRobot',   icon: '🌿',  label: 'מדשן',   homeLeftPct: 25, homeBottom: 14, color: '#388e3c', speed: 700 },
+  sprayer:    { item: 'sprayRobot',  icon: '🧴',  label: 'מתרסס',  homeLeftPct: 49, homeBottom: 14, color: '#f57c00', speed: 720 },
+};
+
+const robotAgents = {};
+
+function initRobotAgents() {
+  const layer = document.getElementById('items-world');
+  if (!layer) return;
+
+  const ROBOT_HTML = {
+    harvester: `<div class="ra-head" data-icon="🤖" style="background:linear-gradient(180deg,#78909c,#546e7a);border-color:rgba(0,0,0,0.4)"><div class="ra-eyes"><div class="ra-eye" style="background:#00e5ff;box-shadow:0 0 4px #00e5ff"></div><div class="ra-eye right" style="background:#00e5ff;box-shadow:0 0 4px #00e5ff"></div></div></div><div class="ra-body" style="background:linear-gradient(180deg,#546e7a,#37474f);border-color:rgba(0,0,0,0.4)"><div class="ra-arm left" style="background:#455a64"><span class="ra-tool">🌾</span></div><div class="ra-arm right" style="background:#455a64"></div><div class="ra-chest" style="background:#4caf50;box-shadow:0 0 6px #4caf50"></div></div><div class="ra-legs"><div class="ra-leg" style="background:#37474f"></div><div class="ra-leg" style="background:#37474f"></div></div><div class="ra-label">קוצר</div>`,
+    weeder: `<div class="ra-head" data-icon="🤖" style="background:linear-gradient(180deg,#43a047,#2e7d32);border-color:rgba(0,0,0,0.4)"><div class="ra-eyes"><div class="ra-eye" style="background:#69f0ae;box-shadow:0 0 4px #69f0ae"></div><div class="ra-eye right" style="background:#69f0ae;box-shadow:0 0 4px #69f0ae"></div></div></div><div class="ra-body" style="background:linear-gradient(180deg,#2e7d32,#1b5e20);border-color:rgba(0,0,0,0.4)"><div class="ra-arm left" style="background:#388e3c"><span class="ra-tool">✂️</span></div><div class="ra-arm right" style="background:#388e3c"></div><div class="ra-chest" style="background:#ffeb3b;box-shadow:0 0 6px #ffeb3b"></div></div><div class="ra-legs"><div class="ra-leg" style="background:#1b5e20"></div><div class="ra-leg" style="background:#1b5e20"></div></div><div class="ra-label">עשבים</div>`,
+    waterer: `<div class="ra-head" data-icon="🤖" style="background:linear-gradient(180deg,#0288d1,#01579b);border-color:rgba(0,0,0,0.4)"><div class="ra-eyes"><div class="ra-eye" style="background:#80d8ff;box-shadow:0 0 4px #80d8ff"></div><div class="ra-eye right" style="background:#80d8ff;box-shadow:0 0 4px #80d8ff"></div></div></div><div class="ra-body" style="background:linear-gradient(180deg,#01579b,#003c71);border-color:rgba(0,0,0,0.4)"><div class="ra-arm left" style="background:#0277bd"><span class="ra-tool">💧</span></div><div class="ra-arm right" style="background:#0277bd"></div><div class="ra-chest" style="background:#40c4ff;box-shadow:0 0 6px #40c4ff"></div></div><div class="ra-legs"><div class="ra-leg" style="background:#003c71"></div><div class="ra-leg" style="background:#003c71"></div></div><div class="ra-label">מזלף</div>`,
+    fertilizer: `<div class="ra-head" data-icon="🤖" style="background:linear-gradient(180deg,#2e7d32,#1b5e20);border-color:rgba(0,0,0,0.4)"><div class="ra-eyes"><div class="ra-eye" style="background:#b9f6ca;box-shadow:0 0 4px #b9f6ca"></div><div class="ra-eye right" style="background:#b9f6ca;box-shadow:0 0 4px #b9f6ca"></div></div></div><div class="ra-body" style="background:linear-gradient(180deg,#1b5e20,#003300);border-color:rgba(0,0,0,0.4)"><div class="ra-arm left" style="background:#33691e"><span class="ra-tool">🌿</span></div><div class="ra-arm right" style="background:#33691e"></div><div class="ra-chest" style="background:#a5d6a7;box-shadow:0 0 6px #a5d6a7"></div></div><div class="ra-legs"><div class="ra-leg" style="background:#003300"></div><div class="ra-leg" style="background:#003300"></div></div><div class="ra-label">מדשן</div>`,
+    sprayer: `<div class="ra-head" data-icon="🤖" style="background:linear-gradient(180deg,#e64a19,#bf360c);border-color:rgba(0,0,0,0.4)"><div class="ra-eyes"><div class="ra-eye" style="background:#ffccbc;box-shadow:0 0 4px #ffccbc"></div><div class="ra-eye right" style="background:#ffccbc;box-shadow:0 0 4px #ffccbc"></div></div></div><div class="ra-body" style="background:linear-gradient(180deg,#bf360c,#7f0000);border-color:rgba(0,0,0,0.4)"><div class="ra-arm left" style="background:#d84315"><span class="ra-tool">🧴</span></div><div class="ra-arm right" style="background:#d84315"></div><div class="ra-chest" style="background:#ff8a65;box-shadow:0 0 6px #ff8a65"></div></div><div class="ra-legs"><div class="ra-leg" style="background:#7f0000"></div><div class="ra-leg" style="background:#7f0000"></div></div><div class="ra-label">מתרסס</div>`,
+  };
+
+  for (const [key, def] of Object.entries(ROBOT_DEFS)) {
+    if (!itemLevel(def.item)) continue;
+    // Remove old if exists
+    const oldEl = document.getElementById('robot-agent-' + key);
+    if (oldEl) oldEl.remove();
+    
+    const el = document.createElement('div');
+    el.id = 'robot-agent-' + key;
+    el.className = 'robot-agent';
+    el.innerHTML = ROBOT_HTML[key] || ROBOT_HTML['harvester'];
+    el.style.left = def.homeLeftPct + '%';
+    el.style.bottom = def.homeBottom + 'px';
+    el.title = def.label + ' — עובד אוטומטי';
+    layer.appendChild(el);
+    
+    robotAgents[key] = {
+      busy: false,
+      el,
+      homeLeftPct: def.homeLeftPct,
+      homeBottom: def.homeBottom,
+    };
+  }
+}
+
+function getRobotTargetPos(plotIdx) {
+  const ground = document.getElementById('ground');
+  const plotEls = document.querySelectorAll('.plot');
+  const plotEl = plotEls[plotIdx];
+  if (!plotEl || !ground) return null;
+  const groundRect = ground.getBoundingClientRect();
+  const plotRect = plotEl.getBoundingClientRect();
+  const leftPct = (plotRect.left + plotRect.width / 2 - groundRect.left) / groundRect.width * 100;
+  const bottom = groundRect.bottom - plotRect.bottom + 10;
+  return { leftPct, bottom };
+}
+
+function dispatchRobot(key, targetIdx, onAction) {
+  const ra = robotAgents[key];
+  if (!ra || ra.busy || !ra.el) return false;
+  const def = ROBOT_DEFS[key];
+  const targetPos = getRobotTargetPos(targetIdx);
+  if (!targetPos) return false;
+  
+  ra.busy = true;
+  ra.el.classList.add('robot-moving');
+  
+  const travelTime = def.speed;
+  ra.el.style.transition = 'left ' + travelTime + 'ms cubic-bezier(0.4,0,0.6,1), bottom ' + travelTime + 'ms cubic-bezier(0.4,0,0.6,1)';
+  ra.el.style.left = targetPos.leftPct + '%';
+  ra.el.style.bottom = targetPos.bottom + 'px';
+  
+  setTimeout(() => {
+    ra.el.classList.add('robot-working');
+    onAction();
+    setTimeout(() => {
+      ra.el.classList.remove('robot-working');
+      ra.el.style.transition = 'left ' + travelTime + 'ms cubic-bezier(0.4,0,0.6,1), bottom ' + travelTime + 'ms cubic-bezier(0.4,0,0.6,1)';
+      ra.el.style.left = ra.homeLeftPct + '%';
+      ra.el.style.bottom = ra.homeBottom + 'px';
+      setTimeout(() => {
+        ra.el.classList.remove('robot-moving');
+        ra.busy = false;
+      }, travelTime);
+    }, 600);
+  }, travelTime);
+  
+  return true;
+}
+
+function tickRobotWorkers() {
+  // Only dispatch every few ticks to avoid chaos
+  if (state.tick % 3 !== 0) return;
+  
+  // Harvester robot
+  if (itemLevel('autoHarvest')) {
+    for (let i = 0; i < 18; i++) {
+      const p = state.plots[i];
+      if (p && p.stage >= 4) {
+        dispatchRobot('harvester', i, () => {
+          if (!state.plots[i] || state.plots[i].stage < 4) return;
+          const pDef = PLANTS[state.plots[i].type];
+          const coins = Math.round(pDef.harvestCoins * (1 + itemLevel('harvestBonus') * 0.2));
+          state.coins += coins;
+          showCoinPop(plotCenter(i), '+' + coins + '🪙');
+          doHarvestPlot(i);
+          updatePlot(i);
+          updateHUD();
+          saveGame();
+        });
+        break;
+      }
+    }
+  }
+  
+  // Weeder robot
+  if (itemLevel('weedRobot') && state.weeds.length > 0) {
+    const weedRobotLvl = itemLevel('weedRobot');
+    const interval = weedRobotLvl === 1 ? 6 : 3;
+    if (state.tick % interval === 0) {
+      const weed = state.weeds[0];
+      dispatchRobot('weeder', weed.plotIdx, () => {
+        if (state.weeds.includes(weed)) {
+          pullWeed(weed, true);
+          log('🤖✂️ רובוט עקר עשב שוטה!');
+        }
+      });
+    }
+  }
+  
+  // Water robot
+  if (itemLevel('waterRobot')) {
+    const waterRobotLvl = itemLevel('waterRobot');
+    const interval = waterRobotLvl === 1 ? 5 : 3;
+    if (state.tick % interval === 0 && state.water > 0) {
+      // Find driest plant
+      let target = -1, minWater = 99;
+      for (let i = 0; i < 18; i++) {
+        const p = state.plots[i];
+        if (p && p.stage < 4 && p.watered < minWater) {
+          minWater = p.watered;
+          target = i;
+        }
+      }
+      if (target >= 0 && minWater < 2) {
+        dispatchRobot('waterer', target, () => {
+          if (state.plots[target] && state.water > 0) {
+            state.water = Math.max(0, state.water - 1);
+            state.plots[target].watered = Math.min(3, state.plots[target].watered + 2);
+            state.plots[target].health = Math.min(100, state.plots[target].health + 15);
+            emitParticles(plotCenter(target), '#4fc3f7', 4);
+            updateHUD();
+            saveGame();
+          }
+        });
+      }
+    }
+  }
+  
+  // Fertilizer robot
+  if (itemLevel('fertRobot') && state.fertilizer > 0) {
+    const fertRobotLvl = itemLevel('fertRobot');
+    const interval = fertRobotLvl === 1 ? 8 : 4;
+    if (state.tick % interval === 0) {
+      // Find plant that needs fertilizing (not recently fertilized)
+      const candidates = [];
+      for (let i = 0; i < 18; i++) {
+        const p = state.plots[i];
+        if (p && p.stage < 4 && !p.fertilized) candidates.push(i);
+      }
+      if (candidates.length > 0) {
+        const target = candidates[Math.floor(Math.random() * candidates.length)];
+        dispatchRobot('fertilizer', target, () => {
+          if (state.plots[target] && state.fertilizer > 0) {
+            state.fertilizer--;
+            state.plots[target].fertilized = true;
+            emitParticles(plotCenter(target), '#81c784', 4);
+            updateHUD();
+            saveGame();
+          }
+        });
+      }
+    }
+  }
+  
+  // Sprayer robot
+  if (itemLevel('sprayRobot') && state.spray > 0) {
+    const sprayRobotLvl = itemLevel('sprayRobot');
+    const interval = sprayRobotLvl === 1 ? 5 : 3;
+    if (state.tick % interval === 0 && state.pests.length > 0) {
+      const pest = state.pests[0];
+      dispatchRobot('sprayer', pest.plotIdx, () => {
+        if (state.spray > 0 && state.pests.includes(pest)) {
+          state.spray--;
+          doSprayAt(pest.plotIdx, true);
+          updateHUD();
+          saveGame();
+          log('🤖🧴 רובוט ריסס מזיק!');
+        }
+      });
+    }
+  }
+}
+
 // ========== WEEDS ==========
 const WEED_TYPES = [
   { icon: '🌾', name: 'חיטה פרועה', dmg: 4, spread: 0.3 },
@@ -4103,13 +4835,17 @@ function spawnWeed() {
   if (emptyPlots.length === 0) return;
   const plotIdx = emptyPlots[Math.floor(Math.random() * emptyPlots.length)];
   const wType = WEED_TYPES[Math.floor(Math.random() * WEED_TYPES.length)];
-  const weed = { plotIdx, type: wType, stage: 0, progress: 0 };
+  const wTypeIdx = Math.floor(Math.random() * WEED_TYPES.length);
+  const weed = { plotIdx, type: WEED_TYPES[wTypeIdx], typeIdx: wTypeIdx, stage: 0, progress: 0 };
   state.weeds.push(weed);
   renderWeedOnPlot(weed);
   log('🌾 עשבים שוטים צמחו בגינה! לחץ לעקירה');
 }
 
 function renderWeedOnPlot(weed) {
+  if (!weed.type || typeof weed.type !== 'object') {
+    weed.type = WEED_TYPES[typeof weed.typeIdx === 'number' ? weed.typeIdx : 0] || WEED_TYPES[0];
+  }
   const plotEl = document.querySelectorAll('.plot')[weed.plotIdx];
   if (!plotEl) return;
   // remove old weed el if exists
@@ -4200,6 +4936,133 @@ function getNeighborPlots(idx) {
 
 // Weed pulling is integrated directly into handlePlotClick above
 
+// ========== INVESTORS / EQUITY ==========
+const INVESTOR_DEALS = [
+  { id: 'angel',    name: 'משקיע מלאך',     icon: '👼', amount: 80,   pct: 5,  desc: 'הון ראשוני לעסקים קטנים' },
+  { id: 'seed',     name: 'סבב זרע',         icon: '🌱', amount: 200,  pct: 10, desc: 'קרן ונצ׳ר מאמינה בגינה שלך' },
+  { id: 'seriesA',  name: 'סבב A',           icon: '🚀', amount: 500,  pct: 18, desc: 'גדלנו! משקיעים רציניים נכנסים' },
+  { id: 'seriesB',  name: 'סבב B',           icon: '💼', amount: 1200, pct: 28, desc: 'הרחבה גדולה — הון ענק' },
+  { id: 'vc',       name: 'קרן הון סיכון',    icon: '🏦', amount: 3000, pct: 40, desc: 'הון עצום, שותף כבד לתמיד' },
+];
+
+function openInvestor() {
+  const overlay = document.getElementById('investor-overlay');
+  overlay.style.display = 'flex';
+  renderInvestorModal();
+}
+function closeInvestor() {
+  document.getElementById('investor-overlay').style.display = 'none';
+}
+
+function renderInvestorModal() {
+  const currentDiv = document.getElementById('investor-current');
+  const optionsDiv = document.getElementById('investor-options');
+
+  // Current cap table — group by deal id and show count
+  if (state.investors && state.investors.length > 0) {
+    // group
+    const grouped = {};
+    for (const inv of state.investors) {
+      if (!grouped[inv.id]) grouped[inv.id] = { ...inv, count: 0, totalPct: 0, totalAmount: 0 };
+      grouped[inv.id].count++;
+      grouped[inv.id].totalPct += inv.pct;
+      grouped[inv.id].totalAmount += inv.amount;
+    }
+    let rows = Object.values(grouped).map(g => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:rgba(255,255,255,0.07);border-radius:8px;margin-bottom:4px;font-size:12px;">
+        <span>${g.icon} ${g.name} ${g.count > 1 ? `<span style="font-size:10px;background:rgba(123,31,162,0.5);padding:1px 5px;border-radius:6px">×${g.count}</span>` : ''}</span>
+        <span style="color:#ce93d8;font-weight:bold">${g.totalPct}% לתמיד</span>
+        <span style="color:rgba(255,255,255,0.5)">+${g.totalAmount}🪙</span>
+      </div>`).join('');
+    currentDiv.innerHTML = `
+      <div style="background:rgba(123,31,162,0.3);border:1px solid rgba(156,39,176,0.4);border-radius:12px;padding:12px;margin-bottom:10px;">
+        <div style="font-size:12px;color:#ce93d8;margin-bottom:8px;font-weight:bold">📊 טבלת בעלות נוכחית</div>
+        ${rows}
+        <div style="border-top:1px solid rgba(255,255,255,0.15);margin-top:8px;padding-top:8px;display:flex;justify-content:space-between;font-size:13px;">
+          <span style="color:rgba(255,255,255,0.7)">סה"כ דילול</span>
+          <span style="color:#ff8a65;font-weight:bold">${state.investorCut}% מכל קציר</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-top:4px;">
+          <span style="color:rgba(255,255,255,0.7)">נשאר לך</span>
+          <span style="color:#a5d6a7;font-weight:bold">${100 - state.investorCut}% מכל קציר</span>
+        </div>
+      </div>`;
+  } else {
+    currentDiv.innerHTML = `<div style="text-align:center;font-size:12px;color:rgba(255,255,255,0.45);margin-bottom:10px">אין משקיעים עדיין — הגינה שלך 100% שלך 🌱</div>`;
+  }
+
+  // Available deals — always purchasable, no "already taken" lock
+  const maxCut = 95;
+  const remaining = maxCut - (state.investorCut || 0);
+  let html = '';
+
+  if (remaining <= 0) {
+    html = `<div style="text-align:center;padding:20px;color:#ff8a80;font-size:13px">⚠️ הגעת למקסימום דילול (${maxCut}%)<br><span style="font-size:11px;color:rgba(255,255,255,0.5)">לא ניתן לדלל את הגינה יותר</span></div>`;
+  } else {
+    for (const deal of INVESTOR_DEALS) {
+      // count how many times this deal was taken
+      const timesTaken = state.investors ? state.investors.filter(i => i.id === deal.id).length : 0;
+      const notEnoughRoom = deal.pct > remaining;
+      const disabled = notEnoughRoom;
+      const disabledStyle = disabled ? 'opacity:0.4;cursor:not-allowed;' : 'cursor:pointer;';
+      const disabledAttr = disabled ? 'disabled' : '';
+      const countTag = timesTaken > 0 ? `<span style="font-size:10px;background:rgba(123,31,162,0.6);padding:2px 7px;border-radius:8px;margin-right:4px">×${timesTaken}</span>` : '';
+      const noRoomTag = notEnoughRoom ? `<span style="font-size:10px;color:#ff8a80"> (נותר רק ${remaining}%)</span>` : '';
+      html += `
+        <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(156,39,176,0.3);border-radius:12px;padding:12px 14px;margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+            <span style="font-size:15px">${deal.icon} ${deal.name} ${countTag}</span>
+            <span style="color:#ffd166;font-weight:bold;font-size:15px">${deal.amount}🪙</span>
+          </div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.55);margin-bottom:8px">${deal.desc}${noRoomTag}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:12px;color:#ff8a65">💸 ${deal.pct}% מכל קציר לתמיד</span>
+            <button onclick="takeInvestorDeal('${deal.id}')" ${disabledAttr} style="background:linear-gradient(135deg,#7b1fa2,#4a148c);border:none;border-radius:10px;color:white;padding:6px 14px;font-family:'Secular One',sans-serif;font-size:12px;transition:all 0.2s;${disabledStyle}" onmouseover="if(!this.disabled)this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+              💎 קבל ${deal.amount}🪙
+            </button>
+          </div>
+        </div>`;
+    }
+  }
+  optionsDiv.innerHTML = html;
+}
+
+function takeInvestorDeal(dealId) {
+  const deal = INVESTOR_DEALS.find(d => d.id === dealId);
+  if (!deal) return;
+  const maxCut = 95;
+  if ((state.investorCut || 0) + deal.pct > maxCut) { log('⚠️ אין מספיק אחוזים פנויים!'); return; }
+
+  if (!state.investors) state.investors = [];
+  state.investors.push({ id: deal.id, name: deal.name, icon: deal.icon, amount: deal.amount, pct: deal.pct, day: state.day });
+  state.investorCut = (state.investorCut || 0) + deal.pct;
+  state.coins += deal.amount;
+
+  updateHUD();
+  updateInvestorBtn();
+  renderInvestorModal();
+  const total = state.investorCut;
+  log(`💎 עסקת מניות! +${deal.amount}🪙 — ${deal.pct}% מכל קציר לתמיד (סה"כ ${total}%)`);
+  emitParticles({ x: window.innerWidth/2, y: window.innerHeight/2 }, '#ce93d8', 14);
+  saveGame();
+}
+
+function updateInvestorBtn() {
+  const btn = document.getElementById('investor-hud-btn');
+  if (!btn) return;
+  if (state.investorCut > 0) {
+    btn.textContent = '📊 ' + state.investorCut + '% למשקיעים';
+    btn.style.color = '#ff8a65';
+    btn.style.borderColor = 'rgba(255,138,101,0.5)';
+    btn.style.background = 'rgba(255,138,101,0.15)';
+  } else {
+    btn.textContent = '💎 מניות';
+    btn.style.color = '#ce93d8';
+    btn.style.borderColor = 'rgba(156,39,176,0.5)';
+    btn.style.background = 'rgba(156,39,176,0.25)';
+  }
+}
+
 // ========== LOANS ==========
 const LOAN_OPTIONS = [
   { id: 'small',  name: 'הלוואה קטנה',  amount: 30,  repay: 40,  desc: 'קבל 30🪙, החזר 40🪙 (ריבית 33%)' },
@@ -4242,6 +5105,13 @@ function renderLoanModal() {
         </button>
       </div>`;
   }
+  if (state.loanCount >= 3 && html.indexOf('💎') === -1) {
+    html += `<div style="text-align:center;margin-top:12px;padding:14px;background:rgba(123,31,162,0.2);border:1px solid rgba(156,39,176,0.35);border-radius:12px;">
+      <div style="font-size:13px;margin-bottom:8px;color:#ce93d8">🚫 הלוואות נעולות — נמאס מחובות?</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:10px">מכור אחוז מהגינה תמורת הון ענק ועם זה לא מחזירים!</div>
+      <button onclick="closeLoan();openInvestor()" style="background:linear-gradient(135deg,#7b1fa2,#4a148c);border:none;border-radius:12px;color:white;padding:8px 20px;font-family:'Secular One',sans-serif;font-size:13px;cursor:pointer;">💎 מימון מניות</button>
+    </div>`;
+  }
   if (state.coins > 0 && state.loanDebt > 0) {
     const canPay = Math.min(state.coins, state.loanDebt);
     html += `<div class="loan-option">
@@ -4263,7 +5133,7 @@ function takeLoan(optId) {
   state.loanDebt += opt.repay;
   state.loanCount++;
   updateHUD();
-  updateLoanBtn();
+  updateLoanBtn(); updateInvestorBtn();
   renderLoanModal();
   log(`🏦 לקחת הלוואה: +${opt.amount}🪙 (תחזיר ${opt.repay}🪙)`);
   emitParticles({ x: window.innerWidth/2, y: window.innerHeight/2 }, '#ffd166', 10);
@@ -4283,7 +5153,7 @@ function repayLoan() {
     log(`💸 שילמת ${canPay}🪙. נותר: ${state.loanDebt}🪙`);
   }
   updateHUD();
-  updateLoanBtn();
+  updateLoanBtn(); updateInvestorBtn();
   renderLoanModal();
   saveGame();
 }
@@ -4306,7 +5176,62 @@ function updateLoanBtn() {
   }
 }
 
-// ========== START ==========
+// ========== EXTERNAL BEEHIVE SYNC (from honeybeeGameSave) ==========
+const BEE_GAME_KEY = 'honeybeeGameSave';
+
+function loadExternalBeeData() {
+  try {
+    const raw = localStorage.getItem(BEE_GAME_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    return {
+      bees:       Math.max(0, parseInt(data.bees)       || 0),
+      hiveLevel:  Math.max(1, parseInt(data.hiveLevel)  || 1),
+      speedLevel: Math.max(1, parseInt(data.speedLevel) || 1),
+    };
+  } catch(e) { return null; }
+}
+
+// Returns a bonus object used by growRate and visitor spawning
+function getBeeGameBonuses() {
+  const d = loadExternalBeeData();
+  if (!d) return { beeVisitorBonus: 0, beeBoostMult: 1.4, growSpeedBonus: 1.0, active: false };
+
+  // bees: every bee above base 3 → slightly more visitors
+  const extraBees = Math.max(0, d.bees - 3);
+  const beeVisitorBonus = Math.floor(extraBees / 3); // +1 visitor per 3 extra bees
+
+  // hiveLevel → beeBoost multiplier: level 1=1.4, scales up logarithmically to max 3.0
+  const beeBoostMult = Math.min(3.0, 1.4 + Math.log2(d.hiveLevel) * 0.4);
+
+  // speedLevel → global grow speed bonus: level 1=1.0, each level +8% capped at +150%
+  const growSpeedBonus = Math.min(2.5, 1.0 + (d.speedLevel - 1) * 0.08);
+
+  return { beeVisitorBonus, beeBoostMult, growSpeedBonus, active: true,
+           raw: d };
+}
+
+// Called once at init and periodically to refresh HUD
+function updateBeeGameHUD() {
+  const bonus = getBeeGameBonuses();
+  const el = document.getElementById('bee-game-hud');
+  if (!el) return;
+
+  if (!bonus.active) {
+    el.innerHTML = `<span style="opacity:0.5;font-size:11px">🐝 כוורת חיצונית: לא מחוברת — <a href="https://giamat13.github.io/Bee-nest-game/" target="_blank" style="color:#ffd166;text-decoration:none">שחק עכשיו!</a></span>`;
+    el.title = 'שחק במשחק הכוורת כדי לקבל בונוסים לגינה';
+    return;
+  }
+
+  const d = bonus.raw;
+  const pct = Math.round((bonus.growSpeedBonus - 1) * 100);
+  const boostMult = bonus.beeBoostMult.toFixed(1);
+  el.innerHTML = `<span style="font-size:11px;color:#ffd166">🐝 כוורת מחוברת!</span>
+    <span style="font-size:10px;opacity:0.85"> ${d.bees} דבורות · כוורת רמה ${d.hiveLevel} · מהירות רמה ${d.speedLevel}</span>
+    <span style="font-size:10px;color:#a5d6a7"> → +${pct}% גדילה · x${boostMult} בונוס דבורה · +${bonus.beeVisitorBonus} ביקורים</span>`;
+  el.title = `מחובר למשחק הכוורת:\n🐝 ${d.bees} דבורות (+${bonus.beeVisitorBonus} ביקורי דבורה לגינה)\n🏠 כוורת רמה ${d.hiveLevel} (בונוס דבורה x${boostMult})\n⚡ מהירות רמה ${d.speedLevel} (+${pct}% גדילת צמחים)`;
+}
+
 window.onload = init;
 </script>
 </body>
