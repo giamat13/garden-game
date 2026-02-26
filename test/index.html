@@ -1561,6 +1561,249 @@ body {
   0%,100% { opacity: 1; }
   50% { opacity: 0.3; filter: hue-rotate(180deg); }
 }
+
+/* ====== WEEDS ====== */
+.weed {
+  position: absolute;
+  font-size: 18px;
+  pointer-events: all;
+  cursor: pointer;
+  z-index: 25;
+  animation: weedGrow 0.5s ease-out, weedSway 3s ease-in-out infinite 0.5s;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5));
+  transform-origin: bottom center;
+}
+@keyframes weedGrow {
+  0% { transform: scale(0) translateX(-50%); opacity: 0; }
+  100% { transform: scale(1) translateX(-50%); opacity: 1; }
+}
+@keyframes weedSway {
+  0%,100% { transform: translateX(-50%) rotate(-6deg); }
+  50% { transform: translateX(-50%) rotate(6deg); }
+}
+.weed:hover { filter: brightness(1.3) drop-shadow(0 0 6px rgba(255,100,100,0.7)); }
+.weed-damage-flash {
+  position: fixed;
+  border-radius: 8px;
+  border: 3px solid rgba(150,50,200,0.8);
+  background: rgba(120,0,180,0.12);
+  pointer-events: none;
+  z-index: 615;
+  animation: damageFlash 0.6s ease forwards;
+}
+
+/* ====== WEED ROBOT ====== */
+.wi-weedRobot {
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(160px);
+}
+.weed-robot-body {
+  width: 32px;
+  height: 36px;
+  background: linear-gradient(180deg, #43a047, #2e7d32);
+  border-radius: 6px;
+  border: 2px solid #1b5e20;
+  position: relative;
+  box-shadow: inset -3px 0 6px rgba(0,0,0,0.25), 0 4px 8px rgba(0,0,0,0.4);
+}
+.weed-robot-head {
+  width: 26px;
+  height: 20px;
+  background: linear-gradient(180deg, #66bb6a, #43a047);
+  border-radius: 5px;
+  border: 2px solid #1b5e20;
+  position: relative;
+  margin: 0 auto;
+  margin-bottom: -1px;
+}
+.weed-robot-head::before {
+  content: '🌿';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+.weed-robot-claw {
+  position: absolute;
+  bottom: -8px;
+  font-size: 14px;
+  animation: clawGrab 2s ease-in-out infinite;
+}
+.weed-robot-claw.left { left: -2px; }
+.weed-robot-claw.right { right: -2px; animation-delay: 0.5s; }
+@keyframes clawGrab {
+  0%,100% { transform: rotate(0deg); }
+  50% { transform: rotate(-30deg) scale(1.2); }
+}
+
+/* ====== LOAN MODAL ====== */
+#loan-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20,12,6,0.8);
+  backdrop-filter: blur(6px);
+  z-index: 3000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+#loan-overlay.open { display: flex; }
+#loan-modal {
+  background: linear-gradient(160deg, #1a2a1a, #2a3d2a);
+  border: 3px solid #4caf50;
+  border-radius: 22px;
+  padding: 28px;
+  width: min(420px, 94vw);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.7), 0 0 40px rgba(76,175,80,0.2);
+  position: relative;
+  text-align: center;
+}
+#loan-modal h2 {
+  font-family: 'Noto Serif Hebrew', serif;
+  font-size: 22px;
+  color: #ffd166;
+  margin-bottom: 8px;
+}
+.loan-subtitle {
+  font-size: 12px;
+  color: #a5d6a7;
+  margin-bottom: 20px;
+}
+.loan-option {
+  background: rgba(255,255,255,0.07);
+  border: 2px solid rgba(76,175,80,0.4);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.loan-option:hover {
+  border-color: #4caf50;
+  background: rgba(76,175,80,0.12);
+  transform: translateY(-2px);
+}
+.loan-option-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffd166;
+  margin-bottom: 4px;
+}
+.loan-option-details {
+  font-size: 11px;
+  color: #c8e6c9;
+  line-height: 1.6;
+}
+.loan-option-btn {
+  width: 100%;
+  padding: 9px;
+  border: none;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  color: white;
+  font-family: 'Secular One', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+}
+.loan-option-btn:hover { background: linear-gradient(135deg, #66bb6a, #388e3c); transform: scale(1.02); }
+.loan-option-btn:disabled { background: #555; cursor: not-allowed; transform: none; }
+.loan-close {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #a5d6a7;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+.loan-close:hover { background: rgba(76,175,80,0.2); }
+.loan-debt-info {
+  background: rgba(229,57,53,0.12);
+  border: 1px solid rgba(229,57,53,0.3);
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin-bottom: 14px;
+  font-size: 11px;
+  color: #ff8a80;
+}
+#loan-hud-btn {
+  background: linear-gradient(135deg, rgba(229,57,53,0.3), rgba(229,57,53,0.15));
+  border: 1px solid rgba(229,57,53,0.5);
+  border-radius: 14px;
+  color: #ff8a80;
+  padding: 5px 12px;
+  cursor: pointer;
+  font-family: 'Secular One', sans-serif;
+  font-size: 12px;
+  display: none;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s;
+}
+#loan-hud-btn:hover { background: rgba(229,57,53,0.35); }
+#loan-hud-btn.visible { display: flex; }
+
+/* ====== PIPES / CONNECTIONS ====== */
+.pipe-line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.pipe-water {
+  stroke: #0288d1;
+  stroke-width: 4;
+  filter: drop-shadow(0 0 3px rgba(2,136,209,0.6));
+}
+.pipe-fert {
+  stroke: #388e3c;
+  stroke-width: 3.5;
+  filter: drop-shadow(0 0 3px rgba(56,142,60,0.5));
+}
+.pipe-electric {
+  stroke: #9c27b0;
+  stroke-width: 2.5;
+  stroke-dasharray: 6 4;
+  filter: drop-shadow(0 0 4px rgba(156,39,176,0.7));
+  animation: electricFlow 1.2s linear infinite;
+}
+@keyframes electricFlow {
+  to { stroke-dashoffset: -20; }
+}
+.pipe-wire {
+  stroke: #ffd166;
+  stroke-width: 2;
+  stroke-dasharray: 4 3;
+  filter: drop-shadow(0 0 3px rgba(255,209,102,0.6));
+  animation: electricFlow 1.5s linear infinite;
+}
+.pipe-joint {
+  fill: #546e7a;
+  stroke: #263238;
+  stroke-width: 1.5;
+}
+.pipe-joint-water { fill: #0277bd; }
+.pipe-joint-fert  { fill: #2e7d32; }
+.pipe-joint-elec  { fill: #6a1b9a; }
+/* Water flow drops animation along pipes */
+.flow-drop {
+  fill: rgba(79,195,247,0.85);
+  animation: dropFlow linear infinite;
+}
+@keyframes dropFlow {
+  0%   { opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0; }
+}
 </style>
 </head>
 <body>
@@ -1574,7 +1817,9 @@ body {
     <div id="grass-strip"></div>
     <div id="dirt"></div>
     <div id="fence"></div>
-    <div id="items-world"></div>
+    <div id="items-world">
+      <svg id="pipes-svg" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:29;overflow:visible;"></svg>
+    </div>
     <div id="garden-area"></div>
   </div>
 </div>
@@ -1603,6 +1848,7 @@ body {
     <span id="weather-name">שמשי</span>
   </div>
   <div id="active-items-row" title="פריטים פעילים"></div>
+  <button id="loan-hud-btn" onclick="openLoan()" title="הלוואות">🏦 הלוואה</button>
   <button id="shop-hud-btn" onclick="openShop()">🏪 חנות</button>
   <div class="day-info">
     <span>יום</span>
@@ -1674,7 +1920,21 @@ body {
     <button class="shop-close" onclick="closeShop()">✕</button>
     <h2>🏪 חנות הגינה</h2>
     <div class="shop-subtitle">שדרג את הגינה שלך — פריטים מופיעים פיזית בגינה!</div>
+    <div style="text-align:center;margin-bottom:12px">
+      <button onclick="closeLoan();closeLoan();openLoan()" style="background:linear-gradient(135deg,#4caf50,#2e7d32);border:none;border-radius:12px;color:white;padding:8px 20px;font-family:'Secular One',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s" onmouseover="this.style.opacity=0.85" onmouseout="this.style.opacity=1">🏦 בנק הגינה — הלוואות</button>
+    </div>
     <div id="shop-content"></div>
+  </div>
+</div>
+
+<!-- LOAN MODAL -->
+<div id="loan-overlay" onclick="if(event.target===this)closeLoan()">
+  <div id="loan-modal">
+    <button class="loan-close" onclick="closeLoan()">✕</button>
+    <h2>🏦 בנק הגינה</h2>
+    <div class="loan-subtitle">נתקעת? קח הלוואה ותחזיר עם הקציר!</div>
+    <div id="loan-debt-display"></div>
+    <div id="loan-options"></div>
   </div>
 </div>
 
@@ -1913,6 +2173,16 @@ const ITEMS = {
     labels: ['+20%','+40%','+60%'],
     maintenance: null,
   },
+  weedRobot: {
+    name: 'רובוט עשבים',
+    icon: '🌿🤖',
+    desc: 'תולש אוטומטית עשבים שוטים מהגינה',
+    category: 'אוטומציה',
+    maxLevel: 2,
+    prices: [80, 150],
+    labels: ['איטי','מהיר'],
+    maintenance: [2, 3],
+  },
 };
 
 // ========== STATE ==========
@@ -1937,6 +2207,9 @@ let state = {
   pests: [],
   birds: [],
   lastDay: 1,
+  weeds: [],
+  loanDebt: 0,
+  loanCount: 0,
 };
 
 // ========== MAINTENANCE ==========
@@ -1995,6 +2268,7 @@ function buyItem(key) {
   renderShop();
   updateActiveItemsRow();
   renderGardenItems();
+  drawPipes();
   saveGame();
 
   if (key === 'waterTank') state.water = Math.min(getMaxWater(), state.water + 10);
@@ -2220,6 +2494,20 @@ function renderGardenItems() {
     ['קוצר אוטומטית צמחים בשלים']);
   }
 
+  // ── ~39%: Weed Robot ──────────────────────────────
+  const lvlWeedRobot = itemLevel('weedRobot');
+  if (lvlWeedRobot > 0) {
+    addItem('weedRobot', `
+      <div class="weed-robot-head"></div>
+      <div class="weed-robot-body">
+        <div class="weed-robot-claw left">✂️</div>
+        <div class="weed-robot-claw right">✂️</div>
+      </div>
+      <div class="world-item-label">✂️ עשבים</div>
+    `, { left: '40%', bottom: 10, zIndex: 34 },
+    [`תולש עשבים שוטים ${lvlWeedRobot === 1 ? 'לאט' : 'מהר'}`]);
+  }
+
   // ── CENTER: Scarecrow ─────────────────────────── ~50% (between garden cols)
   const lvlScarecrow = itemLevel('scarecrow');
   if (lvlScarecrow > 0) {
@@ -2374,7 +2662,333 @@ function renderGardenItems() {
   }
 }
 
-// ========== SAVE / LOAD ==========
+// ========== PIPE / CONNECTION DRAWING ==========
+function getItemCenter(className) {
+  // Returns {x, y} in #items-world coordinate space (which is same as #ground)
+  const el = document.querySelector('.' + className);
+  if (!el) return null;
+  const layer = document.getElementById('items-world');
+  const layerRect = layer.getBoundingClientRect();
+  const elRect = el.getBoundingClientRect();
+  return {
+    x: elRect.left - layerRect.left + elRect.width / 2,
+    y: elRect.top  - layerRect.top  + elRect.height / 2,
+    bottom: elRect.bottom - layerRect.top,
+    top: elRect.top - layerRect.top,
+    left: elRect.left - layerRect.left,
+    right: elRect.right - layerRect.left,
+    w: elRect.width,
+    h: elRect.height,
+  };
+}
+
+function drawPipes() {
+  const svg = document.getElementById('pipes-svg');
+  if (!svg) return;
+  svg.innerHTML = '';
+
+  const ns = 'http://www.w3.org/2000/svg';
+  const mk = (tag, attrs) => {
+    const el = document.createElementNS(ns, tag);
+    for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+    return el;
+  };
+
+  const joint = (x, y, r, cls) => {
+    const c = mk('circle', { cx: x, cy: y, r, class: 'pipe-joint ' + cls });
+    svg.appendChild(c);
+  };
+
+  // Underground pipe helper — draws an L-shaped underground route
+  // from (x1, groundY) going underground and up to (x2, groundY)
+  const groundY = (() => {
+    const layer = document.getElementById('items-world');
+    const groundEl = document.getElementById('ground');
+    if (!layer || !groundEl) return 0;
+    return groundEl.getBoundingClientRect().height - 14; // near bottom
+  })();
+
+  const undergroundPipe = (x1, y1, x2, y2, cls, depth = 0) => {
+    const ug = groundY + 6 + depth; // underground depth
+    const d = `M ${x1} ${y1} L ${x1} ${ug} L ${x2} ${ug} L ${x2} ${y2}`;
+    const path = mk('path', { d, class: 'pipe-line ' + cls });
+    svg.appendChild(path);
+  };
+
+  const surfacePipe = (x1, y1, x2, y2, cls) => {
+    const mid = (y1 + y2) / 2;
+    const d = `M ${x1} ${y1} C ${x1} ${mid}, ${x2} ${mid}, ${x2} ${y2}`;
+    const path = mk('path', { d, class: 'pipe-line ' + cls });
+    svg.appendChild(path);
+  };
+
+  // Animated flow marker along a path
+  const flowMarker = (path, cls, dur, offset = 0) => {
+    const circle = mk('circle', { r: 4, class: 'flow-drop ' + cls });
+    const anim = mk('animateMotion', {
+      dur: dur + 's',
+      repeatCount: 'indefinite',
+      begin: offset + 's',
+    });
+    const mpath = mk('mpath', {});
+    mpath.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '#' + path.id);
+    anim.appendChild(mpath);
+    circle.appendChild(anim);
+    svg.appendChild(circle);
+  };
+
+  let pathIdx = 0;
+  const namedPath = (d, cls) => {
+    const id = 'pp' + (pathIdx++);
+    const path = mk('path', { id, d, class: 'pipe-line ' + cls });
+    svg.appendChild(path);
+    return path;
+  };
+
+  // ── 1. Rain Collector → Water Tank (underground water pipe) ──────────────
+  const rain = getItemCenter('wi-rainCollector');
+  const tank = getItemCenter('wi-waterTank');
+  if (rain && tank && itemLevel('rainCollector') > 0 && itemLevel('waterTank') > 0) {
+    const x1 = rain.x, y1 = rain.bottom - 8;
+    const x2 = tank.right - 6, y2 = tank.bottom - 16;
+    const ug = groundY + 5;
+    const d = `M ${x1} ${y1} L ${x1} ${ug} L ${x2} ${ug} L ${x2} ${y2}`;
+    const p = namedPath(d, 'pipe-water');
+    // animated drop
+    for (let i = 0; i < 2; i++) {
+      const drop = mk('circle', { r: 3.5, class: 'flow-drop' });
+      const anim = mk('animateMotion', { dur: '3s', repeatCount: 'indefinite', begin: (i * 1.5) + 's' });
+      const mp = mk('mpath', {}); mp.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '#' + p.id);
+      anim.appendChild(mp); drop.appendChild(anim); svg.appendChild(drop);
+    }
+    joint(x1, y1, 4, 'pipe-joint-water');
+    joint(x2, y2, 4, 'pipe-joint-water');
+    joint(x1, ug, 3.5, 'pipe-joint-water');
+    joint(x2, ug, 3.5, 'pipe-joint-water');
+  }
+
+  // ── 2. Water Tank → Auto Water pipe (supply line) ────────────────────────
+  const autoWaterEl = document.querySelector('.wi-autoWater .water-pipe');
+  if (autoWaterEl && tank && itemLevel('autoWater') > 0 && itemLevel('waterTank') > 0) {
+    const layer = document.getElementById('items-world');
+    const layerRect = layer.getBoundingClientRect();
+    const awRect = autoWaterEl.getBoundingClientRect();
+    const pipeLeft = awRect.left - layerRect.left;
+    const pipeY    = awRect.top  - layerRect.top + 3;
+    const x1 = tank.right - 4, y1 = tank.top + tank.h * 0.3;
+    const x2 = pipeLeft, y2 = pipeY;
+    const d = `M ${x1} ${y1} C ${x1 + 30} ${y1}, ${x2 - 30} ${y2}, ${x2} ${y2}`;
+    const p = namedPath(d, 'pipe-water');
+    for (let i = 0; i < 3; i++) {
+      const drop = mk('circle', { r: 3, class: 'flow-drop' });
+      const anim = mk('animateMotion', { dur: '2.5s', repeatCount: 'indefinite', begin: (i * 0.83) + 's' });
+      const mp = mk('mpath', {}); mp.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '#' + p.id);
+      anim.appendChild(mp); drop.appendChild(anim); svg.appendChild(drop);
+    }
+    joint(x1, y1, 4, 'pipe-joint-water');
+    joint(x2, y2, 4, 'pipe-joint-water');
+  }
+
+  // ── 3. Rain Collector → Auto Water (if no tank but both present) ─────────
+  if (rain && !tank && itemLevel('autoWater') > 0 && itemLevel('rainCollector') > 0) {
+    const autoWaterPipeEl = document.querySelector('.wi-autoWater .water-pipe');
+    if (autoWaterPipeEl) {
+      const layer = document.getElementById('items-world');
+      const layerRect = layer.getBoundingClientRect();
+      const awRect = autoWaterPipeEl.getBoundingClientRect();
+      const x1 = rain.x, y1 = rain.bottom - 8;
+      const x2 = awRect.left - layerRect.left, y2 = awRect.top - layerRect.top + 3;
+      const ug = groundY + 5;
+      const d = `M ${x1} ${y1} L ${x1} ${ug} L ${x2} ${ug} L ${x2} ${y2}`;
+      const p = namedPath(d, 'pipe-water');
+      joint(x1, y1, 4, 'pipe-joint-water');
+      joint(x2, y2, 4, 'pipe-joint-water');
+    }
+  }
+
+  // ── 4. Compost Bin → Auto Fert machine (fertilizer pipe, green) ──────────
+  const compost = getItemCenter('wi-compostBin');
+  const autoFert = getItemCenter('wi-autoFert');
+  if (compost && autoFert && itemLevel('compostBin') > 0 && itemLevel('autoFert') > 0) {
+    const x1 = compost.left + 4, y1 = compost.bottom - 10;
+    const x2 = autoFert.right - 4, y2 = autoFert.bottom - 10;
+    const ug = groundY + 12;
+    const d = `M ${x1} ${y1} L ${x1} ${ug} L ${x2} ${ug} L ${x2} ${y2}`;
+    const p = namedPath(d, 'pipe-fert');
+    for (let i = 0; i < 2; i++) {
+      const drop = mk('circle', { r: 3, style: 'fill:rgba(129,199,132,0.85);', class: 'flow-drop' });
+      const anim = mk('animateMotion', { dur: '3.5s', repeatCount: 'indefinite', begin: (i * 1.75) + 's' });
+      const mp = mk('mpath', {}); mp.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '#' + p.id);
+      anim.appendChild(mp); drop.appendChild(anim); svg.appendChild(drop);
+    }
+    joint(x1, y1, 4, 'pipe-joint-fert');
+    joint(x2, y2, 4, 'pipe-joint-fert');
+    joint(x1, ug, 3, 'pipe-joint-fert');
+    joint(x2, ug, 3, 'pipe-joint-fert');
+  }
+
+  // ── 5. LED lamp → Greenhouse (electric wire) ─────────────────────────────
+  const ledEl = document.querySelector('.wi-ledLamp .led-bar');
+  const ghEl  = document.querySelector('.wi-greenhouse .greenhouse-glass');
+  if (ledEl && ghEl && itemLevel('ledLamp') > 0 && itemLevel('greenhouse') > 0) {
+    const layer = document.getElementById('items-world');
+    const lr = layer.getBoundingClientRect();
+    const ledR = ledEl.getBoundingClientRect();
+    const ghR  = ghEl.getBoundingClientRect();
+    // Wire from LED bar left edge down to greenhouse top-left corner
+    const x1 = ledR.left - lr.left, y1 = ledR.top - lr.top + 4;
+    const x2 = ghR.left  - lr.left + 10, y2 = ghR.top - lr.top;
+    const d = `M ${x1} ${y1} L ${x2} ${y1} L ${x2} ${y2}`;
+    namedPath(d, 'pipe-electric');
+    joint(x1, y1, 3.5, 'pipe-joint-elec');
+    joint(x2, y2, 3.5, 'pipe-joint-elec');
+  }
+
+  // ── 6. LED lamp wire to auto-water (power) ───────────────────────────────
+  const autoWaterPipeEl2 = document.querySelector('.wi-autoWater .water-pipe');
+  if (ledEl && autoWaterPipeEl2 && itemLevel('ledLamp') > 0 && itemLevel('autoWater') > 0) {
+    const layer = document.getElementById('items-world');
+    const lr = layer.getBoundingClientRect();
+    const ledR  = ledEl.getBoundingClientRect();
+    const awR   = autoWaterPipeEl2.getBoundingClientRect();
+    const x1 = ledR.right - lr.left - 20, y1 = ledR.top - lr.top + 4;
+    const x2 = awR.left   - lr.left + awR.width * 0.5, y2 = awR.top - lr.top;
+    const d = `M ${x1} ${y1} L ${x1} ${y1 - 8} L ${x2} ${y1 - 8} L ${x2} ${y2}`;
+    namedPath(d, 'pipe-wire');
+    joint(x1, y1, 3, 'pipe-joint-elec');
+    joint(x2, y2, 3, 'pipe-joint-elec');
+  }
+
+  // ── 7. Beehive → garden area (dashed "flight path") ─────────────────────
+  const hive = getItemCenter('wi-beeHive');
+  const gardenEl = document.getElementById('garden-area');
+  if (hive && gardenEl && itemLevel('beeHive') > 0) {
+    const layer = document.getElementById('items-world');
+    const lr = layer.getBoundingClientRect();
+    const gr = gardenEl.getBoundingClientRect();
+    const gx = gr.right - lr.left - 30;
+    const gy = gr.top   - lr.top  + gr.height / 2;
+    const x1 = hive.left + 8, y1 = hive.y - 10;
+    // wavy dashed path
+    const cx = (x1 + gx) / 2;
+    const d = `M ${x1} ${y1} Q ${cx} ${y1 - 40} ${gx} ${gy}`;
+    const p = mk('path', {
+      id: 'pp' + (pathIdx++), d,
+      fill: 'none',
+      stroke: '#ffd166',
+      'stroke-width': '1.5',
+      'stroke-dasharray': '5 5',
+      opacity: '0.55',
+    });
+    svg.appendChild(p);
+    // bee animation
+    const bee = mk('text', { 'font-size': '14', 'text-anchor': 'middle' });
+    bee.textContent = '🐝';
+    const beeAnim = mk('animateMotion', { dur: '5s', repeatCount: 'indefinite' });
+    const beeMp = mk('mpath', {}); beeMp.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '#' + p.id);
+    beeAnim.appendChild(beeMp); bee.appendChild(beeAnim);
+    svg.appendChild(bee);
+  }
+
+  // ── 8. Scarecrow → garden area (protection radius, dashed arc) ───────────
+  const sc = getItemCenter('wi-scarecrow');
+  if (sc && itemLevel('scarecrow') > 0 && gardenEl) {
+    const layer = document.getElementById('items-world');
+    const lr = layer.getBoundingClientRect();
+    const gr = gardenEl.getBoundingClientRect();
+    const gCx = (gr.left + gr.right) / 2 - lr.left;
+    const gCy = (gr.top  + gr.bottom) / 2 - lr.top;
+    // dashed oval around garden
+    const rx = gr.width  / 2 + 16;
+    const ry = gr.height / 2 + 12;
+    const ellipse = mk('ellipse', {
+      cx: gCx, cy: gCy, rx, ry,
+      fill: 'none',
+      stroke: '#ff8f00',
+      'stroke-width': '1.5',
+      'stroke-dasharray': '8 6',
+      opacity: '0.3',
+    });
+    svg.appendChild(ellipse);
+    // small arrow from scarecrow to ellipse edge
+    const ex = gCx - rx * 0.85, ey = gCy - ry * 0.5;
+    const arrow = mk('line', {
+      x1: sc.x, y1: sc.top - 4, x2: ex, y2: ey,
+      stroke: '#ff8f00', 'stroke-width': '1.5', 'stroke-dasharray': '4 3', opacity: '0.35',
+    });
+    svg.appendChild(arrow);
+  }
+
+  // ── 9. Sun Mirror → garden sun-loving plants (light beam) ────────────────
+  const mirror = getItemCenter('wi-sunMirror');
+  if (mirror && itemLevel('sunMirror') > 0 && gardenEl) {
+    const layer = document.getElementById('items-world');
+    const lr = layer.getBoundingClientRect();
+    const gr = gardenEl.getBoundingClientRect();
+    const tx = gr.left - lr.left + gr.width * 0.7;
+    const ty = gr.top  - lr.top  + 30;
+    const beam = mk('line', {
+      x1: mirror.x, y1: mirror.top + 6,
+      x2: tx, y2: ty,
+      stroke: '#ffd166', 'stroke-width': '2.5',
+      'stroke-dasharray': '6 4',
+      opacity: '0.4',
+      filter: 'drop-shadow(0 0 4px rgba(255,209,102,0.8))',
+    });
+    svg.appendChild(beam);
+    // bouncing shimmer dot
+    const shimmer = mk('circle', { r: 5, fill: 'rgba(255,220,80,0.7)', filter: 'blur(1px)' });
+    const sAnim = mk('animateMotion', { dur: '2s', repeatCount: 'indefinite' });
+    const sMp = mk('mpath', {});
+    // create inline path for shimmer
+    const shimPath = mk('path', { id: 'pp' + pathIdx, d: `M ${mirror.x} ${mirror.top + 6} L ${tx} ${ty}`, fill: 'none', stroke: 'none' });
+    svg.appendChild(shimPath);
+    sMp.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '#pp' + pathIdx);
+    pathIdx++;
+    sAnim.appendChild(sMp); shimmer.appendChild(sAnim); svg.appendChild(shimmer);
+  }
+
+  // ── 10. Harvest Bonus sign → garden right side (coin trail) ──────────────
+  const hb = getItemCenter('wi-harvestBonus');
+  if (hb && itemLevel('harvestBonus') > 0 && gardenEl) {
+    const layer = document.getElementById('items-world');
+    const lr = layer.getBoundingClientRect();
+    const gr = gardenEl.getBoundingClientRect();
+    const tx = gr.right - lr.left - 10;
+    const ty = gr.top   - lr.top  + gr.height * 0.6;
+    const p = namedPath(`M ${hb.left + 4} ${hb.y} L ${tx} ${ty}`, '');
+    p.setAttribute('stroke', '#ffc107');
+    p.setAttribute('stroke-width', '1.5');
+    p.setAttribute('stroke-dasharray', '5 4');
+    p.setAttribute('opacity', '0.4');
+    // coin flow
+    const coin = mk('text', { 'font-size': '11', 'text-anchor': 'middle' });
+    coin.textContent = '🪙';
+    const cAnim = mk('animateMotion', { dur: '2.8s', repeatCount: 'indefinite' });
+    const cMp = mk('mpath', {}); cMp.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '#' + p.id);
+    cAnim.appendChild(cMp); coin.appendChild(cAnim); svg.appendChild(coin);
+  }
+
+  // ── 11. Grow Boost → garden (sparkle trail) ──────────────────────────────
+  const boost = getItemCenter('wi-growBoost');
+  if (boost && itemLevel('growBoost') > 0 && gardenEl) {
+    const layer = document.getElementById('items-world');
+    const lr = layer.getBoundingClientRect();
+    const gr = gardenEl.getBoundingClientRect();
+    const tx = gr.left + gr.width * 0.55 - lr.left;
+    const ty = gr.bottom - lr.top - 20;
+    const p = namedPath(`M ${boost.x} ${boost.top} Q ${boost.x - 20} ${ty - 60} ${tx} ${ty}`, '');
+    p.setAttribute('stroke', '#ce93d8');
+    p.setAttribute('stroke-width', '1.5');
+    p.setAttribute('stroke-dasharray', '4 4');
+    p.setAttribute('opacity', '0.45');
+    const spark = mk('text', { 'font-size': '12', 'text-anchor': 'middle' });
+    spark.textContent = '✨';
+    const spAnim = mk('animateMotion', { dur: '2.2s', repeatCount: 'indefinite' });
+    const spMp = mk('mpath', {}); spMp.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '#' + p.id);
+    spAnim.appendChild(spMp); spark.appendChild(spAnim); svg.appendChild(spark);
+  }
+}
 const SAVE_KEY = 'garden_of_wonders_save';
 
 function saveGame() {
@@ -2383,6 +2997,8 @@ function saveGame() {
     seeds: state.seeds, plots: state.plots, day: state.day, hour: state.hour,
     weather: state.weather, tick: state.tick, gameTime: state.gameTime,
     items: state.items, spray: state.spray, lastDay: state.lastDay, savedAt: Date.now(),
+    loanDebt: state.loanDebt, loanCount: state.loanCount,
+    weeds: state.weeds,
   };
   const json = JSON.stringify(toSave);
   try { localStorage.setItem(SAVE_KEY, json); } catch(e) {}
@@ -2417,6 +3033,9 @@ function loadGame() {
     state.items = data.items ?? state.items;
     state.spray = data.spray ?? state.spray;
     state.lastDay = data.lastDay ?? state.day;
+    state.loanDebt = data.loanDebt ?? 0;
+    state.loanCount = data.loanCount ?? 0;
+    state.weeds = data.weeds ?? [];
     return true;
   } catch(e) { return false; }
 }
@@ -2439,6 +3058,7 @@ function init() {
   document.getElementById('weather-name').textContent = w.name;
   document.getElementById('day-num').textContent = state.day;
   renderGardenItems();
+  setTimeout(drawPipes, 80); // wait for DOM layout
   gameLoop();
   updateSkyColors();
   setInterval(gameTick, 4000);
@@ -2450,8 +3070,14 @@ function init() {
   setInterval(changeWeather, 60000);
   setInterval(spawnPest, 25000);
   setInterval(spawnBird, 18000);
+  setInterval(spawnWeed, 35000);
   document.addEventListener('click', closePopup);
   updateActiveItemsRow();
+  updateLoanBtn();
+  // Re-render any saved weeds
+  if (state.weeds && state.weeds.length > 0) {
+    state.weeds.forEach(w => renderWeedOnPlot(w));
+  }
   if (hasSave) {
     log('ברוכים חזרה! גינתך נטענה 🌿 (יום ' + state.day + ')');
   } else {
@@ -2628,6 +3254,7 @@ function onNewDay() {
   payMaintenance();
   document.getElementById('day-num').textContent = state.day;
   renderGardenItems(); // refresh water tank level display
+  setTimeout(drawPipes, 50);
 }
 
 setInterval(updateSkyColors, 500);
@@ -2882,6 +3509,7 @@ function gameTick() {
   }
 
   tickPests();
+  tickWeeds();
   updateAllPlots();
   updateHUD();
   
@@ -2934,6 +3562,13 @@ function changeWeather() {
 function handlePlotClick(idx, e) {
   const plot = state.plots[idx];
   
+  // Pull weed if empty plot with weed
+  const weed = state.weeds.find(w => w.plotIdx === idx);
+  if (weed && !plot) {
+    pullWeed(weed);
+    return;
+  }
+
   if (!plot && state.selectedSeed) {
     plantSeed(idx, state.selectedSeed);
     return;
@@ -2997,15 +3632,27 @@ function harvestPlant(idx) {
   if (!plot || plot.stage < 4) { log('הצמח עוד לא מוכן לקציר 🌱'); return; }
   const pDef = PLANTS[plot.type];
   const bonusMult = 1 + itemLevel('harvestBonus') * 0.2;
-  const coins = Math.round((pDef.harvestCoins + Math.floor(plot.health / 20)) * bonusMult);
+  const rawCoins = Math.round((pDef.harvestCoins + Math.floor(plot.health / 20)) * bonusMult);
+  let deduction = 0;
+  if (state.loanDebt > 0) {
+    deduction = Math.min(Math.ceil(rawCoins * 0.3), state.loanDebt);
+    state.loanDebt -= deduction;
+    if (state.loanDebt <= 0) { state.loanDebt = 0; state.loanCount = 0; }
+  }
+  const coins = rawCoins - deduction;
   state.coins += coins;
   state.plots[idx] = null;
   const pos = plotCenter(idx);
-  showCoinPop(pos, `+${coins}🪙`);
+  showCoinPop(pos, `+${coins}🪙${deduction > 0 ? ' (-'+deduction+'💸)' : ''}`);
   emitParticles(pos, '#ffd166', 12);
-  log(`קצרת ${pDef.name}! +${coins} מטבעות 🪙`);
+  if (deduction > 0) {
+    log(`קצרת ${pDef.name}! +${coins}🪙 (${deduction}🪙 לחוב 💸)`);
+  } else {
+    log(`קצרת ${pDef.name}! +${coins} מטבעות 🪙`);
+  }
   updatePlot(idx);
   updateHUD();
+  updateLoanBtn();
   saveGame();
 }
 
@@ -3435,6 +4082,228 @@ function closePopup(e) {
   const popup = document.getElementById('plant-popup');
   if (e && popup.contains(e.target)) return;
   popup.style.display = 'none';
+}
+
+// ========== WEEDS ==========
+const WEED_TYPES = [
+  { icon: '🌾', name: 'חיטה פרועה', dmg: 4, spread: 0.3 },
+  { icon: '🌿', name: 'עלה חמצה', dmg: 5, spread: 0.25 },
+  { icon: '🍀', name: 'תלתן שוטה', dmg: 3, spread: 0.4 },
+  { icon: '🌱', name: 'עשב-רע', dmg: 6, spread: 0.2 },
+];
+
+function spawnWeed() {
+  // Find empty plots (no plant, no weed)
+  const emptyPlots = [];
+  for (let i = 0; i < 18; i++) {
+    if (!state.plots[i] && !state.weeds.find(w => w.plotIdx === i)) {
+      emptyPlots.push(i);
+    }
+  }
+  if (emptyPlots.length === 0) return;
+  const plotIdx = emptyPlots[Math.floor(Math.random() * emptyPlots.length)];
+  const wType = WEED_TYPES[Math.floor(Math.random() * WEED_TYPES.length)];
+  const weed = { plotIdx, type: wType, stage: 0, progress: 0 };
+  state.weeds.push(weed);
+  renderWeedOnPlot(weed);
+  log('🌾 עשבים שוטים צמחו בגינה! לחץ לעקירה');
+}
+
+function renderWeedOnPlot(weed) {
+  const plotEl = document.querySelectorAll('.plot')[weed.plotIdx];
+  if (!plotEl) return;
+  // remove old weed el if exists
+  const old = plotEl.querySelector('.weed-on-plot');
+  if (old) old.remove();
+  const el = document.createElement('div');
+  el.className = 'weed weed-on-plot';
+  const size = 14 + weed.stage * 8;
+  el.style.fontSize = size + 'px';
+  el.style.bottom = (weed.stage * 2) + 'px';
+  el.style.left = '50%';
+  el.style.position = 'absolute';
+  el.textContent = weed.type.icon;
+  el.title = weed.type.name + ' — לחץ לעקירה';
+  el.addEventListener('click', (e) => { e.stopPropagation(); pullWeed(weed); });
+  plotEl.appendChild(el);
+}
+
+function pullWeed(weed, auto = false) {
+  if (!auto && state.selectedTool !== 'remove' && state.selectedTool !== 'water' && state.selectedTool !== 'fertilize' && state.selectedTool !== 'harvest') {
+    // allow pulling with any tool
+  }
+  const plotEl = document.querySelectorAll('.plot')[weed.plotIdx];
+  if (plotEl) {
+    const el = plotEl.querySelector('.weed-on-plot');
+    if (el) el.remove();
+  }
+  state.weeds = state.weeds.filter(w => w !== weed);
+  emitParticles(plotCenter(weed.plotIdx), '#8d6e63', 6);
+  if (!auto) log('✂️ עקרת עשב שוטה!');
+}
+
+function tickWeeds() {
+  // auto-weed robot
+  const weedRobotLvl = itemLevel('weedRobot');
+  if (weedRobotLvl > 0 && state.weeds.length > 0) {
+    // every N ticks remove one weed
+    const interval = weedRobotLvl === 1 ? 8 : 4;
+    if (state.tick % interval === 0) {
+      const w = state.weeds[0];
+      pullWeed(w, true);
+      log('🤖 הרובוט עקר עשב שוטה! ✂️');
+      return;
+    }
+  }
+
+  // Grow existing weeds and damage nearby plants
+  state.weeds.forEach(weed => {
+    weed.progress += 1;
+    if (weed.progress >= 15 && weed.stage < 3) {
+      weed.stage++;
+      weed.progress = 0;
+      renderWeedOnPlot(weed);
+    }
+    // Damage adjacent plots
+    const neighbors = getNeighborPlots(weed.plotIdx);
+    neighbors.forEach(ni => {
+      if (state.plots[ni]) {
+        state.plots[ni].health = Math.max(0, state.plots[ni].health - weed.type.dmg * 0.3);
+      }
+    });
+    // Flash damage
+    const plotEl = document.querySelectorAll('.plot')[weed.plotIdx];
+    if (plotEl && state.tick % 4 === 0) {
+      const flash = document.createElement('div');
+      flash.className = 'weed-damage-flash';
+      const r = plotEl.getBoundingClientRect();
+      flash.style.left = r.left + 'px';
+      flash.style.top = r.top + 'px';
+      flash.style.width = r.width + 'px';
+      flash.style.height = r.height + 'px';
+      document.body.appendChild(flash);
+      setTimeout(() => flash.remove(), 700);
+    }
+  });
+}
+
+function getNeighborPlots(idx) {
+  const row = Math.floor(idx / 6);
+  const col = idx % 6;
+  const neighbors = [];
+  if (col > 0) neighbors.push(idx - 1);
+  if (col < 5) neighbors.push(idx + 1);
+  if (row > 0) neighbors.push(idx - 6);
+  if (row < 2) neighbors.push(idx + 6);
+  return neighbors;
+}
+
+// Weed pulling is integrated directly into handlePlotClick above
+
+// ========== LOANS ==========
+const LOAN_OPTIONS = [
+  { id: 'small',  name: 'הלוואה קטנה',  amount: 30,  repay: 40,  desc: 'קבל 30🪙, החזר 40🪙 (ריבית 33%)' },
+  { id: 'medium', name: 'הלוואה בינונית',amount: 60,  repay: 85,  desc: 'קבל 60🪙, החזר 85🪙 (ריבית 42%)' },
+  { id: 'big',    name: 'הלוואה גדולה',  amount: 120, repay: 180, desc: 'קבל 120🪙, החזר 180🪙 (ריבית 50%)' },
+];
+
+function openLoan() {
+  renderLoanModal();
+  document.getElementById('loan-overlay').classList.add('open');
+}
+
+function closeLoan() {
+  document.getElementById('loan-overlay').classList.remove('open');
+}
+
+function renderLoanModal() {
+  const debtDiv = document.getElementById('loan-debt-display');
+  const optionsDiv = document.getElementById('loan-options');
+
+  if (state.loanDebt > 0) {
+    debtDiv.innerHTML = `<div class="loan-debt-info">💸 חוב נוכחי: <strong>${state.loanDebt}🪙</strong> — ינוכה אוטומטית מהקציר</div>`;
+  } else {
+    debtDiv.innerHTML = '';
+  }
+
+  let html = '';
+  for (const opt of LOAN_OPTIONS) {
+    const maxLoans = 3;
+    const disabled = state.loanCount >= maxLoans ? 'disabled' : '';
+    const tooManyMsg = state.loanCount >= maxLoans ? '<div style="font-size:10px;color:#ff8a80;margin-top:4px">⚠️ הגעת למגבלת הלוואות!</div>' : '';
+    html += `
+      <div class="loan-option">
+        <div class="loan-option-title">${opt.name}</div>
+        <div class="loan-option-details">${opt.desc}<br>
+        סה"כ חוב אחרי: ${state.loanDebt + opt.repay}🪙</div>
+        ${tooManyMsg}
+        <button class="loan-option-btn" onclick="takeLoan('${opt.id}')" ${disabled}>
+          🏦 קח הלוואה (${opt.amount}🪙)
+        </button>
+      </div>`;
+  }
+  if (state.coins > 0 && state.loanDebt > 0) {
+    const canPay = Math.min(state.coins, state.loanDebt);
+    html += `<div class="loan-option">
+      <div class="loan-option-title">💳 החזר חוב</div>
+      <div class="loan-option-details">יש לך ${state.coins}🪙. החוב שלך: ${state.loanDebt}🪙</div>
+      <button class="loan-option-btn" onclick="repayLoan()" style="background:linear-gradient(135deg,#ef5350,#b71c1c)">
+        💸 שלם ${canPay}🪙 כעת
+      </button>
+    </div>`;
+  }
+  optionsDiv.innerHTML = html;
+}
+
+function takeLoan(optId) {
+  const opt = LOAN_OPTIONS.find(o => o.id === optId);
+  if (!opt) return;
+  if (state.loanCount >= 3) { log('⚠️ לא ניתן לקחת יותר הלוואות!'); return; }
+  state.coins += opt.amount;
+  state.loanDebt += opt.repay;
+  state.loanCount++;
+  updateHUD();
+  updateLoanBtn();
+  renderLoanModal();
+  log(`🏦 לקחת הלוואה: +${opt.amount}🪙 (תחזיר ${opt.repay}🪙)`);
+  emitParticles({ x: window.innerWidth/2, y: window.innerHeight/2 }, '#ffd166', 10);
+  saveGame();
+}
+
+function repayLoan() {
+  if (state.loanDebt <= 0) return;
+  const canPay = Math.min(state.coins, state.loanDebt);
+  state.coins -= canPay;
+  state.loanDebt -= canPay;
+  if (state.loanDebt <= 0) {
+    state.loanDebt = 0;
+    state.loanCount = 0;
+    log('✅ שילמת את כל החוב! הגינה חופשית 🎉');
+  } else {
+    log(`💸 שילמת ${canPay}🪙. נותר: ${state.loanDebt}🪙`);
+  }
+  updateHUD();
+  updateLoanBtn();
+  renderLoanModal();
+  saveGame();
+}
+
+// Loan repayment is handled directly in harvestPlant above
+
+function updateLoanBtn() {
+  const btn = document.getElementById('loan-hud-btn');
+  if (!btn) return;
+  const isStrapped = state.coins <= 5 && state.plots.filter(Boolean).length === 0;
+  if (isStrapped || state.loanDebt > 0) {
+    btn.classList.add('visible');
+    if (state.loanDebt > 0) {
+      btn.textContent = '💸 חוב: ' + state.loanDebt + '🪙';
+    } else {
+      btn.textContent = '🏦 הלוואה';
+    }
+  } else {
+    btn.classList.remove('visible');
+  }
 }
 
 // ========== START ==========
