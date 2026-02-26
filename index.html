@@ -882,6 +882,104 @@ body {
   gap: 4px;
   align-items: center;
 }
+
+/* ====== PESTS & BIRDS ====== */
+.pest {
+  position: fixed;
+  font-size: 20px;
+  pointer-events: none;
+  z-index: 610;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.4));
+  transition: transform 0.1s;
+}
+
+.pest.on-plot {
+  animation: pestWiggle 0.8s ease-in-out infinite;
+  pointer-events: all;
+  cursor: pointer;
+  z-index: 620;
+}
+
+@keyframes pestWiggle {
+  0%,100% { transform: rotate(-8deg) scale(1); }
+  50% { transform: rotate(8deg) scale(1.1); }
+}
+
+.pest-damage-flash {
+  position: fixed;
+  width: 90px;
+  height: 110px;
+  border-radius: 8px;
+  border: 3px solid rgba(255,60,60,0.8);
+  background: rgba(255,0,0,0.1);
+  pointer-events: none;
+  z-index: 615;
+  animation: damageFlash 0.6s ease forwards;
+}
+@keyframes damageFlash {
+  0% { opacity: 1; }
+  100% { opacity: 0; transform: scale(1.1); }
+}
+
+.bird {
+  position: fixed;
+  font-size: 24px;
+  pointer-events: none;
+  z-index: 605;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  animation: birdFly linear;
+}
+@keyframes birdFly {
+  0%   { opacity: 0; transform: scaleX(1); }
+  5%   { opacity: 1; }
+  48%  { transform: scaleX(1); }
+  50%  { transform: scaleX(-1); }
+  95%  { opacity: 1; }
+  100% { opacity: 0; transform: scaleX(-1); }
+}
+
+/* Spray bar */
+#spray-bar-wrap {
+  margin-top: 6px;
+  margin-bottom: 2px;
+}
+.resource-bar-fill.spray { background: linear-gradient(90deg, #ff9800, #f44336); }
+
+/* Spray tool button danger state */
+.tool-btn.spray-empty { opacity: 0.5; }
+
+/* Pest alert badge */
+.pest-alert {
+  position: absolute;
+  top: -6px; right: -6px;
+  background: #f44336;
+  color: white;
+  border-radius: 50%;
+  width: 16px; height: 16px;
+  font-size: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: bold;
+  animation: alertPulse 1s ease-in-out infinite;
+  z-index: 10;
+}
+@keyframes alertPulse {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+}
+
+/* Spray cloud animation */
+.spray-cloud {
+  position: fixed;
+  pointer-events: none;
+  z-index: 700;
+  font-size: 28px;
+  animation: sprayCloud 1.2s ease forwards;
+}
+@keyframes sprayCloud {
+  0%   { opacity: 0; transform: scale(0.3); }
+  20%  { opacity: 0.9; transform: scale(1.2); }
+  100% { opacity: 0; transform: scale(1.8) translateY(-20px); }
+}
 </style>
 </head>
 <body>
@@ -947,6 +1045,16 @@ body {
     <span class="tool-icon">🗑️</span>
     <span class="tool-label">הסרה</span>
   </button>
+  <button class="tool-btn" data-tool="spray" onclick="selectTool('spray')" id="spray-tool-btn" title="תרסיס - מגרש מזיקים אבל פוגע בפירות אכילים">
+    <span class="tool-icon">🧴</span>
+    <span class="tool-label">תרסיס</span>
+    <span class="tool-cost" id="spray-cost-label">10</span>
+  </button>
+  <button class="tool-btn" onclick="buySpray()" style="font-size:11px;margin-top:2px" id="buy-spray-btn">
+    <span class="tool-icon">🛒</span>
+    <span class="tool-label">תרסיס x10</span>
+    <span class="tool-cost">12🪙</span>
+  </button>
 
   <div class="panel-section-title" style="margin-top:10px">📊 משאבים</div>
   <div class="resource-bar-wrap">
@@ -956,6 +1064,10 @@ body {
   <div class="resource-bar-wrap">
     <div class="resource-bar-label"><span>דשן</span><span id="fert-val">10</span></div>
     <div class="resource-bar-track"><div class="resource-bar-fill fert" id="fert-bar" style="width:20%"></div></div>
+  </div>
+  <div class="resource-bar-wrap" id="spray-bar-wrap">
+    <div class="resource-bar-label"><span>🧴 תרסיס</span><span id="spray-val">0</span></div>
+    <div class="resource-bar-track"><div class="resource-bar-fill spray" id="spray-bar" style="width:0%"></div></div>
   </div>
 
   <div class="panel-section-title" style="margin-top:6px">🛒 חנות</div>
@@ -1246,6 +1358,9 @@ let state = {
   items: {},  // key -> level (1-based)
   autoFertCounter: 0,
   compostCounter: 0,
+  spray: 0,          // spray charges remaining
+  pests: [],         // active pests: {plotIdx, type, damage, el}
+  birds: [],         // active birds (can eat pests)
 };
 
 
@@ -1351,6 +1466,7 @@ function saveGame() {
     tick:       state.tick,
     gameTime:   state.gameTime,
     items:      state.items,
+    spray:      state.spray,
     savedAt:    Date.now(),
   };
   const json = JSON.stringify(toSave);
@@ -1387,6 +1503,7 @@ function loadGame() {
     state.tick       = data.tick       ?? state.tick;
     state.gameTime   = data.gameTime   ?? state.gameTime;
     state.items      = data.items      ?? state.items;
+    state.spray      = data.spray      ?? state.spray;
     const ago = data.savedAt ? Math.round((Date.now() - data.savedAt) / 1000) : 0;
     console.log('[LOAD] loaded save from ' + ago + 's ago. h=' + state.hour.toFixed(2) + ' day=' + state.day + ' coins=' + state.coins);
     return true;
@@ -1425,6 +1542,8 @@ function init() {
     if (itemLevel('beeHive') >= 2) spawnVisitor();
   }, 12000);
   setInterval(changeWeather, 60000);
+  setInterval(spawnPest, 25000);   // pest every 25s
+  setInterval(spawnBird, 18000);   // bird every 18s
   document.addEventListener('click', closePopup);
   updateActiveItemsRow();
   if (hasSave) {
@@ -1902,6 +2021,9 @@ function gameTick() {
   }
 
   // harvestBonus only affects manual harvest too (applied in harvestPlant)
+  // Tick pest damage every gameTick
+  tickPests();
+
   updateAllPlots();
   updateHUD();
 }
@@ -1963,6 +2085,7 @@ function handlePlotClick(idx, e) {
     else if (tool === 'fertilize') { fertilizePlant(idx); }
     else if (tool === 'harvest') { harvestPlant(idx); }
     else if (tool === 'remove') { removePlant(idx); }
+    else if (tool === 'spray') { sprayPlot(idx); }
     else { showPopup(idx, e); }
   }
   
@@ -2036,6 +2159,38 @@ function harvestPlant(idx) {
   saveGame();
 }
 
+
+function sprayPlot(idx) {
+  if (state.spray <= 0) { log('אין תרסיס! 🧴'); return; }
+  const pest = state.pests.find(p => p.plotIdx === idx);
+  state.spray--;
+  updateHUD();
+  // Spray cloud visual
+  const pos = plotCenter(idx);
+  const cloud = document.createElement('div');
+  cloud.className = 'spray-cloud';
+  cloud.textContent = '💨';
+  cloud.style.left = pos.x + 'px';
+  cloud.style.top  = pos.y + 'px';
+  document.body.appendChild(cloud);
+  setTimeout(() => cloud.remove(), 1300);
+
+  if (pest) {
+    setTimeout(() => removePest(pest, true), 400);
+  } else {
+    // No pest — spray still affects edible plants
+    const plant = state.plots[idx];
+    if (plant && ['tomato','carrot','herbs'].includes(plant.type)) {
+      plant.health = Math.max(10, plant.health - 15);
+      const pDef = PLANTS[plant.type];
+      log('🧴 ריססת ללא מזיק — פגעת ב' + pDef.name + '!');
+      updatePlot(idx);
+    } else {
+      log('🧴 ריססת — אין מזיקים כאן.');
+    }
+  }
+  saveGame();
+}
 function removePlant(idx) {
   state.plots[idx] = null;
   updatePlot(idx);
@@ -2060,10 +2215,15 @@ function buyResource(type) {
 }
 
 function selectTool(tool) {
+  if (tool === 'spray' && state.spray <= 0) {
+    log('אין תרסיס! קנה עוד 🧴');
+    return;
+  }
   state.selectedTool = tool;
   state.selectedSeed = null;
   document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector(`[data-tool="${tool}"]`).classList.add('active');
+  const btn = document.querySelector(`[data-tool="${tool}"]`);
+  if (btn) btn.classList.add('active');
   document.querySelectorAll('.seed-btn').forEach(b => b.classList.remove('active'));
 }
 
@@ -2093,8 +2253,18 @@ function updateHUD() {
   document.getElementById('hud-fert').textContent = state.fertilizer;
   document.getElementById('water-val').textContent = state.water;
   document.getElementById('fert-val').textContent = state.fertilizer;
-  document.getElementById('water-bar').style.width = (state.water / 50 * 100) + '%';
+  const maxW = getMaxWater();
+  document.getElementById('water-bar').style.width = (state.water / maxW * 100) + '%';
   document.getElementById('fert-bar').style.width = (state.fertilizer / 30 * 100) + '%';
+  // Spray
+  const sprayEl = document.getElementById('spray-val');
+  const sprayBar = document.getElementById('spray-bar');
+  const sprayLabel = document.getElementById('spray-cost-label');
+  if (sprayEl) sprayEl.textContent = state.spray;
+  if (sprayBar) sprayBar.style.width = (state.spray / 30 * 100) + '%';
+  if (sprayLabel) sprayLabel.textContent = state.spray + '🧴';
+  const sprayBtn = document.querySelector('[data-tool="spray"]');
+  if (sprayBtn) sprayBtn.classList.toggle('spray-empty', state.spray <= 0);
 }
 
 function updateSeedCounts() {
@@ -2171,6 +2341,201 @@ function highlightPlot(idx) {
   document.querySelectorAll('.plot').forEach(p => p.classList.remove('selected'));
   const el = document.querySelectorAll('.plot')[idx];
   if (el) el.classList.add('selected');
+}
+
+
+// ========== PESTS & BIRDS ==========
+const PEST_TYPES = {
+  aphid:      { icon: '🐛', name: 'כנימות',    dmg: 6,  speed: 'slow',   edible: false },
+  caterpillar:{ icon: '🐜', name: 'זחלים',     dmg: 9,  speed: 'slow',   edible: false },
+  snail:      { icon: '🐌', name: 'חילזון',    dmg: 7,  speed: 'slow',   edible: false },
+  locust:     { icon: '🦗', name: 'ארבה',      dmg: 14, speed: 'fast',   edible: false },
+  mite:       { icon: '🕷️', name: 'קרדית',    dmg: 10, speed: 'medium', edible: false },
+};
+
+const BIRD_TYPES = [
+  { icon: '🐦', name: 'ציפור', eatsPlants: true,  eatsPests: false },
+  { icon: '🦜', name: 'תוכי',  eatsPlants: true,  eatsPests: false },
+  { icon: '🐓', name: 'תרנגול',eatsPlants: false, eatsPests: true  },
+  { icon: '🦅', name: 'נץ',    eatsPlants: false, eatsPests: true  },
+];
+
+function spawnPest() {
+  // Only spawn on plots that have growing plants
+  const targets = state.plots.map((p, i) => (p && p.stage > 0 && p.stage < 4) ? i : -1).filter(i => i >= 0);
+  if (targets.length === 0) return;
+  // Max 3 active pests
+  if (state.pests.length >= 3) return;
+
+  const plotIdx = targets[Math.floor(Math.random() * targets.length)];
+  // Don't stack pests on same plot
+  if (state.pests.find(p => p.plotIdx === plotIdx)) return;
+
+  const typeKey = Object.keys(PEST_TYPES)[Math.floor(Math.random() * Object.keys(PEST_TYPES).length)];
+  const pType = PEST_TYPES[typeKey];
+
+  const plotEl = document.querySelectorAll('.plot')[plotIdx];
+  if (!plotEl) return;
+  const rect = plotEl.getBoundingClientRect();
+
+  const el = document.createElement('div');
+  el.className = 'pest on-plot';
+  el.textContent = pType.icon;
+  el.style.left = (rect.left + rect.width * 0.3 + Math.random() * rect.width * 0.4) + 'px';
+  el.style.top  = (rect.top  + rect.height * 0.3 + Math.random() * rect.height * 0.3) + 'px';
+  el.title = pType.name + ' — לחץ לגירוש (עם תרסיס)';
+  document.body.appendChild(el);
+
+  // Add alert badge to plot
+  const alertBadge = document.createElement('div');
+  alertBadge.className = 'pest-alert';
+  alertBadge.id = 'pest-alert-' + plotIdx;
+  alertBadge.textContent = pType.icon;
+  plotEl.style.position = 'relative';
+  plotEl.appendChild(alertBadge);
+
+  const pestObj = { plotIdx, typeKey, type: pType, el, damage: 0 };
+  state.pests.push(pestObj);
+
+  el.addEventListener('click', (e) => {
+    e.stopPropagation();
+    trySprayPest(pestObj);
+  });
+
+  log('⚠️ ' + pType.name + ' תקפו את הגינה! לחץ על המזיק לגירוש.');
+}
+
+function removePest(pestObj, sprayed = false) {
+  if (pestObj.el && pestObj.el.parentNode) pestObj.el.remove();
+  const badge = document.getElementById('pest-alert-' + pestObj.plotIdx);
+  if (badge) badge.remove();
+  state.pests = state.pests.filter(p => p !== pestObj);
+  if (sprayed) {
+    const pDef = PLANTS[state.plots[pestObj.plotIdx]?.type];
+    // Spray hurts edible plants
+    if (pDef && ['tomato','carrot','herbs'].includes(state.plots[pestObj.plotIdx]?.type)) {
+      if (state.plots[pestObj.plotIdx]) {
+        state.plots[pestObj.plotIdx].health = Math.max(10, state.plots[pestObj.plotIdx].health - 25);
+        log('🧴 תרסיס גירש את המזיקים אבל פגע ב' + pDef.name + '!');
+      }
+    } else {
+      log('✅ מזיקים גורשו בהצלחה!');
+    }
+  }
+  updateAllPlots();
+}
+
+function trySprayPest(pestObj) {
+  if (state.spray <= 0) {
+    log('אין תרסיס! קנה עוד 🧴');
+    return;
+  }
+  state.spray--;
+  updateHUD();
+  // Spray cloud effect
+  const pos = { x: parseFloat(pestObj.el.style.left), y: parseFloat(pestObj.el.style.top) };
+  const cloud = document.createElement('div');
+  cloud.className = 'spray-cloud';
+  cloud.textContent = '💨';
+  cloud.style.left = pos.x + 'px';
+  cloud.style.top  = pos.y + 'px';
+  document.body.appendChild(cloud);
+  setTimeout(() => cloud.remove(), 1300);
+  setTimeout(() => removePest(pestObj, true), 400);
+  saveGame();
+}
+
+function spawnBird() {
+  const bType = BIRD_TYPES[Math.floor(Math.random() * BIRD_TYPES.length)];
+  const fromLeft = Math.random() > 0.5;
+  const startX = fromLeft ? -50 : window.innerWidth + 50;
+  const endX   = fromLeft ? window.innerWidth + 80 : -80;
+  const startY = 80 + Math.random() * (window.innerHeight * 0.35);
+  const dur = 8 + Math.random() * 6;
+
+  const el = document.createElement('div');
+  el.className = 'bird';
+  el.textContent = bType.icon;
+  el.style.left = startX + 'px';
+  el.style.top  = startY + 'px';
+  el.style.animationDuration = dur + 's';
+  document.body.appendChild(el);
+
+  // Fly across
+  const startTime = Date.now();
+  const flyInterval = setInterval(() => {
+    const elapsed = (Date.now() - startTime) / 1000;
+    const t = elapsed / dur;
+    if (t >= 1) { clearInterval(flyInterval); el.remove(); return; }
+    const x = startX + (endX - startX) * t;
+    // slight sine wave path
+    const y = startY + Math.sin(t * Math.PI * 3) * 30;
+    el.style.left = x + 'px';
+    el.style.top  = y + 'px';
+
+    // At midpoint — do the bird's action
+    if (t > 0.45 && t < 0.55 && !el.dataset.acted) {
+      el.dataset.acted = '1';
+      const hasScarecrow = hasItem('scarecrow');
+
+      if (bType.eatsPlants && !hasScarecrow) {
+        // Bird damages a random plant
+        const planted = state.plots.map((p, i) => p && p.stage >= 2 ? i : -1).filter(i => i >= 0);
+        if (planted.length > 0) {
+          const idx = planted[Math.floor(Math.random() * planted.length)];
+          const plant = state.plots[idx];
+          plant.health = Math.max(0, plant.health - 20);
+          emitParticles(plotCenter(idx), '#795548', 6);
+          log('🐦 ' + bType.name + ' ניקרה בגינה ופגעה בצמח!');
+          updateAllPlots();
+        }
+      } else if (bType.eatsPlants && hasScarecrow) {
+        log('🎃 הדחליל הבריח את ה' + bType.name + '!');
+        emitParticles({ x: window.innerWidth * 0.5, y: startY }, '#ffd166', 5);
+      } else if (bType.eatsPests && state.pests.length > 0) {
+        // Bird eats a pest!
+        const pest = state.pests[Math.floor(Math.random() * state.pests.length)];
+        removePest(pest, false);
+        log('🦅 ' + bType.name + ' אכלה מזיק! 🐛✨');
+        emitParticles(plotCenter(pest.plotIdx), '#81c784', 6);
+      } else if (bType.eatsPests) {
+        log('🦅 ' + bType.name + ' עפה מעל הגינה.');
+      }
+    }
+  }, 50);
+
+  el.addEventListener('animationend', () => { clearInterval(flyInterval); el.remove(); });
+}
+
+function buySpray() {
+  if (state.coins < 12) { log('אין מספיק מטבעות! 🪙'); return; }
+  state.coins -= 12;
+  state.spray = Math.min(state.spray + 10, 30);
+  updateHUD();
+  saveGame();
+  log('קנית תרסיס x10 🧴');
+}
+
+// Pest damage tick — runs in gameTick
+function tickPests() {
+  state.pests.forEach(pest => {
+    const plant = state.plots[pest.plotIdx];
+    if (!plant) { removePest(pest, false); return; }
+    plant.health = Math.max(0, plant.health - pest.type.dmg * 0.5);
+    pest.damage += pest.type.dmg * 0.5;
+    // Flash the plot
+    const plotEl = document.querySelectorAll('.plot')[pest.plotIdx];
+    if (plotEl) {
+      const flash = document.createElement('div');
+      flash.className = 'pest-damage-flash';
+      flash.style.left = plotEl.getBoundingClientRect().left + 'px';
+      flash.style.top  = plotEl.getBoundingClientRect().top + 'px';
+      flash.style.width  = plotEl.offsetWidth + 'px';
+      flash.style.height = plotEl.offsetHeight + 'px';
+      document.body.appendChild(flash);
+      setTimeout(() => flash.remove(), 700);
+    }
+  });
 }
 
 // ========== VISITORS ==========
