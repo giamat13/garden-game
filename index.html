@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>גינת הפלאים 🌱</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Hebrew:wght@400;700;900&family=Secular+One&display=swap" rel="stylesheet">
+<style>
+:root {
+  --soil-dark: #3d2b1f;
+  --soil-mid: #5c3d2e;
+  --soil-light: #8b5e3c;
+  --grass: #4a7c59;
+  --grass-light: #6aab78;
+  --sky-day: #87ceeb;
+  --sky-sunset: #f4a261;
+  --sky-night: #0d1b2a;
+  --sun-color: #ffd166;
+  --moon-color: #e2e8f0;
+  --wood: #a0522d;
+  --wood-dark: #6b3a2a;
+  --stone: #9e9e9e;
+  --water-blue: #4fc3f7;
+  --leaf-green: #52b788;
+  --text-warm: #3d2b1f;
+  --coin-gold: #ffc107;
+  --panel-bg: rgba(255,248,240,0.95);
+  --panel-border: #c9a96e;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Secular One', sans-serif;
+  background: var(--sky-day);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  user-select: none;
+}
+
+/* SKY & WORLD */
+#world {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#sky {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 55%;
+  background: linear-gradient(180deg, #1e70c8 0%, #4aaae0 55%, #90d0f4 100%);
+}
+/* Sky uses JS-driven gradient on a fast interval — no CSS transition needed */
+
+/* Sun / Moon */
+#celestial {
+  position: absolute;
+  border-radius: 50%;
+  z-index: 5;
+  transition: background 4s, box-shadow 4s, width 3s, height 3s;
+}
+
+#celestial.sun {
+  width: 58px; height: 58px;
+  background: radial-gradient(circle at 40% 38%, #fff9c4, #ffd166 55%, #ffab00);
+  box-shadow: 0 0 40px 14px rgba(255,200,60,0.55), 0 0 90px 36px rgba(255,180,30,0.25);
+}
+
+#celestial.moon {
+  width: 48px; height: 48px;
+  background: radial-gradient(circle at 38% 35%, #ffffff, #d0dce8 55%, #a0b4c8);
+  box-shadow: 0 0 28px 10px rgba(180,210,240,0.45), 0 0 60px 24px rgba(140,170,210,0.2);
+}
+
+/* Stars */
+#stars {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  opacity: 0;
+  transition: opacity 6s;
+  pointer-events: none;
+}
+
+
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.5); }
+}
+
+/* Clouds */
+.cloud {
+  position: absolute;
+  background: white;
+  border-radius: 50px;
+  opacity: 0.85;
+  transition: opacity 3s;
+  animation: driftCloud linear infinite;
+}
+
+.cloud::before, .cloud::after {
+  content: '';
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+}
+
+@keyframes driftCloud {
+  from { transform: translateX(-200px); }
+  to { transform: translateX(110vw); }
+}
+
+/* GROUND */
+#ground {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 55%;
+}
+
+#grass-strip {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 28px;
+  background: linear-gradient(180deg, var(--grass-light) 0%, var(--grass) 100%);
+  border-radius: 4px 4px 0 0;
+  overflow: hidden;
+}
+
+/* Grass blades */
+.grass-blade {
+  position: absolute;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, #7ec850, #4a7c59);
+  border-radius: 2px 2px 0 0;
+  transform-origin: bottom center;
+  animation: sway 3s ease-in-out infinite;
+}
+
+@keyframes sway {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+
+#dirt {
+  position: absolute;
+  top: 28px; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(180deg, #7a4e32 0%, #5c3d2e 30%, #3d2b1f 100%);
+}
+
+/* GARDEN FENCE */
+#fence {
+  position: absolute;
+  top: -5px; left: 0; right: 0;
+  height: 50px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.fence-post {
+  position: absolute;
+  width: 10px;
+  background: linear-gradient(180deg, #c4955a, #8b6340);
+  border-radius: 2px 2px 0 0;
+  box-shadow: inset -2px 0 4px rgba(0,0,0,0.2);
+}
+
+.fence-rail {
+  position: absolute;
+  height: 6px;
+  background: linear-gradient(180deg, #d4a76a, #b8895a);
+  border-radius: 3px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* GARDEN GRID */
+#garden-area {
+  position: absolute;
+  top: 38px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: grid;
+  grid-template-columns: repeat(6, 95px);
+  grid-template-rows: repeat(3, 130px);
+  gap: 8px;
+  padding: 10px;
+}
+
+.plot {
+  position: relative;
+  background: radial-gradient(ellipse at center, #8b5e3c 0%, #6b4423 60%, #4a2f1a 100%);
+  border-radius: 8px;
+  border: 3px solid #4a2f1a;
+  cursor: pointer;
+  overflow: visible;
+  transition: transform 0.1s, box-shadow 0.2s;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.1);
+}
+
+.plot::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 8px,
+    rgba(0,0,0,0.08) 8px,
+    rgba(0,0,0,0.08) 9px
+  );
+  border-radius: 5px;
+  pointer-events: none;
+}
+
+.plot:hover {
+  transform: scale(1.04) translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.15);
+  z-index: 100;
+}
+
+.plot.selected {
+  border-color: var(--sun-color);
+  box-shadow: 0 0 0 3px rgba(255,209,102,0.6), 0 8px 16px rgba(0,0,0,0.5);
+}
+
+.plot.watered::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(79,195,247,0.2) 0%, transparent 70%);
+  border-radius: 5px;
+  pointer-events: none;
+}
+
+/* Plant display inside plot */
+.plant-emoji {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+  text-align: center;
+  line-height: 1;
+  transition: all 0.5s;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.4));
+  z-index: 5;
+}
+
+.plant-stage-0 .plant-emoji { font-size: 14px; bottom: 6px; }
+.plant-stage-1 .plant-emoji { font-size: 22px; bottom: 6px; }
+.plant-stage-2 .plant-emoji { font-size: 34px; bottom: 4px; }
+.plant-stage-3 .plant-emoji { font-size: 46px; bottom: 2px; }
+.plant-stage-4 .plant-emoji { font-size: 52px; bottom: 0; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.5)) brightness(1.1); }
+
+.plant-wilting .plant-emoji { 
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.4)) sepia(0.8) saturate(0.4);
+  opacity: 0.7;
+}
+
+/* Health bar */
+.health-bar {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 4px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.health-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4caf50, #8bc34a);
+  border-radius: 2px;
+  transition: width 0.5s;
+}
+
+.health-bar-fill.low { background: linear-gradient(90deg, #f44336, #ff7043); }
+.health-bar-fill.mid { background: linear-gradient(90deg, #ff9800, #ffc107); }
+
+/* Water indicator drops */
+.water-dots {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  gap: 2px;
+}
+
+.water-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  opacity: 0.8;
+}
+
+.water-dot.full { background: var(--water-blue); }
+.water-dot.empty { background: rgba(255,255,255,0.2); }
+
+/* Ready to harvest glow */
+.plot.harvestable {
+  animation: harvestPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes harvestPulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(255,209,102,0.4), 0 4px 8px rgba(0,0,0,0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(255,209,102,0.7), 0 8px 16px rgba(0,0,0,0.5); }
+}
+
+/* Empty plot hint */
+.plot-hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  opacity: 0.2;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.plot:hover .plot-hint { opacity: 0.5; }
+
+/* TOP HUD */
+#hud-top {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 58px;
+  background: linear-gradient(180deg, rgba(61,43,31,0.95), rgba(92,61,46,0.9));
+  backdrop-filter: blur(8px);
+  border-bottom: 2px solid var(--panel-border);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 12px;
+  z-index: 1000;
+}
+
+.hud-title {
+  font-family: 'Noto Serif Hebrew', serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--sun-color);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  flex: 1;
+}
+
+.hud-resource {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 20px;
+  padding: 4px 12px 4px 8px;
+  color: white;
+  font-size: 14px;
+  min-width: 70px;
+}
+
+.hud-resource .icon { font-size: 18px; }
+.hud-resource .val { font-weight: bold; color: var(--sun-color); }
+
+.day-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  font-size: 11px;
+  min-width: 60px;
+}
+
+.day-num {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--sun-color);
+}
+
+/* Weather badge */
+#weather-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 16px;
+  padding: 4px 10px;
+  color: white;
+  font-size: 13px;
+}
+
+/* SIDE PANEL - TOOLS */
+#side-panel {
+  position: fixed;
+  left: 12px;
+  top: 70px;
+  width: 170px;
+  background: var(--panel-bg);
+  border: 2px solid var(--panel-border);
+  border-radius: 16px;
+  padding: 12px;
+  z-index: 500;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.panel-section-title {
+  font-size: 12px;
+  color: var(--soil-mid);
+  margin-bottom: 8px;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid rgba(160,82,45,0.2);
+  padding-bottom: 4px;
+}
+
+.tool-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: rgba(160,82,45,0.08);
+  cursor: pointer;
+  font-family: 'Secular One', sans-serif;
+  font-size: 13px;
+  color: var(--text-warm);
+  transition: all 0.2s;
+  margin-bottom: 5px;
+}
+
+.tool-btn:hover {
+  background: rgba(160,82,45,0.18);
+  transform: translateX(-2px);
+}
+
+.tool-btn.active {
+  border-color: var(--wood);
+  background: rgba(160,82,45,0.25);
+  box-shadow: 0 2px 8px rgba(160,82,45,0.3);
+}
+
+.tool-icon { font-size: 20px; }
+.tool-label { flex: 1; font-size: 12px; }
+.tool-cost { font-size: 10px; color: #888; }
+
+/* SEED SHOP */
+#seed-shop {
+  position: fixed;
+  right: 12px;
+  top: 70px;
+  width: 175px;
+  background: var(--panel-bg);
+  border: 2px solid var(--panel-border);
+  border-radius: 16px;
+  padding: 12px;
+  z-index: 500;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.seed-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 7px 8px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: rgba(82,183,136,0.08);
+  cursor: pointer;
+  font-family: 'Secular One', sans-serif;
+  font-size: 12px;
+  color: var(--text-warm);
+  transition: all 0.2s;
+  margin-bottom: 4px;
+  position: relative;
+}
+
+.seed-btn:hover { background: rgba(82,183,136,0.2); transform: translateX(2px); }
+.seed-btn.active { border-color: var(--leaf-green); background: rgba(82,183,136,0.25); }
+.seed-btn .seed-icon { font-size: 18px; }
+.seed-btn .seed-info { flex: 1; }
+.seed-btn .seed-name { font-size: 11px; font-weight: bold; }
+.seed-btn .seed-price { font-size: 10px; color: var(--coin-gold); }
+.seed-count { 
+  background: var(--soil-mid); color: white; 
+  border-radius: 10px; padding: 1px 6px; font-size: 10px;
+}
+
+/* LOG / NOTIFICATIONS */
+#log {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 800;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.log-msg {
+  background: rgba(61,43,31,0.9);
+  color: white;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  border: 1px solid rgba(255,255,255,0.2);
+  animation: fadeInUp 0.3s ease, fadeOut 0.5s ease 2.5s forwards;
+  backdrop-filter: blur(8px);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+  to { opacity: 0; transform: translateY(-10px); }
+}
+
+/* VISITORS - butterflies & bees */
+.visitor {
+  position: fixed;
+  font-size: 22px;
+  pointer-events: none;
+  z-index: 600;
+  animation: visitFloat linear;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+@keyframes visitFloat {
+  0% { opacity: 0; transform: translate(0, 0) rotate(0deg); }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--dr)); }
+}
+
+/* PLANT ACTION POPUP */
+#plant-popup {
+  position: fixed;
+  background: var(--panel-bg);
+  border: 2px solid var(--panel-border);
+  border-radius: 16px;
+  padding: 14px;
+  z-index: 900;
+  display: none;
+  min-width: 180px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+}
+
+#plant-popup h3 {
+  font-family: 'Noto Serif Hebrew', serif;
+  font-size: 15px;
+  color: var(--soil-dark);
+  margin-bottom: 4px;
+}
+
+#plant-popup .stage-info {
+  font-size: 11px;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.popup-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Secular One', sans-serif;
+  font-size: 12px;
+  margin-bottom: 4px;
+  transition: all 0.2s;
+}
+
+.popup-btn.water { background: #e3f2fd; color: #1976d2; }
+.popup-btn.water:hover { background: #bbdefb; }
+.popup-btn.fertilize { background: #e8f5e9; color: #388e3c; }
+.popup-btn.fertilize:hover { background: #c8e6c9; }
+.popup-btn.harvest { background: #fff8e1; color: #f57f17; }
+.popup-btn.harvest:hover { background: #ffecb3; }
+.popup-btn.remove { background: #fce4ec; color: #c62828; }
+.popup-btn.remove:hover { background: #f8bbd0; }
+
+/* Coin pop animation */
+.coin-pop {
+  position: fixed;
+  pointer-events: none;
+  z-index: 999;
+  font-size: 16px;
+  animation: coinFloat 1.5s ease forwards;
+}
+
+@keyframes coinFloat {
+  0% { opacity: 1; transform: translate(0, 0) scale(0.5); }
+  30% { transform: translate(0, -30px) scale(1.2); }
+  100% { opacity: 0; transform: translate(0, -70px) scale(0.8); }
+}
+
+/* Particle effects */
+.particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 700;
+  border-radius: 50%;
+  animation: particleFly ease forwards;
+}
+
+@keyframes particleFly {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--px), var(--py)) scale(0); }
+}
+
+/* Progress bar for resources */
+.resource-bar-wrap {
+  margin-top: 6px;
+  margin-bottom: 10px;
+}
+
+.resource-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #888;
+  margin-bottom: 2px;
+}
+
+.resource-bar-track {
+  height: 6px;
+  background: rgba(0,0,0,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.resource-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.4s;
+}
+
+.resource-bar-fill.water { background: linear-gradient(90deg, #4fc3f7, #0288d1); }
+.resource-bar-fill.fert { background: linear-gradient(90deg, #a5d6a7, #388e3c); }
+
+/* Rain animation */
+.rain-drop {
+  position: fixed;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, rgba(79,195,247,0.7));
+  pointer-events: none;
+  z-index: 50;
+  animation: rainFall linear infinite;
+}
+
+@keyframes rainFall {
+  from { transform: translateY(-20px); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  to { transform: translateY(100vh); opacity: 0; }
+}
+
+/* Tooltip */
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(61,43,31,0.95);
+  color: white;
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 999;
+}
+
+.plot:hover .tooltip { opacity: 1; }
+
+/* Sunlight boost indicator */
+.sun-boost {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  font-size: 12px;
+  opacity: 0.8;
+  animation: sunPulse 2s ease-in-out infinite;
+}
+
+@keyframes sunPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+}
+
+/* Scrollable seed shop */
+.seed-shop-inner {
+  max-height: calc(100vh - 160px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+/* Decorative elements */
+.deco-mushroom, .deco-rock, .deco-flower {
+  position: absolute;
+  font-size: 18px;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
+}
+
+</style>
+</head>
+<body>
+
+<div id="world">
+  <div id="sky">
+    <div id="stars"></div>
+    <div id="celestial" class="sun"></div>
+  </div>
+  <div id="ground">
+    <div id="grass-strip" id="grass"></div>
+    <div id="dirt"></div>
+    <div id="fence"></div>
+    <div id="garden-area"></div>
+  </div>
+</div>
+
+<!-- TOP HUD -->
+<div id="hud-top">
+  <div class="hud-title">🌿 גינת הפלאים</div>
+  <div class="hud-resource">
+    <span class="icon">🪙</span>
+    <span class="val" id="hud-coins">50</span>
+  </div>
+  <div class="hud-resource">
+    <span class="icon">💧</span>
+    <span class="val" id="hud-water">30</span>
+  </div>
+  <div class="hud-resource">
+    <span class="icon">🌿</span>
+    <span class="val" id="hud-fert">10</span>
+  </div>
+  <div id="weather-badge">
+    <span id="weather-icon">☀️</span>
+    <span id="weather-name">שמשי</span>
+  </div>
+  <div class="day-info">
+    <span>יום</span>
+    <span class="day-num" id="day-num">1</span>
+  </div>
+</div>
+
+<!-- TOOLS PANEL -->
+<div id="side-panel">
+  <div class="panel-section-title">🛠️ כלים</div>
+  <button class="tool-btn active" data-tool="water" onclick="selectTool('water')">
+    <span class="tool-icon">🚿</span>
+    <span class="tool-label">מזלף</span>
+    <span class="tool-cost">-1💧</span>
+  </button>
+  <button class="tool-btn" data-tool="fertilize" onclick="selectTool('fertilize')">
+    <span class="tool-icon">🌿</span>
+    <span class="tool-label">דשן</span>
+    <span class="tool-cost">-1🌿</span>
+  </button>
+  <button class="tool-btn" data-tool="harvest" onclick="selectTool('harvest')">
+    <span class="tool-icon">🧺</span>
+    <span class="tool-label">קציר</span>
+  </button>
+  <button class="tool-btn" data-tool="remove" onclick="selectTool('remove')">
+    <span class="tool-icon">🗑️</span>
+    <span class="tool-label">הסרה</span>
+  </button>
+
+  <div class="panel-section-title" style="margin-top:10px">📊 משאבים</div>
+  <div class="resource-bar-wrap">
+    <div class="resource-bar-label"><span>מים</span><span id="water-val">30</span></div>
+    <div class="resource-bar-track"><div class="resource-bar-fill water" id="water-bar" style="width:60%"></div></div>
+  </div>
+  <div class="resource-bar-wrap">
+    <div class="resource-bar-label"><span>דשן</span><span id="fert-val">10</span></div>
+    <div class="resource-bar-track"><div class="resource-bar-fill fert" id="fert-bar" style="width:20%"></div></div>
+  </div>
+
+  <div class="panel-section-title" style="margin-top:6px">🛒 חנות</div>
+  <button class="tool-btn" onclick="buyResource('water')" style="font-size:12px">
+    <span class="tool-icon">💧</span>
+    <span class="tool-label">מים x10</span>
+    <span class="tool-cost">5🪙</span>
+  </button>
+  <button class="tool-btn" onclick="buyResource('fert')" style="font-size:12px">
+    <span class="tool-icon">🌿</span>
+    <span class="tool-label">דשן x5</span>
+    <span class="tool-cost">8🪙</span>
+  </button>
+</div>
+
+<!-- SEED SHOP -->
+<div id="seed-shop">
+  <div class="panel-section-title">🌱 זרעים לשתילה</div>
+  <div class="seed-shop-inner" id="seed-list"></div>
+</div>
+
+<!-- PLANT POPUP -->
+<div id="plant-popup">
+  <h3 id="popup-name">צמח</h3>
+  <div class="stage-info" id="popup-stage"></div>
+  <button class="popup-btn water" onclick="popupAction('water')">💧 השקיה</button>
+  <button class="popup-btn fertilize" onclick="popupAction('fertilize')">🌿 דישון</button>
+  <button class="popup-btn harvest" id="popup-harvest-btn" onclick="popupAction('harvest')">🧺 קציר</button>
+  <button class="popup-btn remove" onclick="popupAction('remove')">🗑️ הסרה</button>
+</div>
+
+<!-- LOG -->
+<div id="log"></div>
+
+<script>
+// ========== DATA ==========
+const PLANTS = {
+  tomato: {
+    name: 'עגבנייה',
+    emoji: ['🌱','🌿','🍃','🍅','🍅'],
+    stages: ['זרע','נבט','שיח','פריחה','בשלה ✂️'],
+    growTime: [8,10,12,8],
+    waterNeed: 3,
+    sunNeed: true,
+    harvestCoins: 18,
+    price: 8,
+    color: '#e53935'
+  },
+  sunflower: {
+    name: 'חמניות',
+    emoji: ['🌱','🌱','🌻','🌻','🌻'],
+    stages: ['זרע','נבט','גבעול','פרח','בשל ✂️'],
+    growTime: [6,8,10,7],
+    waterNeed: 2,
+    sunNeed: true,
+    harvestCoins: 15,
+    price: 7,
+    color: '#fdd835'
+  },
+  rose: {
+    name: 'ורד',
+    emoji: ['🌱','🌿','🌸','🌹','🌹'],
+    stages: ['זרע','נבט','ניצן','פריחה','בשל ✂️'],
+    growTime: [7,10,12,10],
+    waterNeed: 3,
+    sunNeed: false,
+    harvestCoins: 20,
+    price: 10,
+    color: '#e91e63'
+  },
+  carrot: {
+    name: 'גזר',
+    emoji: ['🌱','🌿','🌿','🥕','🥕'],
+    stages: ['זרע','נבט','עלים','התפתחות','בשל ✂️'],
+    growTime: [6,8,10,8],
+    waterNeed: 2,
+    sunNeed: false,
+    harvestCoins: 14,
+    price: 6,
+    color: '#ff7043'
+  },
+  mushroom: {
+    name: 'פטריות',
+    emoji: ['🌱','🍄','🍄','🍄','🍄'],
+    stages: ['נבגים','נביטה','קטן','גדול','בשל ✂️'],
+    growTime: [5,6,8,6],
+    waterNeed: 4,
+    sunNeed: false,
+    harvestCoins: 16,
+    price: 9,
+    color: '#795548'
+  },
+  herbs: {
+    name: 'עשבי תיבול',
+    emoji: ['🌱','🌿','🌿','🪴','🪴'],
+    stages: ['זרע','נבט','שתיל','צמיחה','בשל ✂️'],
+    growTime: [4,6,8,6],
+    waterNeed: 2,
+    sunNeed: false,
+    harvestCoins: 12,
+    price: 5,
+    color: '#388e3c'
+  }
+};
+
+const WEATHERS = [
+  { name: 'שמשי',      icon: '☀️',  waterMult: 1.5, growMult: 1.3,  cloudOpacity: 0.05, cloudCount: 1,  skyTop:'#3a9fe8', skyMid:'#6ec6f5', skyBot:'#b8e8d0', fogColor: null },
+  { name: 'מעונן חלקית',icon: '🌤️', waterMult: 0.9, growMult: 1.0,  cloudOpacity: 0.7,  cloudCount: 3,  skyTop:'#5aaee0', skyMid:'#8ecce8', skyBot:'#c4dff0', fogColor: null },
+  { name: 'מעונן',      icon: '☁️',  waterMult: 0.6, growMult: 0.85, cloudOpacity: 0.95, cloudCount: 6,  skyTop:'#7a9db5', skyMid:'#9db8c8', skyBot:'#c0d0da', fogColor: null },
+  { name: 'גשום',       icon: '🌧️', waterMult: 0.0, growMult: 0.8,  cloudOpacity: 0.98, cloudCount: 7,  skyTop:'#4a5f6e', skyMid:'#637585', skyBot:'#808f96', fogColor: null },
+  { name: 'סוער',       icon: '⛈️', waterMult: 0.0, growMult: 0.55, cloudOpacity: 1.0,  cloudCount: 8,  skyTop:'#2a3540', skyMid:'#3a4a54', skyBot:'#505e66', fogColor: null },
+  { name: 'ערפלי',      icon: '🌫️', waterMult: 0.4, growMult: 0.65, cloudOpacity: 0.0,  cloudCount: 0,  skyTop:'#9baab5', skyMid:'#b8c8d0', skyBot:'#d0dce0', fogColor: 'rgba(200,215,220,0.45)' },
+  { name: 'חם ויבש',    icon: '🌵', waterMult: 2.0, growMult: 0.7,  cloudOpacity: 0.02, cloudCount: 0,  skyTop:'#e8a048', skyMid:'#f0c06a', skyBot:'#f8e098', fogColor: 'rgba(255,200,80,0.12)' },
+  { name: 'שלג קל',     icon: '🌨️', waterMult: 0.1, growMult: 0.4,  cloudOpacity: 0.9,  cloudCount: 5,  skyTop:'#c0ccd8', skyMid:'#d8e0e8', skyBot:'#eaf0f4', fogColor: 'rgba(220,235,245,0.3)' },
+];
+
+// Sky palette keyframes: [hour] -> {top, mid, bot} colors
+// These are the "clear sky" base colors; weather tints them
+const SKY_PALETTE = [
+  // h   top (zenith)   mid             bot (horizon)
+  { h:  0, top:'#020510', mid:'#06101e', bot:'#0e1a2a' }, // deep night
+  { h:  4, top:'#050a1a', mid:'#0a1428', bot:'#151e38' }, // pre-dawn dark
+  { h:  5, top:'#1a0e38', mid:'#4a1e6a', bot:'#c84820' }, // twilight purple-orange
+  { h:  6, top:'#d44010', mid:'#ee7030', bot:'#ffc040' }, // sunrise orange
+  { h:  7, top:'#3a88d0', mid:'#60b0e8', bot:'#b8def5' }, // early morning blue
+  { h:  9, top:'#1e70c8', mid:'#4aaae0', bot:'#90d0f4' }, // morning
+  { h: 12, top:'#0e58be', mid:'#2e90e0', bot:'#70c8f8' }, // noon deep blue
+  { h: 15, top:'#1e70c8', mid:'#4aaae0', bot:'#90d0f4' }, // afternoon
+  { h: 17, top:'#4888c0', mid:'#80b0d8', bot:'#c8dff0' }, // late afternoon
+  { h: 18, top:'#c83010', mid:'#e86020', bot:'#faa030' }, // sunset red-orange
+  { h: 19, top:'#701020', mid:'#b02820', bot:'#d86030' }, // dusk deep red
+  { h: 20, top:'#1a0830', mid:'#240a3c', bot:'#301444' }, // twilight to night
+  { h: 21, top:'#060412', mid:'#0a0818', bot:'#0e0e20' }, // full night
+  { h: 24, top:'#020510', mid:'#06101e', bot:'#0e1a2a' }, // deep night again
+];
+
+// ========== STATE ==========
+let state = {
+  coins: 50,
+  water: 30,
+  fertilizer: 10,
+  seeds: { tomato: 2, sunflower: 2, rose: 1, carrot: 2, mushroom: 1, herbs: 2 },
+  plots: Array(18).fill(null),
+  day: 1,
+  hour: 6, // 0-24
+  weather: 0,
+  selectedTool: 'water',
+  selectedSeed: null,
+  tick: 0,
+  gameTime: 0,
+  selectedPlot: -1,
+};
+
+// ========== INIT ==========
+function init() {
+  buildGarden();
+  buildSeedShop();
+  buildFence();
+  buildGrass();
+  generateStars();
+  updateHUD();
+  gameLoop();
+  updateSkyColors();
+  setInterval(gameTick, 4000);
+  setInterval(spawnVisitor, 12000);
+  setInterval(changeWeather, 60000);
+  document.addEventListener('click', closePopup);
+  log('ברוכים הבאים לגינת הפלאים! 🌿');
+}
+
+function buildGarden() {
+  const area = document.getElementById('garden-area');
+  area.innerHTML = '';
+  for (let i = 0; i < 18; i++) {
+    const plot = document.createElement('div');
+    plot.className = 'plot';
+    plot.dataset.idx = i;
+    plot.innerHTML = `
+      <div class="plot-hint">+</div>
+      <div class="water-dots" id="wdots-${i}"></div>
+      <div class="plant-emoji" id="pemoji-${i}"></div>
+      <div class="health-bar" style="display:none" id="hbar-${i}">
+        <div class="health-bar-fill" id="hfill-${i}" style="width:100%"></div>
+      </div>
+      <div class="tooltip" id="tip-${i}"></div>
+    `;
+    plot.addEventListener('click', (e) => { e.stopPropagation(); handlePlotClick(i, e); });
+    area.appendChild(plot);
+  }
+}
+
+function buildSeedShop() {
+  const list = document.getElementById('seed-list');
+  list.innerHTML = '';
+  for (const [key, plant] of Object.entries(PLANTS)) {
+    const btn = document.createElement('button');
+    btn.className = 'seed-btn';
+    btn.dataset.seed = key;
+    btn.onclick = (e) => { e.stopPropagation(); selectSeed(key); };
+    btn.innerHTML = `
+      <span class="seed-icon">${plant.emoji[0]}</span>
+      <span class="seed-info">
+        <div class="seed-name">${plant.name}</div>
+        <div class="seed-price">🪙 ${plant.price}</div>
+      </span>
+      <span class="seed-count" id="sc-${key}">${state.seeds[key]}</span>
+    `;
+    list.appendChild(btn);
+  }
+}
+
+function buildFence() {
+  const fence = document.getElementById('fence');
+  fence.innerHTML = '';
+  const w = window.innerWidth;
+  // posts
+  for (let x = 20; x < w; x += 40) {
+    const post = document.createElement('div');
+    post.className = 'fence-post';
+    post.style.cssText = `left:${x}px; top:0; height:45px;`;
+    fence.appendChild(post);
+  }
+  // top rail
+  const rail1 = document.createElement('div');
+  rail1.className = 'fence-rail';
+  rail1.style.cssText = `left:0; right:0; top:8px;`;
+  fence.appendChild(rail1);
+  const rail2 = document.createElement('div');
+  rail2.className = 'fence-rail';
+  rail2.style.cssText = `left:0; right:0; top:24px;`;
+  fence.appendChild(rail2);
+}
+
+function buildGrass() {
+  const grass = document.getElementById('grass-strip');
+  for (let i = 0; i < 80; i++) {
+    const blade = document.createElement('div');
+    blade.className = 'grass-blade';
+    const h = 8 + Math.random() * 12;
+    blade.style.cssText = `left:${Math.random()*100}%; height:${h}px; animation-delay:${Math.random()*3}s; animation-duration:${2+Math.random()*2}s;`;
+    grass.appendChild(blade);
+  }
+}
+
+function generateStars() {
+  const stars = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = 1 + Math.random() * 2.5;
+    s.style.cssText = `
+      left:${Math.random()*100}%;
+      top:${Math.random()*80}%;
+      width:${size}px; height:${size}px;
+      animation-delay:${Math.random()*3}s;
+      animation-duration:${1+Math.random()*3}s;
+    `;
+    stars.appendChild(s);
+  }
+  // Add a few clouds
+  for (let i = 0; i < 5; i++) {
+    spawnCloud(Math.random()*100);
+  }
+}
+
+function spawnCloud(startPct = 0) {
+  const sky = document.getElementById('sky');
+  const cloud = document.createElement('div');
+  const w = 60 + Math.random() * 100;
+  const h = 20 + Math.random() * 30;
+  const top = 5 + Math.random() * 35;
+  const dur = 40 + Math.random() * 60;
+  cloud.className = 'cloud';
+  cloud.style.cssText = `
+    width:${w}px; height:${h}px;
+    top:${top}%;
+    left:${startPct}%;
+    animation-duration:${dur}s;
+    animation-delay:${-startPct/100 * dur}s;
+  `;
+  cloud.innerHTML = `<div style="position:absolute;width:${h}px;height:${h}px;top:-${h*0.5}px;left:${w*0.25}px;background:white;border-radius:50%"></div>
+  <div style="position:absolute;width:${h*0.7}px;height:${h*0.7}px;top:-${h*0.3}px;left:${w*0.5}px;background:white;border-radius:50%"></div>`;
+  sky.appendChild(cloud);
+  cloud.addEventListener('animationend', () => { cloud.remove(); spawnCloud(0); });
+}
+
+// ========== GAME LOOP ==========
+let lastTime = 0;
+function gameLoop(ts = 0) {
+  const dt = (ts - lastTime) / 1000;
+  lastTime = ts;
+  state.gameTime += dt;
+  
+  // Update day cycle (1 real minute = 1 game day)
+  state.hour = (state.hour + dt * 0.4) % 24;
+  if (state.hour >= 24) { state.hour = 0; state.day++; document.getElementById('day-num').textContent = state.day; }
+  
+  updateCelestial(); // only position — runs every frame
+  requestAnimationFrame(gameLoop);
+}
+
+// Sky colors update every 2s so CSS transition has time to interpolate
+setInterval(updateSkyColors, 2000);
+
+// Interpolate hex colors
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return [r,g,b];
+}
+function lerpColor(a, b, t) {
+  const [ar,ag,ab] = hexToRgb(a), [br,bg,bb] = hexToRgb(b);
+  const r = Math.round(ar + (br-ar)*t), g = Math.round(ag + (bg-ag)*t), bl = Math.round(ab + (bb-ab)*t);
+  return `rgb(${r},${g},${bl})`;
+}
+function lerpRGB(a, b, t) { // a,b = [r,g,b]
+  return a.map((v,i) => Math.round(v + (b[i]-v)*t));
+}
+
+function getSkyPalette(hour) {
+  // Find surrounding keyframes
+  let lo = SKY_PALETTE[0], hi = SKY_PALETTE[SKY_PALETTE.length-1];
+  for (let i = 0; i < SKY_PALETTE.length-1; i++) {
+    if (hour >= SKY_PALETTE[i].h && hour < SKY_PALETTE[i+1].h) {
+      lo = SKY_PALETTE[i]; hi = SKY_PALETTE[i+1]; break;
+    }
+  }
+  const t = (hour - lo.h) / (hi.h - lo.h);
+  return {
+    top: lerpColor(lo.top, hi.top, t),
+    mid: lerpColor(lo.mid, hi.mid, t),
+    bot: lerpColor(lo.bot, hi.bot, t),
+  };
+}
+
+let fogEl = null;
+let lastSkyTop = '', lastSkyMid = '', lastSkyBot = '';
+
+function updateSkyColors() {
+  const h = state.hour;
+  const sky = document.getElementById('sky');
+  const stars = document.getElementById('stars');
+  const w = WEATHERS[state.weather];
+
+  // Base sky from time-of-day palette
+  const base = getSkyPalette(h);
+  // Blend with weather tint (only 25% weather influence)
+  const topC = lerpColor(base.top, w.skyTop, 0.25);
+  const midC = lerpColor(base.mid, w.skyMid, 0.25);
+  const botC = lerpColor(base.bot, w.skyBot, 0.25);
+  sky.style.background = `linear-gradient(180deg, ${topC} 0%, ${midC} 55%, ${botC} 100%)`;
+
+  // Stars: visible at night (h < 6 or h >= 19), invisible during day (h 7..18)
+  // h=6: dawn, fade out. h=19: dusk, fade in
+  let starOpacity = 0;
+  if (h >= 19) starOpacity = Math.min(1, (h - 19) * 2);       // 19->19.5: fade in
+  else if (h < 6) starOpacity = 1;                              // full night
+  else if (h >= 6 && h < 7) starOpacity = Math.max(0, 1 - (h - 6) * 2); // 6->6.5: fade out
+  stars.style.opacity = starOpacity.toFixed(2);
+
+  // Fog overlay
+  if (!fogEl) {
+    fogEl = document.createElement('div');
+    fogEl.id = 'fog-overlay';
+    fogEl.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:3;transition:background 4s';
+    sky.appendChild(fogEl);
+  }
+  fogEl.style.background = w.fogColor || 'transparent';
+
+  // Cloud color based on weather darkness
+  const darkness = w.cloudOpacity > 0.9 ? '75,82,90' : w.cloudOpacity > 0.6 ? '185,192,200' : '255,255,255';
+  document.querySelectorAll('.cloud').forEach(c => {
+    c.style.background = `rgb(${darkness})`;
+    c.querySelectorAll('div').forEach(d => d.style.background = `rgb(${darkness})`);
+  });
+}
+
+function updateCelestial() {
+  const h = state.hour;
+  const cel = document.getElementById('celestial');
+  const W = window.innerWidth;
+
+  // Day: 6:00 -> 20:00  |  Night: 20:00 -> 6:00 (next day, 10 hours)
+  const isDay = (h >= 6 && h < 20);
+  cel.className = isDay ? 'sun' : 'moon';
+
+  // arcT: 0 = just risen (left/east), 1 = just set (right/west)
+  let arcT;
+  if (isDay) {
+    arcT = (h - 6) / 14;        // 0 at 6am, 1 at 8pm
+  } else {
+    // night spans 20->24->0->6, total 10 hours
+    const nh = h >= 20 ? (h - 20) : (h + 4);
+    arcT = nh / 10;              // 0 at 8pm, 1 at 6am
+  }
+
+  const celSize = isDay ? 58 : 44;
+  // X: left (east) at arcT=0, right (west) at arcT=1
+  const celX = arcT * (W - celSize - 60) + 30;
+  // Y: high arc — sin peaks at arcT=0.5 (noon / midnight)
+  const peak = Math.sin(Math.PI * arcT);
+  const skyH = window.innerHeight * 0.55;
+  // At horizon (arcT=0 or 1): near bottom of sky. At peak: near top.
+  const topPx = skyH * 0.88 - peak * skyH * 0.78;
+
+  cel.style.left = celX + 'px';
+  cel.style.top = Math.max(6, topPx) + 'px';
+  cel.style.width = cel.style.height = celSize + 'px';
+
+  if (isDay) {
+    // Color: orange at horizon, white-yellow at noon
+    const noon = Math.sin(Math.PI * arcT); // 0 at edges, 1 at noon
+    const g = Math.round(150 + noon * 95);
+    const b = Math.round(noon * 50);
+    cel.style.background = `radial-gradient(circle at 38% 36%, #fffde0, rgb(255,${g},${b}) 55%, rgb(230,${Math.round(g*0.72)},0))`;
+    const ga = (0.3 + noon * 0.35).toFixed(2);
+    cel.style.boxShadow = `0 0 ${25+noon*35}px ${8+noon*16}px rgba(255,${g},${b},${ga}), 0 0 ${60+noon*50}px ${20+noon*24}px rgba(255,180,0,${(parseFloat(ga)*0.35).toFixed(2)})`;
+  } else {
+    const high = Math.sin(Math.PI * arcT);
+    cel.style.background = 'radial-gradient(circle at 36% 34%, #ffffff, #ddeaf5 50%, #a8c0d6)';
+    cel.style.boxShadow = `0 0 18px 7px rgba(180,215,245,${(0.28+high*0.18).toFixed(2)}), 0 0 44px 18px rgba(130,175,220,${(0.1+high*0.1).toFixed(2)})`;
+  }
+}
+
+// ========== GAME TICK ==========
+let rainDrops = [];
+function gameTick() {
+  state.tick++;
+  
+  const weather = WEATHERS[state.weather];
+  
+  // Rain/snow: waterMult === 0 means precipitation
+  if (weather.waterMult === 0) {
+    addWater(2);
+    spawnRain();
+    state.plots.forEach((plant) => {
+      if (plant) plant.watered = Math.min(plant.watered + 1, 3);
+    });
+  }
+  
+  // Grow all plants
+  state.plots.forEach((plant, i) => {
+    if (!plant) return;
+    if (plant.stage >= 4) return;
+    
+    // Health: decays without water
+    if (plant.watered <= 0) {
+      plant.health = Math.max(0, plant.health - 12);
+    } else {
+      plant.health = Math.min(100, plant.health + 5);
+    }
+    
+    // Time-of-day factor
+    const h = state.hour;
+    let timeMult = 1.0;
+    if (h >= 10 && h <= 16) timeMult = 1.3;      // peak sun hours best for growth
+    else if (h >= 7 && h < 10) timeMult = 0.9;   // morning
+    else if (h >= 16 && h < 19) timeMult = 0.8;  // late afternoon
+    else if (h >= 19 || h < 6) timeMult = 0.2;   // night - almost no growth
+    else timeMult = 0.5;                           // dawn/dusk
+    
+    const pDef = PLANTS[plant.type];
+    // Sun-loving plants suffer at night even more
+    if (pDef.sunNeed && (h < 7 || h >= 19)) timeMult *= 0.3;
+    // Hot dry weather hurts if not watered
+    if (weather.name === 'חם ויבש' && plant.watered <= 0) plant.health = Math.max(0, plant.health - 8);
+    
+    let growRate = 40 * weather.growMult * timeMult;
+    if (plant.fertilized) { growRate *= 1.6; plant.fertilized = false; }
+    if (plant.beeBoost) { growRate *= 1.4; plant.beeBoost = false; }
+    
+    if (plant.watered > 0 || weather.waterMult === 0) {
+      plant.progress += growRate;
+      if (weather.waterMult > 0) plant.watered = Math.max(0, plant.watered - 0.3);
+    }
+    
+    const stageDuration = pDef.growTime[plant.stage] * 10;
+    if (plant.progress >= stageDuration && plant.stage < 4) {
+      plant.stage++;
+      plant.progress = 0;
+      const pName = pDef.name;
+      const stageName = pDef.stages[plant.stage];
+      log(`${pName} עברה לשלב: ${stageName} ${pDef.emoji[plant.stage]}`);
+    }
+  });
+  
+  // Passive water trickle
+  if (state.tick % 5 === 0) {
+    state.water = Math.min(50, state.water + 1);
+  }
+  
+  updateAllPlots();
+  updateHUD();
+}
+
+function spawnRain() {
+  clearRain();
+  for (let i = 0; i < 40; i++) {
+    const drop = document.createElement('div');
+    drop.className = 'rain-drop';
+    const h = 15 + Math.random() * 30;
+    drop.style.cssText = `
+      left:${Math.random()*100}%;
+      top:-${h}px;
+      height:${h}px;
+      animation-duration:${0.5 + Math.random()*0.5}s;
+      animation-delay:${Math.random()*0.5}s;
+      opacity:${0.4 + Math.random()*0.4};
+    `;
+    document.body.appendChild(drop);
+    rainDrops.push(drop);
+  }
+  setTimeout(clearRain, 8000);
+}
+
+function clearRain() {
+  rainDrops.forEach(d => d.remove());
+  rainDrops = [];
+}
+
+function changeWeather() {
+  clearRain();
+  const old = state.weather;
+  state.weather = Math.floor(Math.random() * WEATHERS.length);
+  const w = WEATHERS[state.weather];
+  document.getElementById('weather-icon').textContent = w.icon;
+  document.getElementById('weather-name').textContent = w.name;
+  log(`מזג האוויר השתנה: ${w.icon} ${w.name}`);
+}
+
+// ========== PLOT ACTIONS ==========
+function handlePlotClick(idx, e) {
+  const plot = state.plots[idx];
+  
+  if (!plot && state.selectedSeed) {
+    // Plant seed
+    plantSeed(idx, state.selectedSeed);
+    return;
+  }
+  
+  if (plot) {
+    // Stage 4 = ready to harvest — always harvest on click regardless of tool
+    if (plot.stage >= 4) {
+      harvestPlant(idx);
+      return;
+    }
+    const tool = state.selectedTool;
+    if (tool === 'water') { waterPlant(idx); }
+    else if (tool === 'fertilize') { fertilizePlant(idx); }
+    else if (tool === 'harvest') { harvestPlant(idx); }
+    else if (tool === 'remove') { removePlant(idx); }
+    else { showPopup(idx, e); }
+  }
+  
+  state.selectedPlot = idx;
+  highlightPlot(idx);
+}
+
+function plantSeed(idx, type) {
+  if (state.seeds[type] <= 0) { log('אין לך זרעים מסוג זה! 🌱'); return; }
+  state.seeds[type]--;
+  state.plots[idx] = {
+    type,
+    stage: 0,
+    progress: 0,
+    health: 100,
+    watered: 2,
+    fertilized: false,
+  };
+  emitParticles(plotCenter(idx), '#52b788', 8);
+  log(`שתלת ${PLANTS[type].name}! 🌱`);
+  updatePlot(idx);
+  updateHUD();
+  updateSeedCounts();
+  // Reset to water tool after planting
+  if (state.seeds[type] <= 0) {
+    state.selectedSeed = null;
+    selectTool('water');
+  }
+}
+
+function waterPlant(idx) {
+  if (state.water <= 0) { log('אין מים! קנה עוד מהחנות 💧'); return; }
+  const plot = state.plots[idx];
+  if (!plot) return;
+  state.water--;
+  plot.watered = Math.min(plot.watered + 2, 3);
+  plot.health = Math.min(100, plot.health + 15);
+  emitParticles(plotCenter(idx), '#4fc3f7', 6);
+  updatePlot(idx);
+  updateHUD();
+}
+
+function fertilizePlant(idx) {
+  if (state.fertilizer <= 0) { log('אין דשן! קנה עוד 🌿'); return; }
+  const plot = state.plots[idx];
+  if (!plot) return;
+  state.fertilizer--;
+  plot.fertilized = true;
+  emitParticles(plotCenter(idx), '#81c784', 6);
+  log('דישנת את הצמח! גדילה מואצת 🌿');
+  updateHUD();
+}
+
+function harvestPlant(idx) {
+  const plot = state.plots[idx];
+  if (!plot || plot.stage < 4) { log('הצמח עוד לא מוכן לקציר 🌱'); return; }
+  const pDef = PLANTS[plot.type];
+  const coins = pDef.harvestCoins + Math.floor(plot.health / 20);
+  state.coins += coins;
+  state.plots[idx] = null;
+  const pos = plotCenter(idx);
+  showCoinPop(pos, `+${coins}🪙`);
+  emitParticles(pos, '#ffd166', 12);
+  log(`קצרת ${pDef.name}! +${coins} מטבעות 🪙`);
+  updatePlot(idx);
+  updateHUD();
+}
+
+function removePlant(idx) {
+  state.plots[idx] = null;
+  updatePlot(idx);
+}
+
+function addWater(amt) {
+  state.water = Math.min(50, state.water + amt);
+  updateHUD();
+}
+
+function buyResource(type) {
+  if (type === 'water') {
+    if (state.coins < 5) { log('אין מספיק מטבעות! 🪙'); return; }
+    state.coins -= 5; state.water = Math.min(50, state.water + 10);
+  } else if (type === 'fert') {
+    if (state.coins < 8) { log('אין מספיק מטבעות! 🪙'); return; }
+    state.coins -= 8; state.fertilizer = Math.min(30, state.fertilizer + 5);
+  }
+  updateHUD();
+}
+
+function selectTool(tool) {
+  state.selectedTool = tool;
+  state.selectedSeed = null;
+  document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-tool="${tool}"]`).classList.add('active');
+  document.querySelectorAll('.seed-btn').forEach(b => b.classList.remove('active'));
+}
+
+function selectSeed(type) {
+  if (state.seeds[type] <= 0) {
+    // Buy seed
+    const price = PLANTS[type].price;
+    if (state.coins < price) { log('אין מספיק מטבעות! 🪙'); return; }
+    state.coins -= price;
+    state.seeds[type] = (state.seeds[type] || 0) + 1;
+    updateSeedCounts();
+    updateHUD();
+    log(`קנית זרע של ${PLANTS[type].name} 🌱`);
+  }
+  state.selectedSeed = type;
+  state.selectedTool = 'plant';
+  document.querySelectorAll('.seed-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-seed="${type}"]`).classList.add('active');
+  document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+  log(`בחרת ${PLANTS[type].name}. לחץ על עציץ ריק לשתילה 🌱`);
+}
+
+// ========== UI UPDATES ==========
+function updateHUD() {
+  document.getElementById('hud-coins').textContent = state.coins;
+  document.getElementById('hud-water').textContent = state.water;
+  document.getElementById('hud-fert').textContent = state.fertilizer;
+  document.getElementById('water-val').textContent = state.water;
+  document.getElementById('fert-val').textContent = state.fertilizer;
+  document.getElementById('water-bar').style.width = (state.water / 50 * 100) + '%';
+  document.getElementById('fert-bar').style.width = (state.fertilizer / 30 * 100) + '%';
+}
+
+function updateSeedCounts() {
+  for (const key of Object.keys(PLANTS)) {
+    const el = document.getElementById(`sc-${key}`);
+    if (el) el.textContent = state.seeds[key] || 0;
+  }
+}
+
+function updateAllPlots() {
+  for (let i = 0; i < 18; i++) updatePlot(i);
+}
+
+function updatePlot(idx) {
+  const plot = state.plots[idx];
+  const el = document.querySelectorAll('.plot')[idx];
+  if (!el) return;
+  const emoji = document.getElementById(`pemoji-${idx}`);
+  const hbar = document.getElementById(`hbar-${idx}`);
+  const hfill = document.getElementById(`hfill-${idx}`);
+  const wdots = document.getElementById(`wdots-${idx}`);
+  const tip = document.getElementById(`tip-${idx}`);
+  
+  el.className = 'plot';
+  
+  if (!plot) {
+    emoji.textContent = '';
+    if (hbar) hbar.style.display = 'none';
+    wdots.innerHTML = '';
+    tip.textContent = 'לחץ לשתילה';
+    return;
+  }
+  
+  const pDef = PLANTS[plot.type];
+  
+  // Emoji & stage class
+  emoji.textContent = pDef.emoji[plot.stage];
+  el.classList.add(`plant-stage-${plot.stage}`);
+  
+  // Wilting
+  if (plot.health < 30) el.classList.add('plant-wilting');
+  
+  // Harvestable
+  if (plot.stage >= 4) el.classList.add('harvestable');
+  
+  // Watered indicator
+  if (plot.watered > 0) el.classList.add('watered');
+  
+  // Health bar
+  if (hbar) {
+    hbar.style.display = 'block';
+    hfill.style.width = plot.health + '%';
+    hfill.className = 'health-bar-fill';
+    if (plot.health < 30) hfill.classList.add('low');
+    else if (plot.health < 60) hfill.classList.add('mid');
+  }
+  
+  // Water dots
+  wdots.innerHTML = '';
+  for (let d = 0; d < 3; d++) {
+    const dot = document.createElement('div');
+    dot.className = 'water-dot ' + (d < Math.ceil(plot.watered) ? 'full' : 'empty');
+    wdots.appendChild(dot);
+  }
+  
+  // Tooltip
+  if (tip) {
+    tip.textContent = `${pDef.name} • ${pDef.stages[plot.stage]} • ❤️${Math.round(plot.health)}%`;
+    if (plot.stage >= 4) tip.textContent += ' • מוכן לקציר!';
+  }
+}
+
+function highlightPlot(idx) {
+  document.querySelectorAll('.plot').forEach(p => p.classList.remove('selected'));
+  const el = document.querySelectorAll('.plot')[idx];
+  if (el) el.classList.add('selected');
+}
+
+// ========== VISITORS ==========
+function spawnVisitor() {
+  const isDay = state.hour >= 7 && state.hour < 19;
+  const types = isDay 
+    ? ['🦋','🐝','🦋','🐝','🐞','🐛']
+    : ['🦉','🌙','✨'];
+  const icon = types[Math.floor(Math.random() * types.length)];
+  
+  const v = document.createElement('div');
+  v.className = 'visitor';
+  v.textContent = icon;
+  const startX = Math.random() * window.innerWidth;
+  const startY = 100 + Math.random() * (window.innerHeight - 300);
+  v.style.left = startX + 'px';
+  v.style.top = startY + 'px';
+  const dx = (Math.random() - 0.5) * 400;
+  const dy = (Math.random() - 0.5) * 200;
+  const dr = (Math.random() - 0.5) * 60;
+  v.style.setProperty('--dx', dx + 'px');
+  v.style.setProperty('--dy', dy + 'px');
+  v.style.setProperty('--dr', dr + 'deg');
+  v.style.animationDuration = (6 + Math.random() * 6) + 's';
+  document.body.appendChild(v);
+  v.addEventListener('animationend', () => {
+    v.remove();
+    // Bonus
+    if (icon === '🐝') {
+      // Boost growth on a random planted plot
+      const planted = state.plots.map((p, i) => p && p.stage < 4 ? i : -1).filter(i => i >= 0);
+      if (planted.length > 0) {
+        const idx = planted[Math.floor(Math.random() * planted.length)];
+        state.plots[idx].beeBoost = true;
+        emitParticles(plotCenter(idx), '#ffd166', 6);
+        log(`דבורה האיצה את גדילת ה${PLANTS[state.plots[idx].type].name}! 🐝✨`);
+      } else {
+        log('דבורה ביקרה בגינה! 🐝');
+      }
+    } else if (icon === '🦋') { log('פרפר יפה עף בגינה! ✨'); }
+  });
+}
+
+// ========== PARTICLES / EFFECTS ==========
+function emitParticles(pos, color, count) {
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = 4 + Math.random() * 6;
+    p.style.cssText = `
+      left:${pos.x}px; top:${pos.y}px;
+      width:${size}px; height:${size}px;
+      background:${color};
+      animation-duration:${0.5 + Math.random()}s;
+      animation-delay:${Math.random()*0.2}s;
+    `;
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 20 + Math.random() * 50;
+    p.style.setProperty('--px', Math.cos(angle) * dist + 'px');
+    p.style.setProperty('--py', Math.sin(angle) * dist + 'px');
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 1500);
+  }
+}
+
+function showCoinPop(pos, text) {
+  const el = document.createElement('div');
+  el.className = 'coin-pop';
+  el.textContent = text;
+  el.style.left = pos.x + 'px';
+  el.style.top = pos.y + 'px';
+  el.style.color = '#ffd166';
+  el.style.fontWeight = 'bold';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1500);
+}
+
+function plotCenter(idx) {
+  const plots = document.querySelectorAll('.plot');
+  const el = plots[idx];
+  if (!el) return { x: 0, y: 0 };
+  const r = el.getBoundingClientRect();
+  return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+}
+
+// ========== LOG ==========
+function log(msg) {
+  const logEl = document.getElementById('log');
+  const div = document.createElement('div');
+  div.className = 'log-msg';
+  div.textContent = msg;
+  logEl.appendChild(div);
+  setTimeout(() => div.remove(), 3000);
+  // Keep max 3 messages
+  while (logEl.children.length > 3) logEl.removeChild(logEl.firstChild);
+}
+
+// ========== POPUP ==========
+let popupPlotIdx = -1;
+
+function showPopup(idx, e) {
+  const plot = state.plots[idx];
+  if (!plot) return;
+  const pDef = PLANTS[plot.type];
+  const popup = document.getElementById('plant-popup');
+  popup.style.display = 'block';
+  popup.style.left = Math.min(e.clientX + 10, window.innerWidth - 200) + 'px';
+  popup.style.top = Math.min(e.clientY - 20, window.innerHeight - 200) + 'px';
+  document.getElementById('popup-name').textContent = pDef.emoji[plot.stage] + ' ' + pDef.name;
+  document.getElementById('popup-stage').textContent = `${pDef.stages[plot.stage]} • ❤️ ${Math.round(plot.health)}%`;
+  document.getElementById('popup-harvest-btn').disabled = plot.stage < 4;
+  document.getElementById('popup-harvest-btn').style.opacity = plot.stage < 4 ? '0.4' : '1';
+  popupPlotIdx = idx;
+}
+
+function popupAction(action) {
+  closePopup();
+  const idx = popupPlotIdx;
+  if (action === 'water') waterPlant(idx);
+  else if (action === 'fertilize') fertilizePlant(idx);
+  else if (action === 'harvest') harvestPlant(idx);
+  else if (action === 'remove') removePlant(idx);
+}
+
+function closePopup(e) {
+  const popup = document.getElementById('plant-popup');
+  if (e && popup.contains(e.target)) return;
+  popup.style.display = 'none';
+}
+
+// ========== START ==========
+window.onload = init;
+</script>
+</body>
+</html>
