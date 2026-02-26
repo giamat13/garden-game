@@ -1953,11 +1953,6 @@ body {
   </div>
 </div>
 
-<!-- BEE GAME LINK BAR -->
-<div id="bee-game-bar" style="position:fixed;top:58px;left:0;right:0;z-index:90;background:rgba(15,10,30,0.82);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,209,102,0.2);padding:3px 16px;display:flex;align-items:center;gap:8px;cursor:pointer;" onclick="window.open('https://giamat13.github.io/Bee-nest-game/','_blank')" title="לחץ לפתיחת משחק הכוורת">
-  <div id="bee-game-hud" style="flex:1;display:flex;align-items:center;gap:10px;flex-wrap:wrap;"></div>
-  <span style="font-size:10px;color:rgba(255,255,255,0.35);white-space:nowrap">לחץ לפתיחה ↗</span>
-</div>
 
 <!-- TOOLS PANEL -->
 <div id="side-panel">
@@ -2378,7 +2373,17 @@ let state = {
   investors: [],         // [{name, amount, pct, day}]
   season: 0,
   seasonTick: 0,
+  afkDays: 0,
+  regularDays: 0,
 };
+
+// ========== AFK TRACKING ==========
+let lastMouseMoveTime = Date.now();
+let mouseMovedToday = false;
+document.addEventListener('mousemove', () => {
+  lastMouseMoveTime = Date.now();
+  mouseMovedToday = true;
+});
 
 // ========== MAINTENANCE ==========
 function getDailyMaintenance() {
@@ -2668,9 +2673,10 @@ function renderGardenItems() {
   if (!gardenEl) return;
   const gr = gardenEl.getBoundingClientRect();
   const groundEl = document.getElementById('ground');
-  const groundTop = groundEl.getBoundingClientRect().top;
-  const gardenLeft = gr.left;
-  const gardenTop = gr.top - groundTop;
+  const layerRect = layer.getBoundingClientRect();
+  const groundTop = layerRect.top; // items-world top = ground top (items-world is absolute inside ground at top:0)
+  const gardenLeft = gr.left - layerRect.left;
+  const gardenTop = gr.top - layerRect.top;
   const gardenW = gr.width;
   const gardenH = gr.height;
 
@@ -2678,7 +2684,7 @@ function renderGardenItems() {
   // bobDelay staggers the floating animation so items don't all move in sync
   let bobCounter = 0;
   const _placedItems = []; // track all placed ground items for collision resolution
-  const groundW = groundEl.getBoundingClientRect().width || window.innerWidth;
+  const groundW = groundEl ? groundEl.getBoundingClientRect().width : window.innerWidth;
   
   const addItem = (key, innerHtml, pos, extraTooltipLines = []) => {
     const div = document.createElement('div');
@@ -2960,11 +2966,12 @@ function drawPipes() {
 
   // Underground pipe helper — draws an L-shaped underground route
   // from (x1, groundY) going underground and up to (x2, groundY)
+  const layerRectRef = document.getElementById('items-world').getBoundingClientRect();
   const groundY = (() => {
-    const layer = document.getElementById('items-world');
     const groundEl = document.getElementById('ground');
-    if (!layer || !groundEl) return 0;
-    return groundEl.getBoundingClientRect().height - 14; // near bottom
+    if (!groundEl) return 0;
+    const gr = groundEl.getBoundingClientRect();
+    return gr.bottom - layerRectRef.top - 14; // near bottom, relative to items-world
   })();
 
   const undergroundPipe = (x1, y1, x2, y2, cls, depth = 0) => {
@@ -3037,11 +3044,9 @@ function drawPipes() {
   // ── 2. Water Tank → Auto Water pipe (supply line) ────────────────────────
   const autoWaterEl = document.querySelector('.wi-autoWater .water-pipe');
   if (autoWaterEl && tank && itemLevel('autoWater') > 0 && itemLevel('waterTank') > 0) {
-    const layer = document.getElementById('items-world');
-    const layerRect = layer.getBoundingClientRect();
     const awRect = autoWaterEl.getBoundingClientRect();
-    const pipeLeft = awRect.left - layerRect.left;
-    const pipeY    = awRect.top  - layerRect.top + 3;
+    const pipeLeft = awRect.left - layerRectRef.left;
+    const pipeY    = awRect.top  - layerRectRef.top + 3;
     const x1 = tank.right - 4, y1 = tank.top + tank.h * 0.3;
     const x2 = pipeLeft, y2 = pipeY;
     const d = `M ${x1} ${y1} C ${x1 + 30} ${y1}, ${x2 - 30} ${y2}, ${x2} ${y2}`;
@@ -3060,11 +3065,9 @@ function drawPipes() {
   if (rain && !tank && itemLevel('autoWater') > 0 && itemLevel('rainCollector') > 0) {
     const autoWaterPipeEl = document.querySelector('.wi-autoWater .water-pipe');
     if (autoWaterPipeEl) {
-      const layer = document.getElementById('items-world');
-      const layerRect = layer.getBoundingClientRect();
       const awRect = autoWaterPipeEl.getBoundingClientRect();
       const x1 = rain.x, y1 = rain.bottom - 8;
-      const x2 = awRect.left - layerRect.left, y2 = awRect.top - layerRect.top + 3;
+      const x2 = awRect.left - layerRectRef.left, y2 = awRect.top - layerRectRef.top + 3;
       const ug = groundY + 5;
       const d = `M ${x1} ${y1} L ${x1} ${ug} L ${x2} ${ug} L ${x2} ${y2}`;
       const p = namedPath(d, 'pipe-water');
@@ -3098,11 +3101,9 @@ function drawPipes() {
   if (compost && itemLevel('compostBin') > 0) {
     const gardenEl = document.getElementById('garden-area');
     if (gardenEl) {
-      const layer = document.getElementById('items-world');
-      const lr = layer.getBoundingClientRect();
       const gr = gardenEl.getBoundingClientRect();
-      const gx = gr.right - lr.left - 20;
-      const gy = gr.top - lr.top + gr.height * 0.6;
+      const gx = gr.right - layerRectRef.left - 20;
+      const gy = gr.top - layerRectRef.top + gr.height * 0.6;
       const x1 = compost.left + 4, y1 = compost.bottom - 10;
       const ug = groundY + 18;
       const d = `M ${x1} ${y1} L ${x1} ${ug} L ${gx} ${ug} L ${gx} ${gy}`;
@@ -3127,13 +3128,10 @@ function drawPipes() {
   const ledEl = document.querySelector('.wi-ledLamp .led-bar');
   const ghEl  = document.querySelector('.wi-greenhouse .greenhouse-glass');
   if (ledEl && ghEl && itemLevel('ledLamp') > 0 && itemLevel('greenhouse') > 0) {
-    const layer = document.getElementById('items-world');
-    const lr = layer.getBoundingClientRect();
     const ledR = ledEl.getBoundingClientRect();
     const ghR  = ghEl.getBoundingClientRect();
-    // Wire from LED bar left edge down to greenhouse top-left corner
-    const x1 = ledR.left - lr.left, y1 = ledR.top - lr.top + 4;
-    const x2 = ghR.left  - lr.left + 10, y2 = ghR.top - lr.top;
+    const x1 = ledR.left - layerRectRef.left, y1 = ledR.top - layerRectRef.top + 4;
+    const x2 = ghR.left  - layerRectRef.left + 10, y2 = ghR.top - layerRectRef.top;
     const d = `M ${x1} ${y1} L ${x2} ${y1} L ${x2} ${y2}`;
     namedPath(d, 'pipe-electric');
     joint(x1, y1, 3.5, 'pipe-joint-elec');
@@ -3143,12 +3141,10 @@ function drawPipes() {
   // ── 6. LED lamp wire to auto-water (power) ───────────────────────────────
   const autoWaterPipeEl2 = document.querySelector('.wi-autoWater .water-pipe');
   if (ledEl && autoWaterPipeEl2 && itemLevel('ledLamp') > 0 && itemLevel('autoWater') > 0) {
-    const layer = document.getElementById('items-world');
-    const lr = layer.getBoundingClientRect();
     const ledR  = ledEl.getBoundingClientRect();
     const awR   = autoWaterPipeEl2.getBoundingClientRect();
-    const x1 = ledR.right - lr.left - 20, y1 = ledR.top - lr.top + 4;
-    const x2 = awR.left   - lr.left + awR.width * 0.5, y2 = awR.top - lr.top;
+    const x1 = ledR.right - layerRectRef.left - 20, y1 = ledR.top - layerRectRef.top + 4;
+    const x2 = awR.left   - layerRectRef.left + awR.width * 0.5, y2 = awR.top - layerRectRef.top;
     const d = `M ${x1} ${y1} L ${x1} ${y1 - 8} L ${x2} ${y1 - 8} L ${x2} ${y2}`;
     namedPath(d, 'pipe-wire');
     joint(x1, y1, 3, 'pipe-joint-elec');
@@ -3159,11 +3155,9 @@ function drawPipes() {
   const hive = getItemCenter('wi-beeHive');
   const gardenEl = document.getElementById('garden-area');
   if (hive && gardenEl && itemLevel('beeHive') > 0) {
-    const layer = document.getElementById('items-world');
-    const lr = layer.getBoundingClientRect();
     const gr = gardenEl.getBoundingClientRect();
-    const gx = gr.right - lr.left - 30;
-    const gy = gr.top   - lr.top  + gr.height / 2;
+    const gx = gr.right - layerRectRef.left - 30;
+    const gy = gr.top   - layerRectRef.top  + gr.height / 2;
     const x1 = hive.left + 8, y1 = hive.y - 10;
     // wavy dashed path
     const cx = (x1 + gx) / 2;
@@ -3189,11 +3183,9 @@ function drawPipes() {
   // ── 8. Scarecrow → garden area (protection radius, dashed arc) ───────────
   const sc = getItemCenter('wi-scarecrow');
   if (sc && itemLevel('scarecrow') > 0 && gardenEl) {
-    const layer = document.getElementById('items-world');
-    const lr = layer.getBoundingClientRect();
     const gr = gardenEl.getBoundingClientRect();
-    const gCx = (gr.left + gr.right) / 2 - lr.left;
-    const gCy = (gr.top  + gr.bottom) / 2 - lr.top;
+    const gCx = (gr.left + gr.right) / 2 - layerRectRef.left;
+    const gCy = (gr.top  + gr.bottom) / 2 - layerRectRef.top;
     // dashed oval around garden
     const rx = gr.width  / 2 + 16;
     const ry = gr.height / 2 + 12;
@@ -3218,11 +3210,9 @@ function drawPipes() {
   // ── 9. Sun Mirror → garden sun-loving plants (light beam) ────────────────
   const mirror = getItemCenter('wi-sunMirror');
   if (mirror && itemLevel('sunMirror') > 0 && gardenEl) {
-    const layer = document.getElementById('items-world');
-    const lr = layer.getBoundingClientRect();
     const gr = gardenEl.getBoundingClientRect();
-    const tx = gr.left - lr.left + gr.width * 0.7;
-    const ty = gr.top  - lr.top  + 30;
+    const tx = gr.left - layerRectRef.left + gr.width * 0.7;
+    const ty = gr.top  - layerRectRef.top  + 30;
     const beam = mk('line', {
       x1: mirror.x, y1: mirror.top + 6,
       x2: tx, y2: ty,
@@ -3247,11 +3237,9 @@ function drawPipes() {
   // ── 10. Harvest Bonus sign → garden right side (coin trail) ──────────────
   const hb = getItemCenter('wi-harvestBonus');
   if (hb && itemLevel('harvestBonus') > 0 && gardenEl) {
-    const layer = document.getElementById('items-world');
-    const lr = layer.getBoundingClientRect();
     const gr = gardenEl.getBoundingClientRect();
-    const tx = gr.right - lr.left - 10;
-    const ty = gr.top   - lr.top  + gr.height * 0.6;
+    const tx = gr.right - layerRectRef.left - 10;
+    const ty = gr.top   - layerRectRef.top  + gr.height * 0.6;
     const p = namedPath(`M ${hb.left + 4} ${hb.y} L ${tx} ${ty}`, '');
     p.setAttribute('stroke', '#ffc107');
     p.setAttribute('stroke-width', '1.5');
@@ -3268,11 +3256,9 @@ function drawPipes() {
   // ── 11. Grow Boost → garden (sparkle trail) ──────────────────────────────
   const boost = getItemCenter('wi-growBoost');
   if (boost && itemLevel('growBoost') > 0 && gardenEl) {
-    const layer = document.getElementById('items-world');
-    const lr = layer.getBoundingClientRect();
     const gr = gardenEl.getBoundingClientRect();
-    const tx = gr.left + gr.width * 0.55 - lr.left;
-    const ty = gr.bottom - lr.top - 20;
+    const tx = gr.left + gr.width * 0.55 - layerRectRef.left;
+    const ty = gr.bottom - layerRectRef.top - 20;
     const p = namedPath(`M ${boost.x} ${boost.top} Q ${boost.x - 20} ${ty - 60} ${tx} ${ty}`, '');
     p.setAttribute('stroke', '#ce93d8');
     p.setAttribute('stroke-width', '1.5');
@@ -3304,6 +3290,8 @@ function saveGame() {
     })),
     season: state.season, seasonTick: state.seasonTick,
     plotShields: state.plotShields || {},
+    afkDays: state.afkDays || 0,
+    regularDays: state.regularDays || 0,
   };
   const json = JSON.stringify(toSave);
   try { localStorage.setItem(SAVE_KEY, json); } catch(e) {}
@@ -3349,6 +3337,8 @@ function loadGame() {
     if (Array.isArray(data.investors)) state.investors = data.investors;
     state.season    = safeInt(data.season,     0,                0, 3);
     state.seasonTick= safeInt(data.seasonTick, 0,                0);
+    state.afkDays   = safeInt(data.afkDays,    0,                0);
+    state.regularDays = safeInt(data.regularDays, 0,             0);
     
     // ── Seeds: only known plant types ───────────────
     if (data.seeds && typeof data.seeds === 'object') {
@@ -3442,9 +3432,6 @@ function init() {
     spawnVisitor();
     if (itemLevel('beeHive') >= 1) spawnVisitor();
     if (itemLevel('beeHive') >= 2) spawnVisitor();
-    // External bee game: spawn extra visitors based on bees count
-    const _extBee = getBeeGameBonuses();
-    for (let _i = 0; _i < _extBee.beeVisitorBonus; _i++) spawnVisitor();
   }, 12000);
   setInterval(changeWeather, 60000);
   setInterval(spawnPest, 25000);
@@ -3453,8 +3440,6 @@ function init() {
   document.addEventListener('click', closePopup);
   updateActiveItemsRow();
   updateLoanBtn(); updateInvestorBtn();
-  updateBeeGameHUD();
-  setInterval(updateBeeGameHUD, 5000); // refresh bee bonuses every 5 seconds
   // Re-render any saved weeds
   if (state.weeds && state.weeds.length > 0) {
     state.weeds.forEach(w => renderWeedOnPlot(w));
@@ -3637,6 +3622,15 @@ function gameLoop(ts = 0) {
 }
 
 function onNewDay() {
+  // Track AFK vs regular day
+  if (mouseMovedToday) {
+    state.regularDays = (state.regularDays || 0) + 1;
+  } else {
+    state.afkDays = (state.afkDays || 0) + 1;
+  }
+  // Reset for the new day
+  mouseMovedToday = false;
+
   state.lastDay = state.day;
   payMaintenance();
   document.getElementById('day-num').textContent = state.day;
@@ -3933,11 +3927,7 @@ function gameTick() {
 
     let growRate = 40 * effectiveGrowMult * effectiveTimeMult * sunBonus * growBoostMult * seasonMult;
     if (plant.fertilized) { growRate *= 1.6; plant.fertilized = false; }
-    // External bee game: beeBoost uses hiveLevel-scaled multiplier
-    const _beeBonus = getBeeGameBonuses();
-    if (plant.beeBoost) { growRate *= _beeBonus.beeBoostMult; plant.beeBoost = false; }
-    // External bee game: speedLevel gives global grow bonus
-    growRate *= _beeBonus.growSpeedBonus;
+    if (plant.beeBoost) { growRate *= 1.4; plant.beeBoost = false; }
 
     if (hasItem('scarecrow') && plant.health < 100) {
       plant.health = Math.min(100, plant.health + 2);
@@ -5176,61 +5166,6 @@ function updateLoanBtn() {
   }
 }
 
-// ========== EXTERNAL BEEHIVE SYNC (from honeybeeGameSave) ==========
-const BEE_GAME_KEY = 'honeybeeGameSave';
-
-function loadExternalBeeData() {
-  try {
-    const raw = localStorage.getItem(BEE_GAME_KEY);
-    if (!raw) return null;
-    const data = JSON.parse(raw);
-    return {
-      bees:       Math.max(0, parseInt(data.bees)       || 0),
-      hiveLevel:  Math.max(1, parseInt(data.hiveLevel)  || 1),
-      speedLevel: Math.max(1, parseInt(data.speedLevel) || 1),
-    };
-  } catch(e) { return null; }
-}
-
-// Returns a bonus object used by growRate and visitor spawning
-function getBeeGameBonuses() {
-  const d = loadExternalBeeData();
-  if (!d) return { beeVisitorBonus: 0, beeBoostMult: 1.4, growSpeedBonus: 1.0, active: false };
-
-  // bees: every bee above base 3 → slightly more visitors
-  const extraBees = Math.max(0, d.bees - 3);
-  const beeVisitorBonus = Math.floor(extraBees / 3); // +1 visitor per 3 extra bees
-
-  // hiveLevel → beeBoost multiplier: level 1=1.4, scales up logarithmically to max 3.0
-  const beeBoostMult = Math.min(3.0, 1.4 + Math.log2(d.hiveLevel) * 0.4);
-
-  // speedLevel → global grow speed bonus: level 1=1.0, each level +8% capped at +150%
-  const growSpeedBonus = Math.min(2.5, 1.0 + (d.speedLevel - 1) * 0.08);
-
-  return { beeVisitorBonus, beeBoostMult, growSpeedBonus, active: true,
-           raw: d };
-}
-
-// Called once at init and periodically to refresh HUD
-function updateBeeGameHUD() {
-  const bonus = getBeeGameBonuses();
-  const el = document.getElementById('bee-game-hud');
-  if (!el) return;
-
-  if (!bonus.active) {
-    el.innerHTML = `<span style="opacity:0.5;font-size:11px">🐝 כוורת חיצונית: לא מחוברת — <a href="https://giamat13.github.io/Bee-nest-game/" target="_blank" style="color:#ffd166;text-decoration:none">שחק עכשיו!</a></span>`;
-    el.title = 'שחק במשחק הכוורת כדי לקבל בונוסים לגינה';
-    return;
-  }
-
-  const d = bonus.raw;
-  const pct = Math.round((bonus.growSpeedBonus - 1) * 100);
-  const boostMult = bonus.beeBoostMult.toFixed(1);
-  el.innerHTML = `<span style="font-size:11px;color:#ffd166">🐝 כוורת מחוברת!</span>
-    <span style="font-size:10px;opacity:0.85"> ${d.bees} דבורות · כוורת רמה ${d.hiveLevel} · מהירות רמה ${d.speedLevel}</span>
-    <span style="font-size:10px;color:#a5d6a7"> → +${pct}% גדילה · x${boostMult} בונוס דבורה · +${bonus.beeVisitorBonus} ביקורים</span>`;
-  el.title = `מחובר למשחק הכוורת:\n🐝 ${d.bees} דבורות (+${bonus.beeVisitorBonus} ביקורי דבורה לגינה)\n🏠 כוורת רמה ${d.hiveLevel} (בונוס דבורה x${boostMult})\n⚡ מהירות רמה ${d.speedLevel} (+${pct}% גדילת צמחים)`;
-}
 
 window.onload = init;
 </script>
